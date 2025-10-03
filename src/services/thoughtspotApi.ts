@@ -160,7 +160,7 @@ import { ThoughtSpotContent } from "../types/thoughtspot";
 
 // Default ThoughtSpot URL - will be overridden by the configured URL
 let THOUGHTSPOT_BASE_URL =
-  "https://se-thoughtspot-cloud.thoughtspot.cloud/api/rest/2.0";
+  "https://techpartners.thoughtspot.cloud/api/rest/2.0";
 
 export function setThoughtSpotBaseUrl(url: string) {
   // Ensure the URL ends with /api/rest/2.0

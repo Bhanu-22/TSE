@@ -1248,13 +1248,20 @@ export default function Layout({ children }: LayoutProps) {
 
         const initConfig: ThoughtSpotInitConfig = {
           thoughtSpotHost: appConfig.thoughtspotUrl,
-          authType: AuthType.None,
+          authType: appConfig.authType || AuthType.None,
           locale: userLocale,
           additionalFlags: {
             isLiveboardStylingEnabled: true,
             ...earlyAccessFlags,
           },
+          getAuthToken: function (): Promise<string> {
+            throw new Error("Function not implemented.");
+          }
         };
+
+        if (appConfig.authType === "TrustedAuthToken") {
+          initConfig.getAuthToken = () => Promise.resolve("'YXJhdmluZGFuLm1rQDdkeHBlcnRzLmNvbTpKSE5vYVhKdk1TUlRTRUV0TWpVMkpEVXdNREF3TUNSNlJFTlZja05yTlZoVFRFMTJkRVZUUjBneFRTdG5QVDBrVVVwNGFIaFZZU3RMVUVadFYwRndhRkJTUjNkdmQwMXllVlZJZURaek1VUm5TbTAxWkdWU1lYVlVWVDA='");
+        }
 
         console.log(
           "[Layout] Initializing ThoughtSpot with config:",

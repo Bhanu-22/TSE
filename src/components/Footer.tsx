@@ -25,7 +25,7 @@ export default function Footer({
   const { appConfig } = useAppContext();
   const thoughtspotUrl =
     appConfig.thoughtspotUrl ||
-    "https://se-thoughtspot-cloud.thoughtspot.cloud";
+    "https://techpartners.thoughtspot.cloud/";
 
   useEffect(() => {
     const fetchUser = async () => {

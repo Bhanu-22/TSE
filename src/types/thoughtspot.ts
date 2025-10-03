@@ -10,6 +10,7 @@ export interface ThoughtSpotEmbedInstance {
 }
 
 export interface ThoughtSpotInitConfig {
+  getAuthToken: () => Promise<string>;
   thoughtSpotHost: string;
   authType: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   locale?: string; // User locale preference
@@ -144,6 +145,7 @@ export interface HomePageConfig {
 
 export interface AppConfig {
   thoughtspotUrl: string;
+  authType: "None" | "SSO" | "TrustedAuthToken";
   applicationName: string;
   logo: string;
   earlyAccessFlags: string;

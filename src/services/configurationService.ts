@@ -94,7 +94,7 @@ export const DEFAULT_CONFIG: ConfigurationData = {
     value: "<h1>Welcome to TSE Demo Builder</h1>",
   },
   appConfig: {
-    thoughtspotUrl: "https://se-thoughtspot-cloud.thoughtspot.cloud/",
+    thoughtspotUrl: "https://techpartners.thoughtspot.cloud/",
     applicationName: "TSE Demo Builder",
     logo: "/ts.png",
     earlyAccessFlags: "enable-modular-home\nenable-custom-styling",
@@ -103,12 +103,12 @@ export const DEFAULT_CONFIG: ConfigurationData = {
     chatbot: {
       enabled: true,
       defaultModelId: undefined,
-      welcomeMessage:
-        "Hello! I'm your AI assistant. What would you like to know about your data?",
+      welcomeMessage: "Hello! I'm your AI assistant. What would you like to know about your data?",
       position: "bottom-right",
       primaryColor: "#3b82f6",
       hoverColor: "#2563eb",
     },
+    authType: "None"
   },
   fullAppConfig: {
     showPrimaryNavbar: true,
