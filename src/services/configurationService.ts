@@ -96,9 +96,9 @@ export const DEFAULT_CONFIG: ConfigurationData = {
   appConfig: {
     thoughtspotUrl: "https://techpartners.thoughtspot.cloud/",
     applicationName: "TSE Demo Builder",
-    logo: "/ts.png",
+    logo: "/logo.png",
     earlyAccessFlags: "enable-modular-home\nenable-custom-styling",
-    favicon: "/ts.png",
+    favicon: "/logo.png",
     showFooter: true,
     chatbot: {
       enabled: true,
@@ -119,7 +119,7 @@ export const DEFAULT_CONFIG: ConfigurationData = {
       topBar: {
         backgroundColor: "#ffffff",
         foregroundColor: "#333333",
-        logoUrl: "/ts.png",
+        logoUrl: "/logo.png",
       },
       sidebar: {
         backgroundColor: "#f5f5f5",
