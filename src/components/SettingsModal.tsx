@@ -42,6 +42,7 @@ import {
 } from "../services/configurationService";
 import ThemeSelector from "./ThemeSelector";
 import { applyTheme } from "../types/themes";
+import { loginToThoughtSpot } from "../services/thoughtspotApi";
 
 // Configuration interfaces for compatibility
 interface ConfigurationData {
@@ -242,6 +243,167 @@ function SearchQueryInput({
     </div>
   );
 }
+
+// This handles URL update (via pending config) and login (via API call, then reload).
+  function ConnectionContent({
+    appConfig,
+    updateAppConfig,
+  }: {
+    appConfig: AppConfig;
+    updateAppConfig: (config: AppConfig) => void;
+  }) {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [loginError, setLoginError] = useState<string | null>(null);
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
+    const [localUrl, setLocalUrl] = useState(appConfig.thoughtspotUrl || '');
+
+    useEffect(() => {
+      setLocalUrl(appConfig.thoughtspotUrl || '');
+      setUsername("");
+      setPassword("");
+    }, [appConfig.thoughtspotUrl]);
+
+    const handleSaveUrl = () => {
+      updateAppConfig({ ...appConfig, thoughtspotUrl: localUrl });
+    };
+
+    const handleLogin = async () => {
+      if (!username || !password) {
+        setLoginError("Please enter username and password");
+        return;
+      }
+
+      setIsLoggingIn(true);
+      setLoginError(null);
+
+      const success = await loginToThoughtSpot(username, password);
+
+      setIsLoggingIn(false);
+
+      if (success) {
+        window.location.reload(); // Reload to update session status globally
+      } else {
+        setLoginError("Login failed. Please check your credentials.");
+      }
+    };
+
+    return (
+      <div style={{ padding: "16px" }}>
+        <h3 style={{ marginBottom: "16px" }}>ThoughtSpot Connection</h3>
+        <div style={{ marginBottom: "24px" }}>
+          <label 
+            style={{ 
+              display: "block", 
+              marginBottom: "8px", 
+              fontWeight: "500" 
+            }}
+          >
+            ThoughtSpot URL
+          </label>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <input
+              type="text"
+              // value={localUrl}
+              onChange={(e) => setLocalUrl(e.target.value)}
+              style={{
+                flex: 1,
+                padding: "8px 12px",
+                border: "1px solid #d1d5db",
+                borderRadius: "4px",
+              }}
+            />
+            <button
+              onClick={handleSaveUrl}
+              disabled={localUrl === appConfig.thoughtspotUrl}
+              style={{
+                padding: "8px 16px",
+                backgroundColor: "#3182ce",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: localUrl === appConfig.thoughtspotUrl ? "not-allowed" : "pointer",
+                opacity: localUrl === appConfig.thoughtspotUrl ? 0.6 : 1,
+              }}
+            >
+              Save URL
+            </button>
+          </div>
+          <p style={{ fontSize: "12px", color: "#6b7280", marginTop: "4px" }}>
+            Example: https://your.thoughtspot.cloud (Apply changes after saving)
+          </p>
+        </div>
+        <div>
+          <label 
+            style={{ 
+              display: "block", 
+              marginBottom: "8px", 
+              fontWeight: "500" 
+            }}
+          >
+            Username
+          </label>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "8px 12px",
+              border: "1px solid #d1d5db",
+              borderRadius: "4px",
+              marginBottom: "16px",
+            }}
+          />
+          <label 
+            style={{ 
+              display: "block", 
+              marginBottom: "8px", 
+              fontWeight: "500" 
+            }}
+          >
+            Password
+          </label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "8px 12px",
+              border: "1px solid #d1d5db",
+              borderRadius: "4px",
+              marginBottom: "16px",
+            }}
+          />
+          <button
+            onClick={handleLogin}
+            disabled={isLoggingIn || !appConfig.thoughtspotUrl || !username || !password}
+            style={{
+              padding: "8px 16px",
+              backgroundColor: "#3182ce",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor:
+              isLoggingIn || !appConfig.thoughtspotUrl || !username || !password
+                ? "not-allowed"
+                : "pointer",
+            opacity:
+              isLoggingIn || !appConfig.thoughtspotUrl || !username || !password
+                ? 0.6
+                : 1,
+            }}
+          >
+            {isLoggingIn ? "Logging in..." : "Login"}
+          </button>
+          {loginError && (
+            <p style={{ color: "#dc2626", marginTop: "8px" }}>{loginError}</p>
+          )}
+        </div>
+      </div>
+    );
+  }
 
 function StandardMenusContent({
   standardMenus,
@@ -5287,7 +5449,7 @@ function ConfigurationContent({
               {/* Left Column */}
               <div>
                 <div style={{ marginBottom: "24px" }}>
-                  <label
+                  {/* <label
                     style={{
                       display: "block",
                       marginBottom: "8px",
@@ -5323,7 +5485,7 @@ function ConfigurationContent({
                     }}
                   >
                     The URL of your ThoughtSpot instance
-                  </p>
+                  </p> */}
                 </div>
 
                 <div style={{ marginBottom: "24px" }}>
@@ -5454,7 +5616,7 @@ function ConfigurationContent({
                         checked={appConfig.faviconSyncEnabled ?? false}
                         disabled={
                           !stylingConfig.application.topBar.logoUrl ||
-                          stylingConfig.application.topBar.logoUrl === "/logo.png"
+                          stylingConfig.application.topBar.logoUrl === "/ts.png"
                         }
                         onChange={(e) => {
                           const isChecked = e.target.checked;
@@ -5475,14 +5637,14 @@ function ConfigurationContent({
                               faviconSyncEnabled: true,
                               favicon:
                                 stylingConfig.application.topBar.logoUrl ||
-                                "/logo.png",
+                                "/ts.png",
                             });
                           } else {
                             // Disable favicon sync and reset favicon to default
                             updateAppConfig({
                               ...appConfig,
                               faviconSyncEnabled: false,
-                              favicon: "/logo.png",
+                              favicon: "/ts.png",
                             });
                           }
                         }}
@@ -5501,7 +5663,7 @@ function ConfigurationContent({
                       application logo. Uncheck to set them independently.
                       {(!Boolean(stylingConfig.application.topBar.logoUrl) ||
                         stylingConfig.application.topBar.logoUrl ===
-                          "/logo.png") && (
+                          "/ts.png") && (
                         <span style={{ color: "#ef4444", fontWeight: "500" }}>
                           {" "}
                           First set an application logo above to enable this
@@ -6042,7 +6204,7 @@ export default function SettingsModal({
   initialSubTab,
   onTabChange,
 }: SettingsModalProps) {
-  const [activeTab, setActiveTab] = useState(initialTab || "configuration");
+  const [activeTab, setActiveTab] = useState(initialTab || "connection");
 
   // Update activeTab when initialTab prop changes, but only if it's different
   useEffect(() => {
@@ -6063,7 +6225,7 @@ export default function SettingsModal({
       "storage",
     ];
     if (!validTabs.includes(activeTab)) {
-      setActiveTab("configuration");
+      setActiveTab("connection");
     }
   }, [activeTab]);
 
@@ -6463,6 +6625,14 @@ export default function SettingsModal({
   };
 
   const tabs: Tab[] = [
+    {
+      id: "connection",
+      name: "Connection",
+      content: <ConnectionContent 
+                appConfig={pendingAppConfig} 
+                updateAppConfig={updatePendingAppConfig}
+                 />,
+    },
     {
       id: "configuration",
       name: "Configuration",
