@@ -64,7 +64,7 @@ export default function LoginPage({
         }}  
       >  
         <h1 style={{ margin: "0 0 10px", color: "#2d3748", fontSize: "24px" }}>  
-          ThoughtSpot Demo Builder  
+          7Dxperts TSE Demo Builder  
         </h1>  
         <p style={{ margin: "0 0 30px", color: "#718096", fontSize: "14px" }}>  
           Please authenticate with ThoughtSpot to continue  
