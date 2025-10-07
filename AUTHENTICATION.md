@@ -16,7 +16,7 @@ The login page (`src/components/LoginPage.tsx`) now includes:
 -   **Error Handling**: Visual error messages with warning icons.
 -   **Responsive Design**: Mobile-friendly layout with proper padding.
 
-*Reference: `LoginPage.tsx:12-43`*
+*Reference: `LoginPage.tsx`*
 
 ### Implementation Details
 
@@ -67,7 +67,7 @@ export async function logoutFromThoughtSpot(): Promise<boolean> {
   }
 }
 ```
-*Reference: `thoughtspotApi.ts:1104-1128`*
+*Reference: `thoughtspotApi.ts`*
 
 #### 2. TopBar Integration
 
@@ -99,7 +99,7 @@ The `handleLogout` function in `Layout.tsx` performs cleanup:
 -   Clears ThoughtSpot cookies.
 -   Reloads the page to trigger `SessionChecker`.
 
-*Reference: `SessionChecker.tsx:271-286`*
+*Reference: `SessionChecker.tsx`*
 
 ### State Cleanup
 
@@ -126,7 +126,7 @@ document.cookie.split(";").forEach((cookie) => {
   }
 });
 ```
-*Reference: `configurationService.ts:1939-1972`*
+*Reference: `configurationService.ts`*
 
 ## Integration with SessionChecker
 
@@ -135,7 +135,7 @@ Both features integrate seamlessly with the existing `SessionChecker` component:
 -   **Login**: After successful authentication, the page reloads and `SessionChecker` detects a valid session.
 -   **Logout**: After logout, the page reloads and `SessionChecker` detects no session, showing the `LoginPage`.
 
-*Reference: `SessionChecker.tsx:136-192`*
+*Reference: `SessionChecker.tsx`*
 
 ## Testing
 
