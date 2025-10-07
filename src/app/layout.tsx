@@ -15,12 +15,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TSE Demo Builder",
-  description: "TSE Demo Builder Application",
+  title: "7Dxperts TSE Demo Builder",
+  description: "7Dxperts TSE Demo Builder Application",
   icons: {
     icon: [
       {
-        url: "/ts.png",
+        url: "/7dx-logo.png",
         type: "image/png",
       },
     ],

@@ -5529,7 +5529,7 @@ function ConfigurationContent({
                         applicationName: e.target.value,
                       });
                     }}
-                    placeholder="TSE Demo Builder"
+                    placeholder="7Dxperts TSE Demo Builder"
                     style={{
                       width: "100%",
                       padding: "8px 12px",
@@ -5637,7 +5637,7 @@ function ConfigurationContent({
                         checked={appConfig.faviconSyncEnabled ?? false}
                         disabled={
                           !stylingConfig.application.topBar.logoUrl ||
-                          stylingConfig.application.topBar.logoUrl === "/ts.png"
+                          stylingConfig.application.topBar.logoUrl === "/7dx-logo.png"
                         }
                         onChange={(e) => {
                           const isChecked = e.target.checked;
@@ -5658,14 +5658,14 @@ function ConfigurationContent({
                               faviconSyncEnabled: true,
                               favicon:
                                 stylingConfig.application.topBar.logoUrl ||
-                                "/ts.png",
+                                "/7dx-logo.png",
                             });
                           } else {
                             // Disable favicon sync and reset favicon to default
                             updateAppConfig({
                               ...appConfig,
                               faviconSyncEnabled: false,
-                              favicon: "/ts.png",
+                              favicon: "/7dx-logo.png",
                             });
                           }
                         }}
@@ -5684,7 +5684,7 @@ function ConfigurationContent({
                       application logo. Uncheck to set them independently.
                       {(!Boolean(stylingConfig.application.topBar.logoUrl) ||
                         stylingConfig.application.topBar.logoUrl ===
-                          "/ts.png") && (
+                          "/7dx-logo.png") && (
                         <span style={{ color: "#ef4444", fontWeight: "500" }}>
                           {" "}
                           First set an application logo above to enable this

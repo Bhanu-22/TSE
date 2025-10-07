@@ -929,7 +929,7 @@ export default function Layout({ children }: LayoutProps) {
 
   // Update document title when application name changes
   useEffect(() => {
-    const title = appConfig.applicationName || "TSE Demo Builder";
+    const title = appConfig.applicationName || "7Dxperts TSE Demo Builder";
     document.title = title;
   }, [appConfig.applicationName]);
 
@@ -1484,7 +1484,7 @@ export default function Layout({ children }: LayoutProps) {
     // Create new app config with the new cluster URL but keep other default values
     const newAppConfig = {
       thoughtspotUrl: pendingClusterUrl,
-      applicationName: "TSE Demo Builder",
+      applicationName: "7Dxperts TSE Demo Builder",
       logo: "",
       earlyAccessFlags: "",
       favicon: "/7dx-logo.png",
@@ -2374,7 +2374,7 @@ export default function Layout({ children }: LayoutProps) {
           >
             {/* Top Bar */}
             <TopBar
-              title={appConfig.applicationName || "TSE Demo Builder"}
+              title={appConfig.applicationName || "7Dxperts TSE Demo Builder"}
               logoUrl={stylingConfig.application.topBar.logoUrl || "/7dx-logo.png"}
               users={userConfig.users.map((user) => ({
                 id: user.id,

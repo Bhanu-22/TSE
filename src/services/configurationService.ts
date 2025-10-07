@@ -1773,7 +1773,7 @@ export const exportConfiguration = async (
       ...configToExport,
       version: "1.0.0",
       timestamp: new Date().toISOString(),
-      description: "TSE Demo Builder Configuration Export",
+      description: "7Dxperts TSE Demo Builder Configuration Export",
     };
 
     const blob = new Blob([JSON.stringify(exportData, null, 2)], {
