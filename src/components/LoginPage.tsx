@@ -199,7 +199,7 @@ export default function LoginPage({
       {isSavingUrl ? "Saving..." : "Save"}  
     </button>  
   </div>  
-  <p style={{ fontSize: "12px", color: "#6b7280", marginTop: "4px" }}>  
+  <p style={{ fontSize: "12px", color: "#6b7280", marginTop: "10px" }}>  
     Enter your ThoughtSpot instance URL and save before logging in  
   </p>  
 </div>

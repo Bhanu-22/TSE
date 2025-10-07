@@ -245,165 +245,186 @@ function SearchQueryInput({
 }
 
 // This handles URL update (via pending config) and login (via API call, then reload).
-  function ConnectionContent({
-    appConfig,
-    updateAppConfig,
-  }: {
-    appConfig: AppConfig;
-    updateAppConfig: (config: AppConfig) => void;
-  }) {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [loginError, setLoginError] = useState<string | null>(null);
-    const [isLoggingIn, setIsLoggingIn] = useState(false);
-    const [localUrl, setLocalUrl] = useState(appConfig.thoughtspotUrl || '');
+// Replace existing ConnectionContent with this updated version
+function ConnectionContent({
+  appConfig,
+  updateAppConfig,
+  username,
+  setUsername,
+  password,
+  setPassword,
+}: {
+  appConfig: AppConfig;
+  updateAppConfig: (config: AppConfig, bypassClusterWarning?: boolean) => void;
+  username: string;
+  setUsername: (s: string) => void;
+  password: string;
+  setPassword: (s: string) => void;
+}) {
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [localUrl, setLocalUrl] = useState(appConfig.thoughtspotUrl || "");
+  const [loginSuccess, setLoginSuccess] = useState(false);
 
-    useEffect(() => {
-      setLocalUrl(appConfig.thoughtspotUrl || '');
-      setUsername("");
-      setPassword("");
-    }, [appConfig.thoughtspotUrl]);
+  useEffect(() => {
+    setLocalUrl(appConfig.thoughtspotUrl || "");
+  }, [appConfig.thoughtspotUrl]);
 
-    const handleSaveUrl = () => {
-      updateAppConfig({ ...appConfig, thoughtspotUrl: localUrl });
-    };
+  // const handleSaveUrl = () => {
+  //   // mark new URL as pending (this calls handleConfigChange and sets hasUnsavedChanges)
+  //   updateAppConfig({ ...appConfig, thoughtspotUrl: localUrl });
+  // };
 
-    const handleLogin = async () => {
-      if (!username || !password) {
-        setLoginError("Please enter username and password");
-        return;
-      }
+  const handleLogin = async () => {
+    if (!username || !password) {
+      setLoginError("Please enter username and password");
+      setLoginSuccess(false);
+      return;
+    }
 
-      setIsLoggingIn(true);
-      setLoginError(null);
+    setIsLoggingIn(true);
+    setLoginError(null);
 
+    try {
       const success = await loginToThoughtSpot(username, password);
-
       setIsLoggingIn(false);
 
       if (success) {
-        window.location.reload(); // Reload to update session status globally
+        // Show success banner (no full page reload)
+        setLoginSuccess(true);
+        setLoginError(null);
+
+        // Ensure the URL is also saved as a pending change so footer's Apply Changes appears.
+        // If localUrl is already the pending value this still triggers hasUnsavedChanges because updateAppConfig calls handleConfigChange
+        updateAppConfig({ ...appConfig, thoughtspotUrl: localUrl });
+
+        // Don't call window.location.reload() — let user click Apply Changes to finalize the cluster change.
       } else {
         setLoginError("Login failed. Please check your credentials.");
+        setLoginSuccess(false);
       }
-    };
+    } catch (err) {
+      console.error("Login error", err);
+      setIsLoggingIn(false);
+      setLoginError("Login failed. Please check your credentials.");
+      setLoginSuccess(false);
+    }
+  };
 
-    return (
-      <div style={{ padding: "16px" }}>
-        <h3 style={{ marginBottom: "16px" }}>ThoughtSpot Connection</h3>
-        <div style={{ marginBottom: "24px" }}>
-          <label 
-            style={{ 
-              display: "block", 
-              marginBottom: "8px", 
-              fontWeight: "500" 
-            }}
-          >
-            ThoughtSpot URL
-          </label>
-          <div style={{ display: "flex", gap: "8px" }}>
-            <input
-              type="text"
-              // value={localUrl}
-              onChange={(e) => setLocalUrl(e.target.value)}
-              style={{
-                flex: 1,
-                padding: "8px 12px",
-                border: "1px solid #d1d5db",
-                borderRadius: "4px",
-              }}
-            />
-            <button
-              onClick={handleSaveUrl}
-              disabled={localUrl === appConfig.thoughtspotUrl}
-              style={{
-                padding: "8px 16px",
-                backgroundColor: "#3182ce",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: localUrl === appConfig.thoughtspotUrl ? "not-allowed" : "pointer",
-                opacity: localUrl === appConfig.thoughtspotUrl ? 0.6 : 1,
-              }}
-            >
-              Save URL
-            </button>
-          </div>
-          <p style={{ fontSize: "12px", color: "#6b7280", marginTop: "4px" }}>
-            Example: https://your.thoughtspot.cloud (Apply changes after saving)
-          </p>
+  return (
+    <div style={{ padding: "16px" }}>
+      <h3 style={{ marginBottom: "16px" }}>ThoughtSpot Connection</h3>
+
+      {/* Success banner */}
+      {loginSuccess && (
+        <div
+          style={{
+            padding: "10px 12px",
+            borderRadius: "6px",
+            backgroundColor: "#ecfdf5",
+            border: "1px solid #bbf7d0",
+            color: "#166534",
+            marginBottom: "12px",
+            fontWeight: 600,
+          }}
+        >
+          Successfully logged in. Click <strong>Apply Changes</strong> to save the
+          cluster change.
         </div>
-        <div>
-          <label 
-            style={{ 
-              display: "block", 
-              marginBottom: "8px", 
-              fontWeight: "500" 
-            }}
-          >
-            Username
-          </label>
+      )}
+
+      <div style={{ marginBottom: "24px" }}>
+        <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
+          ThoughtSpot URL
+        </label>
+        <div style={{ display: "flex", gap: "8px" }}>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={localUrl}
+            onChange={(e) => setLocalUrl(e.target.value)}
             style={{
-              width: "100%",
+              flex: 1,
               padding: "8px 12px",
               border: "1px solid #d1d5db",
               borderRadius: "4px",
-              marginBottom: "16px",
             }}
           />
-          <label 
-            style={{ 
-              display: "block", 
-              marginBottom: "8px", 
-              fontWeight: "500" 
-            }}
-          >
-            Password
-          </label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "8px 12px",
-              border: "1px solid #d1d5db",
-              borderRadius: "4px",
-              marginBottom: "16px",
-            }}
-          />
-          <button
-            onClick={handleLogin}
-            disabled={isLoggingIn || !appConfig.thoughtspotUrl || !username || !password}
+          {/* <button
+            onClick={handleSaveUrl}
+            disabled={localUrl === appConfig.thoughtspotUrl}
             style={{
               padding: "8px 16px",
               backgroundColor: "#3182ce",
               color: "white",
               border: "none",
               borderRadius: "4px",
-              cursor:
-              isLoggingIn || !appConfig.thoughtspotUrl || !username || !password
-                ? "not-allowed"
-                : "pointer",
-            opacity:
-              isLoggingIn || !appConfig.thoughtspotUrl || !username || !password
-                ? 0.6
-                : 1,
+              cursor: localUrl === appConfig.thoughtspotUrl ? "not-allowed" : "pointer",
+              opacity: localUrl === appConfig.thoughtspotUrl ? 0.6 : 1,
             }}
           >
-            {isLoggingIn ? "Logging in..." : "Login"}
-          </button>
-          {loginError && (
-            <p style={{ color: "#dc2626", marginTop: "8px" }}>{loginError}</p>
-          )}
+            Save URL
+          </button> */}
         </div>
+        {/* <p style={{ fontSize: "12px", color: "#6b7280", marginTop: "4px" }}>
+          Example: https://your.thoughtspot.cloud (Apply changes after saving)
+        </p> */}
       </div>
-    );
-  }
+
+      <div>
+        <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
+          Username
+        </label>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "8px 12px",
+            border: "1px solid #d1d5db",
+            borderRadius: "4px",
+            marginBottom: "16px",
+          }}
+        />
+        <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
+          Password
+        </label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "8px 12px",
+            border: "1px solid #d1d5db",
+            borderRadius: "4px",
+            marginBottom: "16px",
+          }}
+        />
+        <button
+          onClick={handleLogin}
+          disabled={isLoggingIn || !appConfig.thoughtspotUrl}
+          style={{
+            padding: "8px 16px",
+            backgroundColor: "#3182ce",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: isLoggingIn || !appConfig.thoughtspotUrl ? "not-allowed" : "pointer",
+            opacity: isLoggingIn || !appConfig.thoughtspotUrl ? 0.6 : 1,
+          }}
+        >
+          {isLoggingIn ? "Logging in..." : "Login"}
+        </button>
+
+        {loginError && (
+          <p style={{ color: "#dc2626", marginTop: "8px" }}>{loginError}</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 
 function StandardMenusContent({
   standardMenus,
@@ -6204,6 +6225,8 @@ export default function SettingsModal({
   initialSubTab,
   onTabChange,
 }: SettingsModalProps) {
+  const [connectionUsername, setConnectionUsername] = useState<string>("");
+  const [connectionPassword, setConnectionPassword] = useState<string>("");
   const [activeTab, setActiveTab] = useState(initialTab || "connection");
 
   // Update activeTab when initialTab prop changes, but only if it's different
@@ -6216,6 +6239,7 @@ export default function SettingsModal({
   // Ensure we always have a valid tab selected
   useEffect(() => {
     const validTabs = [
+      "connection",
       "configuration",
       "standard-menus",
       "custom-menus",
@@ -6631,6 +6655,10 @@ export default function SettingsModal({
       content: <ConnectionContent 
                 appConfig={pendingAppConfig} 
                 updateAppConfig={updatePendingAppConfig}
+                username={connectionUsername}
+                setUsername={setConnectionUsername}
+                password={connectionPassword}
+                setPassword={setConnectionPassword}
                  />,
     },
     {
