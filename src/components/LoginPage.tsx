@@ -86,7 +86,7 @@ export default function LoginPage({
         justifyContent: "center",  
         alignItems: "center",  
         minHeight: "100vh",  
-        backgroundColor: "#080808ff",  
+        backgroundColor: "#038a3bff",  
         padding: "20px",  
       }}  
     >  
