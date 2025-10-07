@@ -113,3 +113,12 @@ This application is built with security as a top priority.
 - **No Exposed Keys**: The `SPOTGPT_API_KEY` is **only** accessed on the server-side. It is never sent to the user's browser.
 - **`.gitignore`**: The `.env.local` file is included in the `.gitignore` file by default in Next.js, preventing you from accidentally committing secrets.
 - **Vercel Security**: Vercel's environment variable system is encrypted and secure for storing production secrets.
+
+---
+
+## Additional Documentation
+
+For more detailed information on specific features, please refer to the following documents:
+
+- **Authentication Enhancements**: Describes the modernized login page and logout functionality.
+- **SpotGPT API Setup**: Guide for setting up the SpotGPT API for chatbot features.
