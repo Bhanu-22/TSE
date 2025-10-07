@@ -2362,6 +2362,8 @@ export default function Layout({ children }: LayoutProps) {
           thoughtspotUrl={appConfig.thoughtspotUrl}
           onSessionStatusChange={handleSessionStatusChange}
           onConfigureSettings={handleConfigureSettings}
+          appConfig={appConfig}
+          updateAppConfig={updateAppConfig}
         >
           <div
             style={{
