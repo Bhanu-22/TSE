@@ -1100,3 +1100,29 @@ export async function fetchThoughtSpotVersion(): Promise<string | null> {
     return null;
   }
 }
+
+export async function loginToThoughtSpot(username: string, password: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${THOUGHTSPOT_BASE_URL}/auth/session/login`, {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+        credentials: "include", // Ensures cookie is set for session
+      });
+
+      if (!response.ok) {
+        throw new Error(`Login failed: ${response.status} ${response.statusText}`);
+      }
+
+      return true;
+    } catch (error) {
+      console.error("ThoughtSpot login failed:", error);
+      return false;
+    }
+  }

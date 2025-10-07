@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getCurrentUser } from "../services/thoughtspotApi";
+import LoginPage from "./LoginPage";
 
 interface SessionCheckerProps {
   children: React.ReactNode;
@@ -253,17 +254,34 @@ export default function SessionChecker({
   }
 
   // Always render children, but show warning banner if no session
-  return (
-    <>
-      {!sessionStatus.hasSession && (
-        <SessionWarningBanner
-          thoughtspotUrl={thoughtspotUrl}
-          error={sessionStatus.error}
-          onRefresh={handleRefresh}
-          onConfigure={handleConfigure}
-        />
-      )}
-      {children}
-    </>
-  );
+  // return (
+  //   <>
+  //     {!sessionStatus.hasSession && (
+  //       <SessionWarningBanner
+  //         thoughtspotUrl={thoughtspotUrl}
+  //         error={sessionStatus.error}
+  //         onRefresh={handleRefresh}
+  //         onConfigure={handleConfigure}
+  //       />
+  //     )}
+  //     {children}
+  //   </>
+  // );
+
+  return (  
+  <>  
+    {!sessionStatus.hasSession ? (  
+      <LoginPage  
+        thoughtspotUrl={thoughtspotUrl}  
+        onLoginSuccess={() => {  
+          // Re-check session after login  
+          window.location.reload();  
+        }}  
+        onConfigureSettings={handleConfigure}  
+      />  
+    ) : (  
+      children  
+    )}  
+  </>  
+);
 }

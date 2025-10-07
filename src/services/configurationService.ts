@@ -94,12 +94,12 @@ export const DEFAULT_CONFIG: ConfigurationData = {
     value: "<h1>7Dxperts Portal</h1>",
   },
   appConfig: {
-    thoughtspotUrl: "https://techpartners.thoughtspot.cloud/",
+    thoughtspotUrl: "https://techpartners.thoughtspot.cloud",
     authType: "TrustedAuthToken",
     applicationName: "7Dxperts Portal",
-    logo: "/ts.png",
+    logo: "/7dx-logo.png",
     earlyAccessFlags: "enable-modular-home\nenable-custom-styling",
-    favicon: "/ts.png",
+    favicon: "/7dx-logo.png",
     showFooter: true,
     chatbot: {
       enabled: true,
@@ -120,7 +120,7 @@ export const DEFAULT_CONFIG: ConfigurationData = {
       topBar: {
         backgroundColor: "#ffffff",
         foregroundColor: "#333333",
-        logoUrl: "/ts.png",
+        logoUrl: "/7dx-logo.png",
       },
       sidebar: {
         backgroundColor: "#f5f5f5",
