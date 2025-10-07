@@ -1408,6 +1408,66 @@ export default function Layout({ children }: LayoutProps) {
     }
   };
 
+   const handleLogout = async () => {  
+    try {  
+      // Import the logout function  
+      const { logoutFromThoughtSpot } = await import("../services/thoughtspotApi");  
+        
+      // Call the logout API  
+      const success = await logoutFromThoughtSpot();  
+        
+      if (success) {  
+        // Clear ThoughtSpot-related state (reuse existing cleanup logic)  
+        if (typeof window !== "undefined") {  
+          // Clear localStorage  
+          const keysToRemove = Object.keys(localStorage).filter(  
+            (key) =>  
+              key.includes("thoughtspot") ||  
+              key.includes("ts-") ||  
+              key.includes("ts_")  
+          );  
+          keysToRemove.forEach((key) => {  
+            localStorage.removeItem(key);  
+          });  
+  
+          // Clear sessionStorage  
+          const sessionKeysToRemove = Object.keys(sessionStorage).filter(  
+            (key) =>  
+              key.includes("thoughtspot") ||  
+              key.includes("ts-") ||  
+              key.includes("ts_")  
+          );  
+          sessionKeysToRemove.forEach((key) => {  
+            sessionStorage.removeItem(key);  
+          });  
+  
+          // Clear cookies  
+          document.cookie.split(";").forEach((cookie) => {  
+            const eqPos = cookie.indexOf("=");  
+            const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;  
+            if (  
+              name.includes("thoughtspot") ||  
+              name.includes("ts-") ||  
+              name.includes("ts_")  
+            ) {  
+              document.cookie =  
+                name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";  
+            }  
+          });  
+  
+          // Reload the page to trigger SessionChecker  
+          window.location.reload();  
+        }  
+      } else {  
+        console.error("Logout failed");  
+        alert("Logout failed. Please try again.");  
+      }  
+    } catch (error) {  
+      console.error("Error during logout:", error);  
+      alert("An error occurred during logout. Please try again.");  
+    }  
+  };
+
   const openSettingsWithTab = (tab?: string, subTab?: string) => {
     setSettingsInitialTab(tab);
     setSettingsInitialSubTab(subTab);
@@ -2325,6 +2385,7 @@ export default function Layout({ children }: LayoutProps) {
                 userConfig.users[0] || { id: "1", name: "User" }
               }
               onUserChange={handleUserChange}
+              onLogout={handleLogout}
               backgroundColor={stylingConfig.application.topBar.backgroundColor}
               foregroundColor={stylingConfig.application.topBar.foregroundColor}
             />
