@@ -3,28 +3,30 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
-interface TopBarProps {
-  title: string;
-  logoUrl?: string;
-  users?: Array<{ id: string; name: string; avatar?: string }>;
-  currentUser?: { id: string; name: string; avatar?: string };
-  onUserChange?: (userId: string) => void;
-  backgroundColor?: string;
-  foregroundColor?: string;
+interface TopBarProps {  
+  title: string;  
+  logoUrl?: string;  
+  users?: Array<{ id: string; name: string; avatar?: string }>;  
+  currentUser?: { id: string; name: string; avatar?: string };  
+  onUserChange?: (userId: string) => void;  
+  onLogout?: () => void;   
+  backgroundColor?: string;  
+  foregroundColor?: string;  
 }
 
-export default function TopBar({
-  title,
-  logoUrl = "/logo.png",
-  users = [
-    { id: "1", name: "John Doe" },
-    { id: "2", name: "Jane Smith" },
-    { id: "3", name: "Bob Johnson" },
-  ],
-  currentUser = { id: "1", name: "John Doe" },
-  onUserChange,
-  backgroundColor = "white",
-  foregroundColor = "#1a202c",
+export default function TopBar({  
+  title,  
+  logoUrl = "/logo.png",  
+  users = [  
+    { id: "1", name: "John Doe" },  
+    { id: "2", name: "Jane Smith" },  
+    { id: "3", name: "Bob Johnson" },  
+  ],  
+  currentUser = { id: "1", name: "John Doe" },  
+  onUserChange,  
+  onLogout,  
+  backgroundColor = "white",  
+  foregroundColor = "#1a202c",  
 }: TopBarProps) {
   const [thoughtSpotVersion, setThoughtSpotVersion] = useState<string | null>(
     null
@@ -322,31 +324,70 @@ export default function TopBar({
               </button>
             ))}
 
-            {/* Version display */}
-            {thoughtSpotVersion && (
-              <>
-                <hr
-                  style={{
-                    margin: "8px 0",
-                    border: "none",
-                    borderTop: "1px solid #e2e8f0",
-                  }}
-                />
-                <div
-                  style={{
-                    padding: "8px 16px",
-                    fontSize: "12px",
-                    color: "#6b7280",
-                    textAlign: "center",
-                  }}
-                >
-                  Version {thoughtSpotVersion}
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+            {/* Version display */}  
+            {thoughtSpotVersion && (  
+              <>  
+                <hr  
+                  style={{  
+                    margin: "8px 0",  
+                    border: "none",  
+                    borderTop: "1px solid #e2e8f0",  
+                  }}  
+                />  
+                <div  
+                  style={{  
+                    padding: "8px 16px",  
+                    fontSize: "12px",  
+                    color: "#6b7280",  
+                    textAlign: "center",  
+                  }}  
+                >  
+                  Version {thoughtSpotVersion}  
+                </div>  
+              </>  
+            )}  
+              
+            {/* Logout button - ADD THIS SECTION */}  
+            {onLogout && (  
+              <>  
+                <hr  
+                  style={{  
+                    margin: "8px 0",  
+                    border: "none",  
+                    borderTop: "1px solid #e2e8f0",  
+                  }}  
+                />  
+                <button  
+                  onClick={() => {  
+                    onLogout();  
+                    const menu = document.getElementById("user-menu");  
+                    if (menu) menu.style.display = "none";  
+                  }}  
+                  style={{  
+                    width: "100%",  
+                    padding: "12px 16px",  
+                    border: "none",  
+                    background: "transparent",  
+                    cursor: "pointer",  
+                    textAlign: "left",  
+                    color: "#dc2626",  
+                    fontWeight: "500",  
+                    fontSize: "14px",  
+                  }}  
+                  onMouseEnter={(e) => {  
+                    e.currentTarget.style.backgroundColor = "#fef2f2";  
+                  }}  
+                  onMouseLeave={(e) => {  
+                    e.currentTarget.style.backgroundColor = "transparent";  
+                  }}  
+                >  
+                  🚪 Logout  
+                </button>  
+              </>  
+            )}  
+          </div>  
+        </div>  
+      </div>  
+    </div>  
+  );  
 }

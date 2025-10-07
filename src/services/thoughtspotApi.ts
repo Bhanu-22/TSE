@@ -1126,3 +1126,25 @@ export async function loginToThoughtSpot(username: string, password: string): Pr
       return false;
     }
   }
+
+export async function logoutFromThoughtSpot(): Promise<boolean> {  
+  try {  
+    const response = await fetch(`${THOUGHTSPOT_BASE_URL}/auth/session/logout`, {  
+      method: "POST",  
+      headers: {  
+        "Accept": "application/json",  
+        "Content-Type": "application/json",  
+      },  
+      credentials: "include", // Include session cookies to clear them  
+    });  
+  
+    if (!response.ok) {  
+      throw new Error(`Logout failed: ${response.status} ${response.statusText}`);  
+    }  
+  
+    return true;  
+  } catch (error) {  
+    console.error("ThoughtSpot logout failed:", error);  
+    return false;  
+  }  
+}
