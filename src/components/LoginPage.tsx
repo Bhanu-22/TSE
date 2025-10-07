@@ -119,7 +119,7 @@ export default function LoginPage({
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        backgroundColor: "#f7fafc",
+        backgroundColor: "#25bb63ff",
       }}
     >
       <div
@@ -129,12 +129,20 @@ export default function LoginPage({
           padding: "40px",
           backgroundColor: "white",
           borderRadius: "8px",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0 7px 10px rgba(255, 255, 255, 1)",
           textAlign: "center",
         }}
       >
+        
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
+          <img
+            src="/logo.png"
+            alt="7Dxperts logo"
+            style={{ width: 110, height: 72, objectFit: 'contain', borderRadius: 8 }}
+          />
+        </div>
         <h1 style={{ margin: "0 0 10px", color: "#2d3748", fontSize: "24px" }}>
-          ThoughtSpot Demo Builder
+          TSE Demo Builder
         </h1>
         <p style={{ margin: "0 0 30px", color: "#718096", fontSize: "14px" }}>
           Please authenticate with ThoughtSpot to continue
