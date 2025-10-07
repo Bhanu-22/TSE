@@ -1,62 +1,79 @@
 "use client";  
   
-import { useState, useEffect } from "react";  
-import { getCurrentUser } from "../services/thoughtspotApi";  
+import { useState } from "react";  
+import { getCurrentUser, loginToThoughtSpot, setThoughtSpotBaseUrl } from "../services/thoughtspotApi";  
+import { AppConfig } from "../types/thoughtspot";  
   
 interface LoginPageProps {  
   thoughtspotUrl: string;  
   onLoginSuccess: () => void;  
   onConfigureSettings: () => void;  
+  updateAppConfig: (config: AppConfig) => void;  
+  appConfig: AppConfig;  
 }  
   
 export default function LoginPage({  
   thoughtspotUrl,  
   onLoginSuccess,  
   onConfigureSettings,  
+  updateAppConfig,  
+  appConfig,  
 }: LoginPageProps) {  
+  const [thoughtspotUrlInput, setThoughtspotUrlInput] = useState(thoughtspotUrl || '');  
+  const [username, setUsername] = useState('');  
+  const [password, setPassword] = useState('');  
   const [isChecking, setIsChecking] = useState(false);  
   const [error, setError] = useState<string | null>(null);  
-  const [logoUrl, setLogoUrl] = useState<string>("/logo.png");  
-  const [isLogoLoading, setIsLogoLoading] = useState(true);  
-  
-  // Load logo from configuration (similar to TopBar implementation)  
-  useEffect(() => {  
-    const loadLogo = async () => {  
-      try {  
-        // Load styling config from localStorage  
-        const configStr = localStorage.getItem("tse-demo-builder-config");  
-        if (configStr) {  
-          const config = JSON.parse(configStr);  
-          const storedLogoUrl = config?.stylingConfig?.application?.topBar?.logoUrl;  
-            
-          if (storedLogoUrl && storedLogoUrl !== "/logo.png") {  
-            // Handle IndexedDB references  
-            if (storedLogoUrl.startsWith("indexeddb://")) {  
-              const imageId = storedLogoUrl.replace("indexeddb://", "");  
-              const { getImageFromIndexedDB } = await import("../components/ImageUpload");  
-              const imageData = await getImageFromIndexedDB(imageId);  
-                
-              if (imageData) {  
-                setLogoUrl(imageData);  
-              }  
-            } else {  
-              setLogoUrl(storedLogoUrl);  
-            }  
-          }  
-        }  
-      } catch (err) {  
-        console.error("Failed to load logo:", err);  
-      } finally {  
-        setIsLogoLoading(false);  
-      }  
+  const [localThoughtSpotUrl, setLocalThoughtSpotUrl] = useState(thoughtspotUrl || '');  
+  const [isSavingUrl, setIsSavingUrl] = useState(false);
+ 
+  const handleSaveUrl = async () => {  
+  if (!localThoughtSpotUrl) {  
+    setError("Please enter a ThoughtSpot URL");  
+    return;  
+  }  
+ 
+  setIsSavingUrl(true);  
+  setError(null);  
+ 
+  try {  
+    // Import configuration service  
+    const { saveAppConfig, loadAllConfigurations } = await import("../services/configurationService");  
+    const { setThoughtSpotBaseUrl } = await import("../services/thoughtspotApi");  
+     
+    // Load current config  
+    const currentConfig = await loadAllConfigurations();  
+     
+    // Update with new URL  
+    const updatedAppConfig = {  
+      ...currentConfig.appConfig,  
+      thoughtspotUrl: localThoughtSpotUrl  
     };  
-  
-    loadLogo();  
-  }, []);  
+     
+    // Save to storage  
+    await saveAppConfig(updatedAppConfig);  
+     
+    // Update API base URL  
+    setThoughtSpotBaseUrl(localThoughtSpotUrl);  
+     
+    // Reload to apply changes  
+    window.location.reload();  
+  } catch (err) {  
+    console.error("Failed to save URL:", err);  
+    setError("Failed to save ThoughtSpot URL. Please try again.");  
+  } finally {  
+    setIsSavingUrl(false);  
+  }  
+};
   
   const handleLogin = async () => {  
-    if (!thoughtspotUrl) {  
-      setError("No ThoughtSpot URL configured. Please configure settings first.");  
+    if (!thoughtspotUrlInput) {  
+      setError("Please enter ThoughtSpot URL");  
+      return;  
+    }  
+      
+    if (!username || !password) {  
+      setError("Please enter username and password");  
       return;  
     }  
   
@@ -64,299 +81,181 @@ export default function LoginPage({
     setError(null);  
   
     try {  
-      const user = await getCurrentUser();  
-  
-      if (user) {  
-        onLoginSuccess();  
+      // Save ThoughtSpot URL first  
+      if (thoughtspotUrlInput !== appConfig.thoughtspotUrl) {  
+        updateAppConfig({ ...appConfig, thoughtspotUrl: thoughtspotUrlInput });  
+        setThoughtSpotBaseUrl(thoughtspotUrlInput);  
       } else {  
-        setError("Please log into ThoughtSpot first, then return here to continue.");  
+        // Still need to set the base URL for the API  
+        setThoughtSpotBaseUrl(thoughtspotUrlInput);  
+      }  
+  
+      // Attempt login  
+      const success = await loginToThoughtSpot(username, password);  
+        
+      if (success) {  
+        // Verify session was created  
+        const user = await getCurrentUser();  
+        if (user) {  
+          onLoginSuccess();  
+        } else {  
+          setError("Login succeeded but session verification failed");  
+        }  
+      } else {  
+        setError("Login failed. Please check your credentials.");  
       }  
     } catch (err) {  
       console.error("Login check failed:", err);  
-      setError("Unable to verify ThoughtSpot session. Please check your connection.");  
+      setError("Unable to connect to ThoughtSpot. Please check the URL and your connection.");  
     } finally {  
       setIsChecking(false);  
     }  
   };  
   
-  return (  
-    <div  
+ return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        backgroundColor: "#f7fafc",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "400px",
+          width: "100%",
+          padding: "40px",
+          backgroundColor: "white",
+          borderRadius: "8px",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          textAlign: "center",
+        }}
+      >
+        <h1 style={{ margin: "0 0 10px", color: "#2d3748", fontSize: "24px" }}>
+          ThoughtSpot Demo Builder
+        </h1>
+        <p style={{ margin: "0 0 30px", color: "#718096", fontSize: "14px" }}>
+          Please authenticate with ThoughtSpot to continue
+        </p>
+ 
+        {error && (
+          <div
+            style={{
+              padding: "12px",
+              marginBottom: "20px",
+              backgroundColor: "#fef3c7",
+              border: "1px solid #f59e0b",
+              borderRadius: "4px",
+              color: "#92400e",
+              fontSize: "14px",
+            }}
+          >
+            {error}
+          </div>
+        )}
+        <div style={{ marginBottom: "24px" }}>  
+  <label  
+    style={{  
+      display: "block",  
+      marginBottom: "8px",  
+      fontWeight: "500",  
+      color: "#374151",  
+      fontSize: "14px"  
+    }}  
+  >  
+    ThoughtSpot URL  
+  </label>  
+  <div style={{ display: "flex", gap: "8px" }}>  
+    <input  
+      type="url"  
+      value={localThoughtSpotUrl}  
+      onChange={(e) => setLocalThoughtSpotUrl(e.target.value)}  
+      placeholder="https://your-instance.thoughtspot.cloud"  
       style={{  
-        display: "flex",  
-        justifyContent: "center",  
-        alignItems: "center",  
-        minHeight: "100vh",  
-        backgroundColor: "#038a3bff",  
-        padding: "20px",  
+        flex: 1,  
+        padding: "10px 12px",  
+        border: "1px solid #d1d5db",  
+        borderRadius: "6px",  
+        fontSize: "14px",  
+      }}  
+    />  
+    <button  
+      onClick={handleSaveUrl}  
+      disabled={isSavingUrl || localThoughtSpotUrl === thoughtspotUrl}  
+      style={{  
+        padding: "10px 16px",  
+        backgroundColor: "#3182ce",  
+        color: "white",  
+        border: "none",  
+        borderRadius: "6px",  
+        cursor: isSavingUrl || localThoughtSpotUrl === thoughtspotUrl ? "not-allowed" : "pointer",  
+        fontSize: "14px",  
+        fontWeight: "500",  
+        opacity: isSavingUrl || localThoughtSpotUrl === thoughtspotUrl ? 0.6 : 1,  
       }}  
     >  
-      <div  
-        style={{  
-          maxWidth: "440px",  
-          width: "100%",  
-          padding: "48px",  
-          backgroundColor: "white",  
-          borderRadius: "12px",  
-          boxShadow: "0 10px 25px rgba(255, 255, 255, 1), 0 4px 10px rgba(255, 255, 255, 1)",  
-          textAlign: "center",  
-          animation: "fadeIn 0.4s ease-in-out",  
-        }}  
-      >  
-        {/* Logo Section */}  
-        <div  
-          style={{  
-            marginBottom: "32px",  
-            display: "flex",  
-            justifyContent: "center",  
-            alignItems: "center",  
-          }}  
-        >  
-          {isLogoLoading ? (  
-            <div  
-              style={{  
-                height: "120px",  
-                width: "120px",  
-                backgroundColor: "#f3f4f6",  
-                borderRadius: "12px",  
-                display: "flex",  
-                alignItems: "center",  
-                justifyContent: "center",  
-                animation: "pulse 1.5s ease-in-out infinite",  
-              }}  
-            >  
-              <span style={{ fontSize: "14px", color: "#9ca3af" }}>Loading...</span>  
-            </div>  
-          ) : (  
-            <img  
-              src={logoUrl}  
-              alt="Application Logo"  
-              style={{  
-                height: "120px",  
-                width: "auto",  
-                maxWidth: "100%",  
-                objectFit: "contain",  
-                filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.06))",  
-              }}  
-              onError={(e) => {  
-                console.error("Logo failed to load, using fallback");  
-                (e.target as HTMLImageElement).src = "/logo.png";  
-              }}  
-            />  
-          )}  
-        </div>  
+      {isSavingUrl ? "Saving..." : "Save"}  
+    </button>  
+  </div>  
+  <p style={{ fontSize: "12px", color: "#6b7280", marginTop: "4px" }}>  
+    Enter your ThoughtSpot instance URL and save before logging in  
+  </p>  
+</div>
+ 
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          {localThoughtSpotUrl ? (  
+            <>
+              <input
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                style={{
+                  padding: "12px",
+                  border: "1px solid #cbd5e0",
+                  borderRadius: "4px",
+                  fontSize: "14px",
+                }}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={{
+                  padding: "12px",
+                  border: "1px solid #cbd5e0",
+                  borderRadius: "4px",
+                  fontSize: "14px",
+                }}
+              />
+              <button
+                onClick={handleLogin}
+                disabled={isChecking}
+                style={{
+                  padding: "12px 24px",
+                  backgroundColor: isChecking ? "#cbd5e0" : "#38a169",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: isChecking ? "not-allowed" : "pointer",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                }}
+              >
+                {isChecking ? "Logging in..." : "Login"}
+              </button>
+            </>
+          ) : (
+           <p style={{ color: "#6b7280", textAlign: "center" }}>  
+    Please enter and save your ThoughtSpot URL first  
+  </p>  
+          )}
+        </div>
+      </div>
+    </div>
+  );
   
-        {/* Title and Subtitle */}  
-        <h1  
-          style={{  
-            margin: "0 0 8px",  
-            color: "#1f2937",  
-            fontSize: "28px",  
-            fontWeight: "700",  
-            letterSpacing: "-0.02em",  
-          }}  
-        >  
-          7Dxperts TSE Demo Builder  
-        </h1>  
-        <p  
-          style={{  
-            margin: "0 0 36px",  
-            color: "#6b7280",  
-            fontSize: "15px",  
-            lineHeight: "1.6",  
-          }}  
-        >  
-          Please authenticate with ThoughtSpot to continue  
-        </p>  
-  
-        {/* Error Message */}  
-        {error && (  
-          <div  
-            style={{  
-              padding: "14px 16px",  
-              marginBottom: "24px",  
-              backgroundColor: "#fef3c7",  
-              border: "1px solid #f59e0b",  
-              borderRadius: "8px",  
-              color: "#92400e",  
-              fontSize: "14px",  
-              textAlign: "left",  
-              display: "flex",  
-              alignItems: "flex-start",  
-              gap: "10px",  
-              animation: "slideDown 0.3s ease-out",  
-            }}  
-          >  
-            <span style={{ fontSize: "18px", flexShrink: 0 }}>⚠️</span>  
-            <span style={{ flex: 1 }}>{error}</span>  
-          </div>  
-        )}  
-  
-        {/* Action Buttons */}  
-        <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>  
-          {thoughtspotUrl ? (  
-            <>  
-              <button  
-                onClick={() => window.open(thoughtspotUrl, "_blank")}  
-                style={{  
-                  padding: "14px 28px",  
-                  backgroundColor: "#3182ce",  
-                  color: "white",  
-                  border: "none",  
-                  borderRadius: "8px",  
-                  cursor: "pointer",  
-                  fontSize: "15px",  
-                  fontWeight: "600",  
-                  transition: "all 0.2s ease",  
-                  boxShadow: "0 2px 4px rgba(49, 130, 206, 0.2)",  
-                }}  
-                onMouseEnter={(e) => {  
-                  e.currentTarget.style.backgroundColor = "#2c5aa0";  
-                  e.currentTarget.style.transform = "translateY(-1px)";  
-                  e.currentTarget.style.boxShadow = "0 4px 8px rgba(49, 130, 206, 0.3)";  
-                }}  
-                onMouseLeave={(e) => {  
-                  e.currentTarget.style.backgroundColor = "#3182ce";  
-                  e.currentTarget.style.transform = "translateY(0)";  
-                  e.currentTarget.style.boxShadow = "0 2px 4px rgba(49, 130, 206, 0.2)";  
-                }}  
-              >  
-                 Open ThoughtSpot to Login
-              </button>  
-              <button  
-                onClick={handleLogin}  
-                disabled={isChecking}  
-                style={{  
-                  padding: "14px 28px",  
-                  backgroundColor: isChecking ? "#cbd5e0" : "#38a169",  
-                  color: "white",  
-                  border: "none",  
-                  borderRadius: "8px",  
-                  cursor: isChecking ? "not-allowed" : "pointer",  
-                  fontSize: "15px",  
-                  fontWeight: "600",  
-                  transition: "all 0.2s ease",  
-                  opacity: isChecking ? 0.7 : 1,  
-                  boxShadow: isChecking ? "none" : "0 2px 4px rgba(56, 161, 105, 0.2)",  
-                  position: "relative",  
-                }}  
-                onMouseEnter={(e) => {  
-                  if (!isChecking) {  
-                    e.currentTarget.style.backgroundColor = "#2f855a";  
-                    e.currentTarget.style.transform = "translateY(-1px)";  
-                    e.currentTarget.style.boxShadow = "0 4px 8px rgba(56, 161, 105, 0.3)";  
-                  }  
-                }}  
-                onMouseLeave={(e) => {  
-                  if (!isChecking) {  
-                    e.currentTarget.style.backgroundColor = "#38a169";  
-                    e.currentTarget.style.transform = "translateY(0)";  
-                    e.currentTarget.style.boxShadow = "0 2px 4px rgba(56, 161, 105, 0.2)";  
-                  }  
-                }}  
-              >  
-                {isChecking ? (  
-                  <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>  
-                    <span  
-                      style={{  
-                        display: "inline-block",  
-                        width: "16px",  
-                        height: "16px",  
-                        border: "2px solid white",  
-                        borderTopColor: "transparent",  
-                        borderRadius: "50%",  
-                        animation: "spin 0.8s linear infinite",  
-                      }}  
-                    />  
-                    Checking...  
-                  </span>  
-                ) : (  
-                  "✓ I'm Logged In"  
-                )}  
-              </button>  
-            </>  
-          ) : (  
-            <button  
-              onClick={onConfigureSettings}  
-              style={{  
-                padding: "14px 28px",  
-                backgroundColor: "#6b7280",  
-                color: "white",  
-                border: "none",  
-                borderRadius: "8px",  
-                cursor: "pointer",  
-                fontSize: "15px",  
-                fontWeight: "600",  
-                transition: "all 0.2s ease",  
-                boxShadow: "0 2px 4px rgba(107, 114, 128, 0.2)",  
-              }}  
-              onMouseEnter={(e) => {  
-                e.currentTarget.style.backgroundColor = "#4b5563";  
-                e.currentTarget.style.transform = "translateY(-1px)";  
-                e.currentTarget.style.boxShadow = "0 4px 8px rgba(107, 114, 128, 0.3)";  
-              }}  
-              onMouseLeave={(e) => {  
-                e.currentTarget.style.backgroundColor = "#6b7280";  
-                e.currentTarget.style.transform = "translateY(0)";  
-                e.currentTarget.style.boxShadow = "0 2px 4px rgba(107, 114, 128, 0.2)";  
-              }}  
-            >  
-              ⚙️ Configure Settings  
-            </button>  
-          )}  
-        </div>  
-  
-        {/* Footer Text */}  
-        <p  
-          style={{  
-            marginTop: "32px",  
-            fontSize: "13px",  
-            color: "#9ca3af",  
-            lineHeight: "1.5",  
-          }}  
-        >  
-          Need help? Contact your administrator  
-        </p>  
-      </div>  
-  
-      {/* CSS Animations */}  
-      <style jsx>{`  
-        @keyframes fadeIn {  
-          from {  
-            opacity: 0;  
-            transform: translateY(10px);  
-          }  
-          to {  
-            opacity: 1;  
-            transform: translateY(0);  
-          }  
-        }  
-  
-        @keyframes slideDown {  
-          from {  
-            opacity: 0;  
-            transform: translateY(-10px);  
-          }  
-          to {  
-            opacity: 1;  
-            transform: translateY(0);  
-          }  
-        }  
-  
-        @keyframes pulse {  
-          0%, 100% {  
-            opacity: 1;  
-          }  
-          50% {  
-            opacity: 0.5;  
-          }  
-        }  
-  
-        @keyframes spin {  
-          to {  
-            transform: rotate(360deg);  
-          }  
-        }  
-      `}</style>  
-    </div>  
-  );  
 }

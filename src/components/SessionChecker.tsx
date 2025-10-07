@@ -3,12 +3,15 @@
 import { useState, useEffect } from "react";
 import { getCurrentUser } from "../services/thoughtspotApi";
 import LoginPage from "./LoginPage";
+import { AppConfig } from "@/types/thoughtspot";
 
-interface SessionCheckerProps {
-  children: React.ReactNode;
-  thoughtspotUrl: string;
-  onSessionStatusChange: (hasSession: boolean) => void;
-  onConfigureSettings?: () => void;
+interface SessionCheckerProps {  
+  children: React.ReactNode;  
+  thoughtspotUrl: string;  
+  onSessionStatusChange: (hasSession: boolean) => void;  
+  onConfigureSettings?: () => void;  
+  appConfig: AppConfig;  
+  updateAppConfig: (config: AppConfig) => void;  
 }
 
 interface SessionStatus {
@@ -121,11 +124,13 @@ function SessionWarningBanner({
   );
 }
 
-export default function SessionChecker({
-  children,
-  thoughtspotUrl,
-  onSessionStatusChange,
-  onConfigureSettings,
+export default function SessionChecker({  
+  children,  
+  thoughtspotUrl,  
+  onSessionStatusChange,  
+  onConfigureSettings,  
+  appConfig,  
+  updateAppConfig,  
 }: SessionCheckerProps) {
   const [sessionStatus, setSessionStatus] = useState<SessionStatus>({
     hasSession: false,
@@ -268,20 +273,21 @@ export default function SessionChecker({
   //   </>
   // );
 
-  return (  
-  <>  
-    {!sessionStatus.hasSession ? (  
-      <LoginPage  
-        thoughtspotUrl={thoughtspotUrl}  
-        onLoginSuccess={() => {  
-          // Re-check session after login  
-          window.location.reload();  
-        }}  
+  return (    
+  <>    
+    {!sessionStatus.hasSession ? (    
+      <LoginPage    
+        thoughtspotUrl={thoughtspotUrl}    
+        onLoginSuccess={() => {    
+          window.location.reload();    
+        }}    
         onConfigureSettings={handleConfigure}  
-      />  
-    ) : (  
-      children  
-    )}  
-  </>  
+        appConfig={appConfig}  
+        updateAppConfig={updateAppConfig}  
+      />    
+    ) : (    
+      children    
+    )}    
+  </>    
 );
 }

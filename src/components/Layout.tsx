@@ -2359,9 +2359,11 @@ export default function Layout({ children }: LayoutProps) {
       <link rel="icon" href="/ts.png" id="favicon" />
       <StylingProvider stylingConfig={stylingConfig}>
         <SessionChecker
-          thoughtspotUrl={appConfig.thoughtspotUrl}
-          onSessionStatusChange={handleSessionStatusChange}
-          onConfigureSettings={handleConfigureSettings}
+          thoughtspotUrl={appConfig.thoughtspotUrl}  
+          onSessionStatusChange={handleSessionStatusChange}  
+          onConfigureSettings={() => setIsSettingsOpen(true)}  
+          appConfig={appConfig}  
+          updateAppConfig={updateAppConfig}
         >
           <div
             style={{
@@ -2373,7 +2375,7 @@ export default function Layout({ children }: LayoutProps) {
             {/* Top Bar */}
             <TopBar
               title={appConfig.applicationName || "TSE Demo Builder"}
-              logoUrl={stylingConfig.application.topBar.logoUrl || "/ts.png"}
+              logoUrl={stylingConfig.application.topBar.logoUrl || "/logo.png"}
               users={userConfig.users.map((user) => ({
                 id: user.id,
                 name: user.name,
