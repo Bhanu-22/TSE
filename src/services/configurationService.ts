@@ -1134,6 +1134,58 @@ export const loadConfigurationFromSource = async (
   }
 };
 
+  export const pushConfigurationToGitHub = async (  
+  customName?: string  
+): Promise<{ success: boolean; url?: string; error?: string }> => {  
+  try {  
+    // Get current configuration  
+    const config = await loadFromStorage();  
+      
+    // Convert IndexedDB references to data URLs for portability  
+    const exportableConfig = await convertIndexedDBReferencesToDataURLs(config);  
+      
+    // Add metadata  
+    const configWithMetadata = {  
+      version: "1.0.0",  
+      timestamp: new Date().toISOString(),  
+      description: "7Dxperts TSE Demo Builder Configuration Export",  
+      ...exportableConfig,  
+    };  
+  
+    // Generate filename  
+    const timestamp = new Date().toISOString().split('T')[0];  
+    const filename = customName   
+      ? `${customName}.json`  
+      : `tse-demo-builder-config-${timestamp}.json`;  
+  
+    // Call API route  
+    const response = await fetch('/api/push-config', {  
+      method: 'POST',  
+      headers: {  
+        'Content-Type': 'application/json',  
+      },  
+      body: JSON.stringify({  
+        filename,  
+        content: JSON.stringify(configWithMetadata, null, 2),  
+        commitMessage: `Update configuration: ${filename}`,  
+      }),  
+    });  
+  
+    const result = await response.json();  
+      
+    if (!response.ok) {  
+      return { success: false, error: result.error };  
+    }  
+  
+    return { success: true, url: result.url };  
+  } catch (error) {  
+    return {  
+      success: false,  
+      error: error instanceof Error ? error.message : 'Unknown error',  
+    };  
+  }  
+};
+
 // Update functions interface
 export interface ConfigurationUpdateFunctions {
   updateStandardMenu: (

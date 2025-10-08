@@ -39,6 +39,7 @@ import { fetchSavedConfigurations } from "../services/githubApi";
 import {
   checkStorageHealth,
   clearStorageAndReloadDefaults,
+  pushConfigurationToGitHub,
 } from "../services/configurationService";
 import ThemeSelector from "./ThemeSelector";
 import { applyTheme } from "../types/themes";
@@ -5442,6 +5443,42 @@ function ConfigurationContent({
                   Load from GitHub
                 </button>
               </div>
+
+              <button  
+                onClick={async () => {  
+                  try {  
+                    const result = await pushConfigurationToGitHub();  
+                    if (result.success) {  
+                      setImportStatus({  
+                        message: `Successfully pushed to GitHub! View at: ${result.url}`,  
+                        type: 'success',  
+                      });  
+                    } else {  
+                      setImportStatus({  
+                        message: `Failed to push: ${result.error}`,  
+                        type: 'error',  
+                      });  
+                    }  
+                  } catch (error) {  
+                    setImportStatus({  
+                      message: 'Failed to push to GitHub',  
+                      type: 'error',  
+                    });  
+                  }  
+                }}  
+                style={{  
+                  padding: "10px 20px",  
+                  backgroundColor: "#7c3aed",  
+                  color: "white",  
+                  border: "none",  
+                  borderRadius: "6px",  
+                  cursor: "pointer",  
+                  fontSize: "14px",  
+                  fontWeight: "500",  
+                }}  
+              >  
+                Push to GitHub  
+              </button>
 
               <button
                 onClick={clearAllConfigurations}
