@@ -5268,6 +5268,15 @@ function ConfigurationContent({
   fetchUser();  
 }, []);
 
+useEffect(() => {
+    if (importStatus) {
+      const timer = setTimeout(() => {
+        setImportStatus({ message: "", type: null });
+      }, 3500);
+      return () => clearTimeout(timer);
+    }
+  }, [importStatus]);
+
   // GitHub configuration loading state
   const [savedConfigurations, setSavedConfigurations] = useState<
     SavedConfiguration[]
