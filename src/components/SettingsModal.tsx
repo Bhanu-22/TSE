@@ -5861,27 +5861,6 @@ function ConfigurationContent({
               </div>
             </div>
 
-            {/* Import Status Message */}
-            {importStatus.type && (
-              <div
-                style={{
-                  marginTop: "16px",
-                  padding: "12px 16px",
-                  borderRadius: "6px",
-                  fontSize: "14px",
-                  backgroundColor:
-                    importStatus.type === "success" ? "#d1fae5" : "#fee2e2",
-                  color:
-                    importStatus.type === "success" ? "#065f46" : "#991b1b",
-                  border: `1px solid ${
-                    importStatus.type === "success" ? "#a7f3d0" : "#fecaca"
-                  }`,
-                }}
-              >
-                {importStatus.message}
-              </div>
-            )}
-
             {/* Export Status Message */}
             {isExporting && (
               <div
