@@ -5349,6 +5349,74 @@ function ConfigurationContent({
               General Configuration
             </h4>
 
+            {/* Status Banners - Add this right after the Push to GitHub button */}  
+            {importStatus.type === 'success' && (  
+              <div  
+                style={{  
+                  marginTop: '16px',  
+                  padding: '12px 16px',  
+                  borderRadius: '6px',  
+                  fontSize: '14px',  
+                  backgroundColor: '#d1fae5',  
+                  color: '#065f46',  
+                  border: '1px solid #a7f3d0',  
+                  display: 'flex',  
+                  alignItems: 'flex-start',  
+                  gap: '8px',  
+                }}  
+              >  
+                <span style={{ fontSize: '16px' }}>✓</span>  
+                <div style={{ flex: 1 }}>  
+                  <strong>Successfully pushed</strong>   
+                </div>  
+                <button  
+                  onClick={() => setImportStatus({ message: '', type: null })}  
+                  style={{  
+                    background: 'none',  
+                    border: 'none',  
+                    fontSize: '18px',  
+                    cursor: 'pointer',  
+                    color: '#065f46',  
+                  }}  
+                >  
+                  ×  
+                </button>  
+              </div>  
+            )}  
+              
+            {importStatus.type === 'error' && (  
+              <div  
+                style={{  
+                  marginTop: '16px',  
+                  padding: '12px 16px',  
+                  borderRadius: '6px',  
+                  fontSize: '14px',  
+                  backgroundColor: '#fee2e2',  
+                  color: '#991b1b',  
+                  border: '1px solid #fecaca',  
+                  display: 'flex',  
+                  alignItems: 'flex-start',  
+                  gap: '8px',  
+                }}  
+              >  
+                <span style={{ fontSize: '16px' }}>⚠️</span>  
+                <div style={{ flex: 1 }}>  
+                  <strong>Error:</strong> {importStatus.message}  
+                </div>  
+                <button  
+                  onClick={() => setImportStatus({ message: '', type: null })}  
+                  style={{  
+                    background: 'none',  
+                    border: 'none',  
+                    fontSize: '18px',  
+                    cursor: 'pointer',  
+                    color: '#991b1b',  
+                  }}  
+                >  
+                  ×  
+                </button>  
+              </div>  
+            )}
             {/* Configuration Action Buttons */}
             <div
               style={{
@@ -5444,41 +5512,53 @@ function ConfigurationContent({
                 </button>
               </div>
 
-              <button  
-                onClick={async () => {  
-                  try {  
-                    const result = await pushConfigurationToGitHub();  
-                    if (result.success) {  
-                      setImportStatus({  
-                        message: `Successfully pushed to GitHub! View at: ${result.url}`,  
-                        type: 'success',  
-                      });  
-                    } else {  
-                      setImportStatus({  
-                        message: `Failed to push: ${result.error}`,  
-                        type: 'error',  
-                      });  
-                    }  
-                  } catch (error) {  
-                    setImportStatus({  
-                      message: 'Failed to push to GitHub',  
-                      type: 'error',  
-                    });  
+              <button    
+                onClick={async () => {    
+                  console.log('=== Push to GitHub clicked ===');  
+                  try {    
+                    console.log('Calling pushConfigurationToGitHub...');  
+                    const result = await pushConfigurationToGitHub();    
+                    console.log('Result received:', result);  
+                      
+                    if (result.success) {    
+                      console.log('Setting SUCCESS status');  
+                      setImportStatus({    
+                        message: `Successfully pushed to GitHub! View at: ${result.url}`,    
+                        type: 'success',    
+                      });    
+                    } else {    
+                      console.log('Setting ERROR status:', result.error);  
+                      setImportStatus({    
+                        message: `Failed to push: ${result.error}`,    
+                        type: 'error',    
+                      });    
+                    }    
+                  } catch (error) {    
+                    console.error('Exception caught:', error);  
+                    setImportStatus({    
+                      message: 'Failed to push to GitHub',    
+                      type: 'error',    
+                    });    
                   }  
-                }}  
-                style={{  
-                  padding: "10px 20px",  
-                  backgroundColor: "#7c3aed",  
-                  color: "white",  
-                  border: "none",  
-                  borderRadius: "6px",  
-                  cursor: "pointer",  
-                  fontSize: "14px",  
-                  fontWeight: "500",  
-                }}  
-              >  
-                Push to GitHub  
+                    
+                  // Force a re-render check  
+                  console.log('Current importStatus after update:', importStatus);  
+                }}    
+                style={{    
+                  padding: "10px 20px",    
+                  backgroundColor: "#7c3aed",    
+                  color: "white",    
+                  border: "none",    
+                  borderRadius: "6px",    
+                  cursor: "pointer",    
+                  fontSize: "14px",    
+                  fontWeight: "500",    
+                }}    
+              >    
+                Push to GitHub    
               </button>
+
+              
 
               <button
                 onClick={clearAllConfigurations}
