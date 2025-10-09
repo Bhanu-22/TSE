@@ -1133,6 +1133,69 @@ export const loadConfigurationFromSource = async (
   }
 };
 
+export const pushConfigurationToGitHub = async (  
+  customName?: string  
+): Promise<{ success: boolean; url?: string; error?: string }> => {  
+    console.log('[DEBUG] pushConfigurationToGitHub called');  
+  try {  
+    // Get current configuration  
+    const config = await loadFromStorage();  
+     console.log('[DEBUG] Config loaded from storage');  
+     
+    // Convert IndexedDB references to data URLs for portability  
+    const exportableConfig = await convertIndexedDBReferencesToDataURLs(config);  
+    console.log('[DEBUG] Config converted to exportable format');  
+     
+    // Add metadata  
+    const configWithMetadata = {  
+      version: "1.0.0",  
+      timestamp: new Date().toISOString(),  
+      description: "7Dxperts TSE Demo Builder Configuration Export",  
+      ...exportableConfig,  
+    };  
+ 
+    // Generate filename  
+    const timestamp = new Date().toISOString().split('T')[0];  
+    const filename = customName  
+      ? `${customName}.json`  
+      : `tse-demo-builder-config-${timestamp}.json`;  
+      console.log('[DEBUG] Calling /api/push-config with filename:', filename);
+ 
+    // Call API route  
+    const response = await fetch('/api/push-config', {  
+      method: 'POST',  
+      headers: {  
+        'Content-Type': 'application/json',  
+      },  
+      body: JSON.stringify({  
+        filename,  
+        content: JSON.stringify(configWithMetadata, null, 2),  
+        commitMessage: `Update configuration: ${filename}`,  
+      }),  
+    });  
+    console.log('[DEBUG] Response status:', response.status);  
+    console.log('[DEBUG] Response ok:', response.ok);  
+ 
+    const result = await response.json();  
+    console.log('[DEBUG] Response body:', result);
+ 
+    if (!response.ok) {
+      console.error('[DEBUG] Push to GitHub failed:', result.error);
+      return { success: false, error: result.error || 'Failed to push to GitHub' };
+    }
+ 
+    return { success: true, url: result.url };
+  } catch (error) {
+    console.error('[DEBUG] Error in pushConfigurationToGitHub:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`[DEBUG] Fetch failed: ${errorMessage}`);
+    return {
+      success: false,
+      error: errorMessage,
+    };
+  }
+};
+
 // Update functions interface
 export interface ConfigurationUpdateFunctions {
   updateStandardMenu: (
