@@ -1141,6 +1141,12 @@ export const pushConfigurationToGitHub = async (
     // Get current configuration  
     const config = await loadFromStorage();  
      console.log('[DEBUG] Config loaded from storage');  
+
+    // Get current username  
+    const currentUser = config.userConfig?.users?.find(  
+      u => u.id === config.userConfig?.currentUserId  
+    );  
+    const username = currentUser?.name || 'unknown-user';
      
     // Convert IndexedDB references to data URLs for portability  
     const exportableConfig = await convertIndexedDBReferencesToDataURLs(config);  
@@ -1155,10 +1161,10 @@ export const pushConfigurationToGitHub = async (
     };  
  
     // Generate filename  
-    const timestamp = new Date().toISOString().split('T')[0];  
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);  
     const filename = customName  
-      ? `${customName}.json`  
-      : `tse-demo-builder-config-${timestamp}.json`;  
+      ? `${username}-${customName}-${timestamp}.json`  
+      : `${username}-${timestamp}.json`;  
       console.log('[DEBUG] Calling /api/push-config with filename:', filename);
  
     // Call API route  
