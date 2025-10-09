@@ -1135,19 +1135,23 @@ export const loadConfigurationFromSource = async (
   }
 };
 
-  export const pushConfigurationToGitHub = async (  
-  customName?: string  
-): Promise<{ success: boolean; url?: string; error?: string }> => {  
-    console.log('[DEBUG] pushConfigurationToGitHub called');  
-  try {  
-    // Get current configuration  
-    const config = await loadFromStorage();  
-     console.log('[DEBUG] Config loaded from storage');  
-
-     const currentUser = config.userConfig?.users?.find(  
-      u => u.id === config.userConfig?.currentUserId  
-    );  
-    const username = currentUser?.name || 'unknown-user';
+export const pushConfigurationToGitHub = async (    
+  customName?: string,  
+  thoughtSpotUser?: { name: string; display_name: string } | null  
+): Promise<{ success: boolean; url?: string; error?: string }> => {        
+  try {    
+    const config = await loadFromStorage();     
+ 
+    // Use ThoughtSpot user display name if available  
+    let username = 'unknown-user';  
+    if (thoughtSpotUser?.display_name) {  
+      username = thoughtSpotUser.display_name.replace(/\\s+/g, '-'); 
+    } else {  
+      const currentUser = config.userConfig?.users?.find(    
+        u => u.id === config.userConfig?.currentUserId    
+      );    
+      username = currentUser?.name || 'unknown-user';  
+    }
       
     // Convert IndexedDB references to data URLs for portability  
     const exportableConfig = await convertIndexedDBReferencesToDataURLs(config);  

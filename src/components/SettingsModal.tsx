@@ -45,6 +45,14 @@ import ThemeSelector from "./ThemeSelector";
 import { applyTheme } from "../types/themes";
 import { loginToThoughtSpot } from "../services/thoughtspotApi";
 
+import { getCurrentUser } from '../services/thoughtspotApi';  
+ 
+// Add this type import  
+type ThoughtSpotUser = {  
+  name: string;  
+  display_name: string;  
+};
+
 // Configuration interfaces for compatibility
 interface ConfigurationData {
   standardMenus: StandardMenu[];
@@ -5248,6 +5256,17 @@ function ConfigurationContent({
   const [exportFileName, setExportFileName] = useState("");
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
+  const [user, setUser] = useState<ThoughtSpotUser | null>(null);
+ 
+  useEffect(() => {  
+  const fetchUser = async () => {  
+    const { getCurrentUser } = await import('../services/thoughtspotApi');  
+    const currentUser = await getCurrentUser();  
+    setUser(currentUser);  
+  };  
+   
+  fetchUser();  
+}, []);
 
   // GitHub configuration loading state
   const [savedConfigurations, setSavedConfigurations] = useState<
@@ -5366,7 +5385,7 @@ function ConfigurationContent({
               >  
                 <span style={{ fontSize: '16px' }}>✓</span>  
                 <div style={{ flex: 1 }}>  
-                  <strong>Success:</strong> {importStatus.message}  
+                  <strong>Successfully Pushed to Github</strong> 
                 </div>  
                 <button  
                   onClick={() => setImportStatus({ message: '', type: null })}  
@@ -5513,32 +5532,29 @@ function ConfigurationContent({
               </div>
 
               <button    
-            onClick={async () => {    
-              try {    
-                const result = await pushConfigurationToGitHub();    
-                  
-                if (result.success) {    
-                  console.log('Setting SUCCESS status');  
+              onClick={async () => {    
+                try {    
+                  // Pass user?.display_name or undefined to the function  
+                  const result = await pushConfigurationToGitHub(undefined, user);    
+                  if (result.success) {    
+                    setImportStatus({    
+                      message: `Successfully pushed to GitHub! View at: ${result.url}`,    
+                      type: 'success',    
+                    });    
+                  } else {    
+                    setImportStatus({    
+                      message: `Failed to push: ${result.error}`,    
+                      type: 'error',    
+                    });    
+                  }    
+                } catch (error) {    
                   setImportStatus({    
-                    message: `Successfully pushed to GitHub! View at: ${result.url}`,    
-                    type: 'success',    
-                  });    
-                } else {    
-                  console.log('Setting ERROR status:', result.error);  
-                  setImportStatus({    
-                    message: `Failed to push: ${result.error}`,    
+                    message: 'Failed to Load to GitHub',    
                     type: 'error',    
                   });    
                 }    
-              } catch (error) {    
-                console.error('Exception caught:', error);  
-                setImportStatus({    
-                  message: 'Failed to load to GitHub',    
-                  type: 'error',    
-                });    
-              }   
-            }}    
-            style={{    
+              }}
+              style={{    
               padding: "10px 20px",    
               backgroundColor: "#7c3aed",    
               color: "white",    
@@ -5547,10 +5563,10 @@ function ConfigurationContent({
               cursor: "pointer",    
               fontSize: "14px",    
               fontWeight: "500",    
-            }}    
-          >    
-            Load to GitHub    
-          </button>
+            }}      
+            >    
+              Load to GitHub    
+            </button>
 
               <button
                 onClick={clearAllConfigurations}
