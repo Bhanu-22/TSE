@@ -1133,37 +1133,38 @@ export const loadConfigurationFromSource = async (
   }
 };
 
-export const pushConfigurationToGitHub = async (  
-  customName?: string  
-): Promise<{ success: boolean; url?: string; error?: string }> => {  
-    console.log('[DEBUG] pushConfigurationToGitHub called');  
-  try {  
-    // Get current configuration  
-    const config = await loadFromStorage();  
-     console.log('[DEBUG] Config loaded from storage');  
-
-    // Get current username  
-    const currentUser = config.userConfig?.users?.find(  
-      u => u.id === config.userConfig?.currentUserId  
-    );  
-    const username = currentUser?.name || 'unknown-user';
-     
-    // Convert IndexedDB references to data URLs for portability  
-    const exportableConfig = await convertIndexedDBReferencesToDataURLs(config);  
-    console.log('[DEBUG] Config converted to exportable format');  
-     
-    // Add metadata  
-    const configWithMetadata = {  
-      version: "1.0.0",  
-      timestamp: new Date().toISOString(),  
-      description: "7Dxperts TSE Demo Builder Configuration Export",  
-      ...exportableConfig,  
-    };  
- 
-    // Generate filename  
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);  
-    const filename = customName  
-      ? `${username}-${customName}-${timestamp}.json`  
+export const pushConfigurationToGitHub = async (    
+  customName?: string,  
+  thoughtSpotUser?: { name: string; display_name: string } | null  
+): Promise<{ success: boolean; url?: string; error?: string }> => {    
+  console.log('[DEBUG] pushConfigurationToGitHub called');    
+  try {    
+    const config = await loadFromStorage();    
+    console.log('[DEBUG] Config loaded from storage');    
+  
+    // Use ThoughtSpot user display name if available  
+    let username = 'unknown-user';  
+    if (thoughtSpotUser?.display_name) {  
+      username = thoughtSpotUser.display_name.replace(/\\s+/g, '-'); // Replace spaces with hyphens  
+    } else {  
+      const currentUser = config.userConfig?.users?.find(    
+        u => u.id === config.userConfig?.currentUserId    
+      );    
+      username = currentUser?.name || 'unknown-user';  
+    }      
+    const exportableConfig = await convertIndexedDBReferencesToDataURLs(config);    
+    console.log('[DEBUG] Config converted to exportable format');    
+       
+    const configWithMetadata = {    
+      version: "1.0.0",    
+      timestamp: new Date().toISOString(),    
+      description: "7Dxperts TSE Demo Builder Configuration Export",    
+      ...exportableConfig,    
+    };    
+   
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);    
+    const filename = customName    
+      ? `${username}-${customName}-${timestamp}.json`    
       : `${username}-${timestamp}.json`;  
       console.log('[DEBUG] Calling /api/push-config with filename:', filename);
  

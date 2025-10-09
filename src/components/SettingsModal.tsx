@@ -45,6 +45,14 @@ import ThemeSelector from "./ThemeSelector";
 import { applyTheme } from "../types/themes";
 import { loginToThoughtSpot } from "../services/thoughtspotApi";
 
+import { getCurrentUser } from '../services/thoughtspotApi';  
+  
+// Add this type import  
+type ThoughtSpotUser = {  
+  name: string;  
+  display_name: string;  
+};
+
 // Configuration interfaces for compatibility
 interface ConfigurationData {
   standardMenus: StandardMenu[];
@@ -5248,6 +5256,17 @@ function ConfigurationContent({
   const [exportFileName, setExportFileName] = useState("");
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
+  const [user, setUser] = useState<ThoughtSpotUser | null>(null);
+
+  useEffect(() => {  
+  const fetchUser = async () => {  
+    const { getCurrentUser } = await import('../services/thoughtspotApi');  
+    const currentUser = await getCurrentUser();  
+    setUser(currentUser);  
+  };  
+    
+  fetchUser();  
+}, []);
 
   // GitHub configuration loading state
   const [savedConfigurations, setSavedConfigurations] = useState<
@@ -5513,50 +5532,41 @@ function ConfigurationContent({
               </div>
 
               <button    
-                onClick={async () => {    
-                  console.log('=== Push to GitHub clicked ===');  
-                  try {    
-                    console.log('Calling pushConfigurationToGitHub...');  
-                    const result = await pushConfigurationToGitHub();    
-                    console.log('Result received:', result);  
-                      
-                    if (result.success) {    
-                      console.log('Setting SUCCESS status');  
-                      setImportStatus({    
-                        message: `Successfully pushed to GitHub! View at: ${result.url}`,    
-                        type: 'success',    
-                      });    
-                    } else {    
-                      console.log('Setting ERROR status:', result.error);  
-                      setImportStatus({    
-                        message: `Failed to push: ${result.error}`,    
-                        type: 'error',    
-                      });    
-                    }    
-                  } catch (error) {    
-                    console.error('Exception caught:', error);  
+              onClick={async () => {    
+                try {    
+                  // Pass user?.display_name or undefined to the function  
+                  const result = await pushConfigurationToGitHub(undefined, user);    
+                  if (result.success) {    
                     setImportStatus({    
-                      message: 'Failed to push to GitHub',    
+                      message: `Successfully pushed to GitHub! View at: ${result.url}`,    
+                      type: 'success',    
+                    });    
+                  } else {    
+                    setImportStatus({    
+                      message: `Failed to push: ${result.error}`,    
                       type: 'error',    
                     });    
-                  }  
-                    
-                  // Force a re-render check  
-                  console.log('Current importStatus after update:', importStatus);  
-                }}    
-                style={{    
-                  padding: "10px 20px",    
-                  backgroundColor: "#7c3aed",    
-                  color: "white",    
-                  border: "none",    
-                  borderRadius: "6px",    
-                  cursor: "pointer",    
-                  fontSize: "14px",    
-                  fontWeight: "500",    
-                }}    
-              >    
-                Push to GitHub    
-              </button>
+                  }    
+                } catch (error) {    
+                  setImportStatus({    
+                    message: 'Failed to push to GitHub',    
+                    type: 'error',    
+                  });    
+                }    
+              }}
+              style={{    
+              padding: "10px 20px",    
+              backgroundColor: "#7c3aed",    
+              color: "white",    
+              border: "none",    
+              borderRadius: "6px",    
+              cursor: "pointer",    
+              fontSize: "14px",    
+              fontWeight: "500",    
+            }}      
+            >    
+              Push to GitHub    
+            </button>
 
               
 
