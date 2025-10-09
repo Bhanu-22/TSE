@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';  
-  
+import { NextRequest, NextResponse } from 'next/server';
+
 export async function POST(request: NextRequest) {  
   try {  
     const { filename, content, commitMessage } = await request.json();  
@@ -32,17 +32,17 @@ export async function POST(request: NextRequest) {
       );  
     }  
   
-    const path = `${configPath}/${filename}`;  
-    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;  
+    const path = `${configPath}/${filename}`;
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
   
     // Get current file SHA if it exists (for updates)  
     let sha: string | undefined;  
     try {  
       const getResponse = await fetch(apiUrl, {  
         headers: {  
-          'Authorization': `Bearer ${token}`,  
-          'Accept': 'application/vnd.github.v3+json',  
-        },  
+          'Authorization': `token ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+        },
       });  
       if (getResponse.ok) {  
         const data = await getResponse.json();  
@@ -56,10 +56,10 @@ export async function POST(request: NextRequest) {
     const response = await fetch(apiUrl, {  
       method: 'PUT',  
       headers: {  
-        'Authorization': `Bearer ${token}`,  
-        'Accept': 'application/vnd.github.v3+json',  
-        'Content-Type': 'application/json',  
-      },  
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({  
         message: commitMessage,  
         content: Buffer.from(content).toString('base64'),  
