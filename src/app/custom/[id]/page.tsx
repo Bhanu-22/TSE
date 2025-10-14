@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useAppContext } from "../../../components/Layout";
 import ContentGrid from "../../../components/ContentGrid";
@@ -12,6 +12,7 @@ type ContentType = "all" | "answer" | "liveboard";
 function CustomMenuPageContent() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { customMenus, stylingConfig } = useAppContext();
   const [mounted, setMounted] = useState(false);
   const [selectedContentType, setSelectedContentType] =
@@ -24,6 +25,28 @@ function CustomMenuPageContent() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    const contentId = searchParams.get('contentId');
+    const contentType = searchParams.get('contentType');
+
+    if (contentId && contentType) {
+        const fetchContentDetails = async () => {
+            const { fetchContentByIds } = await import("../../../services/thoughtspotApi");
+            const liveboards = contentType === 'liveboard' ? [contentId] : [];
+            const answers = contentType === 'answer' ? [contentId] : [];
+            const content = await fetchContentByIds(liveboards, answers);
+            if (content.liveboards.length > 0) {
+                setSelectedContent(content.liveboards[0]);
+                setShowContentDirectly(true);
+            } else if (content.answers.length > 0) {
+                setSelectedContent(content.answers[0]);
+                setShowContentDirectly(true);
+            }
+        };
+        fetchContentDetails();
+    }
+  }, [searchParams]);
 
   const menuId = params?.id as string;
   const customMenu = customMenus.find((menu) => menu.id === menuId);
@@ -143,6 +166,7 @@ function CustomMenuPageContent() {
           overflow: "hidden",
         }}
       >
+        {!searchParams.get('contentId') && (
         <div style={{ marginBottom: "24px" }}>
           <button
             onClick={handleBackToGrid}
@@ -169,6 +193,7 @@ function CustomMenuPageContent() {
             ← Back to {customMenu?.name || "Content"}
           </button>
         </div>
+        )}
         {!stylingConfig.embedDisplay?.hideTitle ||
         (selectedContent.description &&
           !stylingConfig.embedDisplay?.hideDescription) ? (

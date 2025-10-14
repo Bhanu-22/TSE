@@ -136,6 +136,28 @@ export default function SideNav({
     allMenus.set(menu.id, { menu, isCustom: true });
   });
 
+  const getCustomMenuRoute = (customMenu: CustomMenu): string => {
+    let route = `/custom/${customMenu.id}`; // Default route
+
+    if (customMenu.contentSelection.type === 'specific' && customMenu.contentSelection.specificContent) {
+        const { liveboards, answers } = customMenu.contentSelection.specificContent;
+        const liveboardCount = liveboards ? liveboards.length : 0;
+        const answerCount = answers ? answers.length : 0;
+        const totalItems = liveboardCount + answerCount;
+
+        if (totalItems === 1) {
+            if (liveboardCount === 1) {
+                const contentId = liveboards[0];
+                route = `/custom/${customMenu.id}?contentId=${contentId}&contentType=liveboard`;
+            } else if (answerCount === 1) {
+                const contentId = answers[0];
+                route = `/custom/${customMenu.id}?contentId=${contentId}&contentType=answer`;
+            }
+        }
+    }
+    return route;
+};
+
   // Create navigation items based on menuOrder or default order
   const createNavItems = (): NavItem[] => {
     if (menuOrder && menuOrder.length > 0) {
@@ -157,7 +179,7 @@ export default function SideNav({
             id: customMenu.id,
             name: customMenu.name,
             icon: customMenu.icon,
-            route: `/custom/${customMenu.id}`,
+            route: getCustomMenuRoute(customMenu),
             isCustom: true,
           });
         } else {
@@ -213,7 +235,7 @@ export default function SideNav({
           id: menu.id,
           name: menu.name,
           icon: menu.icon,
-          route: `/custom/${menu.id}`,
+          route: getCustomMenuRoute(menu),
           isCustom: true,
         }));
 
