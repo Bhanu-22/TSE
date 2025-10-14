@@ -1,0 +1,238 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2025-10-13T07:34:12.355Z",
+  "description": "7Dxperts TSE Demo Builder Configuration Export",
+  "standardMenus": [
+    {
+      "id": "home",
+      "name": "Home",
+      "enabled": true,
+      "icon": "home",
+      "homePageType": "html",
+      "homePageValue": "<header style=\"background-color: #0a0a23; color: white; padding: 20px; text-align: center;\">\n  <h1 style=\"font-size: 2.5em; margin: 0;\">7Dxperts</h1>\n  <p style=\"font-size: 1.2em; margin-top: 10px;\">\n    Empowering digital transformation through innovation, technology, and expertise.\n  </p>\n</header>\n\n<section style=\"padding: 30px; font-family: Arial, sans-serif; line-height: 1.6;\">\n  <h2>About 7Dxperts</h2>\n  <p>\n    7Dxperts is a leading technology solutions provider specializing in digital innovation,\n    cloud integration, AI development, and business automation. Our mission is to help\n    organizations of all sizes adapt, evolve, and thrive in the digital era by offering\n    scalable, secure, and cutting-edge solutions.\n  </p>\n  <p>\n    With a team of experienced professionals and a passion for excellence, we partner with\n    clients to design and deliver transformative digital strategies that drive measurable\n    success and sustainable growth.\n  </p>\n</section>\n"
+    },
+    {
+      "id": "favorites",
+      "name": "Favorites",
+      "enabled": true,
+      "icon": "favorites",
+      "homePageType": "html",
+      "homePageValue": "<h1>Favorites</h1>"
+    },
+    {
+      "id": "my-reports",
+      "name": "My Reports",
+      "enabled": true,
+      "icon": "my-reports",
+      "homePageType": "html",
+      "homePageValue": "<h1>My Reports</h1>"
+    },
+    {
+      "id": "spotter",
+      "name": "Spotter",
+      "enabled": true,
+      "icon": "spotter-custom.svg",
+      "homePageType": "html",
+      "homePageValue": "<h1>Spotter</h1>",
+      "spotterModelId": "9fc6b5ae-a795-4c5f-b51a-3a3e5911ed81",
+      "spotterSearchQuery": ""
+    },
+    {
+      "id": "search",
+      "name": "Search",
+      "enabled": true,
+      "icon": "search",
+      "homePageType": "html",
+      "homePageValue": "<h1>Search</h1>"
+    },
+    {
+      "id": "full-app",
+      "name": "Full App",
+      "enabled": true,
+      "icon": "full-app",
+      "homePageType": "html",
+      "homePageValue": "<h1>Full App</h1>"
+    },
+    {
+      "id": "all-content",
+      "name": "All Content",
+      "enabled": true,
+      "icon": "📚",
+      "homePageType": "html",
+      "homePageValue": "<h1>All Content</h1>",
+      "excludeSystemContent": true
+    }
+  ],
+  "customMenus": [
+    {
+      "id": "custom-1759915645846",
+      "name": "RTG",
+      "description": "",
+      "icon": "line-chart",
+      "enabled": false,
+      "contentSelection": {
+        "type": "specific",
+        "specificContent": {
+          "liveboards": [
+            "9dd00397-9751-411d-b44f-4ec6af148945"
+          ],
+          "answers": [
+            "7cd8ab54-0c81-4270-8740-34c6f45abbfd",
+            "c8a4b44b-17ea-4029-a44d-e426539f3bcf"
+          ]
+        }
+      }
+    }
+  ],
+  "menuOrder": [
+    "home",
+    "favorites",
+    "my-reports",
+    "spotter",
+    "search",
+    "full-app",
+    "all-content"
+  ],
+  "homePageConfig": {
+    "type": "html",
+    "value": "<h1>Welcome to TSE Demo Builder</h1>"
+  },
+  "appConfig": {
+    "thoughtspotUrl": "https://techpartners.thoughtspot.cloud/",
+    "applicationName": "On time performance",
+    "logo": "/ts.png",
+    "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
+    "favicon": "https://www.gatwickairport.com/on/demandware.static/-/Sites-Gatwick-Library/default/dwe6a3b12e/images/gatwick-main-logo/gatwick-official-airport-parking.svg",
+    "showFooter": true,
+    "chatbot": {
+      "enabled": true,
+      "welcomeMessage": "Hello! I'm your AI assistant. What would you like to know about your data?",
+      "position": "bottom-right",
+      "primaryColor": "#3b82f6",
+      "hoverColor": "#2563eb"
+    },
+    "authType": "None",
+    "faviconSyncEnabled": true
+  },
+  "fullAppConfig": {
+    "showPrimaryNavbar": true,
+    "hideHomepageLeftNav": false
+  },
+  "stylingConfig": {
+    "application": {
+      "topBar": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333",
+        "logoUrl": "https://www.gatwickairport.com/on/demandware.static/-/Sites-Gatwick-Library/default/dwe6a3b12e/images/gatwick-main-logo/gatwick-official-airport-parking.svg"
+      },
+      "sidebar": {
+        "backgroundColor": "#f5f5f5",
+        "foregroundColor": "#333333"
+      },
+      "footer": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "dialogs": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "buttons": {
+        "primary": {
+          "backgroundColor": "#3182ce",
+          "foregroundColor": "#ffffff",
+          "borderColor": "#3182ce",
+          "hoverBackgroundColor": "#2c5aa0",
+          "hoverForegroundColor": "#ffffff"
+        },
+        "secondary": {
+          "backgroundColor": "#ffffff",
+          "foregroundColor": "#374151",
+          "borderColor": "#d1d5db",
+          "hoverBackgroundColor": "#f9fafb",
+          "hoverForegroundColor": "#374151"
+        }
+      },
+      "backgrounds": {
+        "mainBackground": "#f7fafc",
+        "contentBackground": "#ffffff",
+        "cardBackground": "#ffffff",
+        "borderColor": "#e2e8f0"
+      },
+      "typography": {
+        "primaryColor": "#1f2937",
+        "secondaryColor": "#6b7280",
+        "linkColor": "#3182ce",
+        "linkHoverColor": "#2c5aa0"
+      },
+      "selectedTheme": "default"
+    },
+    "embeddedContent": {
+      "strings": {},
+      "stringIDs": {},
+      "cssUrl": "",
+      "customCSS": {
+        "variables": {},
+        "rules_UNSTABLE": {}
+      }
+    },
+    "embedFlags": {},
+    "embedDisplay": {
+      "hideTitle": false,
+      "hideDescription": false
+    }
+  },
+  "userConfig": {
+    "users": [
+      {
+        "id": "power-user",
+        "name": "Power User",
+        "description": "Full access - can access all features including Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": true,
+            "full-app": true,
+            "all-content": true
+          },
+          "customMenus": [
+            "custom-1759847126747",
+            "custom-1759850260956",
+            "custom-1759915645846"
+          ],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      },
+      {
+        "id": "basic-user",
+        "name": "Basic User",
+        "description": "Limited access - cannot access Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": false,
+            "full-app": false,
+            "all-content": true
+          },
+          "customMenus": [],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      }
+    ],
+    "currentUserId": "power-user"
+  }
+}
