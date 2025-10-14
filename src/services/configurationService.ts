@@ -1203,6 +1203,51 @@ export const pushConfigurationToGitHub = async (
   }
 };
 
+export const publishDeployment = async (  
+  
+  customName?: string  
+): Promise<{ success: boolean; branchUrl?: string; deploymentUrl?: string; error?: string }> => {  
+    console.log("Publish Triggered")
+
+  try {  
+    const config = await loadFromStorage();  
+    const exportableConfig = await convertIndexedDBReferencesToDataURLs(config);  
+      
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);  
+    const branchName = customName   
+      ? `deploy-${customName}-${timestamp}`  
+      : `deploy-${timestamp}`;  
+  
+    const response = await fetch('/api/publish-deployment', {  
+      method: 'POST',  
+      headers: {  
+        'Content-Type': 'application/json',  
+      },  
+      body: JSON.stringify({  
+        configuration: exportableConfig,  
+        branchName  
+      }),  
+    });  
+  
+    const result = await response.json();  
+  
+    if (!response.ok) {  
+      return { success: false, error: result.error || 'Failed to publish deployment' };  
+    }  
+  
+    return {   
+      success: true,   
+      branchUrl: result.branchUrl,  
+      deploymentUrl: result.deploymentUrl   
+    };  
+  } catch (error) {  
+    return {  
+      success: false,  
+      error: error instanceof Error ? error.message : 'Unknown error',  
+    };  
+  }  
+};
+
 // Update functions interface
 export interface ConfigurationUpdateFunctions {
   updateStandardMenu: (
