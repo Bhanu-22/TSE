@@ -40,6 +40,7 @@ import {
   checkStorageHealth,
   clearStorageAndReloadDefaults,
   pushConfigurationToGitHub,
+  publishDeployment,
 } from "../services/configurationService";
 import ThemeSelector from "./ThemeSelector";
 import { applyTheme } from "../types/themes";
@@ -5257,6 +5258,9 @@ function ConfigurationContent({
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   const [user, setUser] = useState<ThoughtSpotUser | null>(null);
+  const [showPublishDialog, setShowPublishDialog] = useState(false);  
+  const [publishName, setPublishName] = useState('');  
+  const [isPublishing, setIsPublishing] = useState(false);
  
   useEffect(() => {  
   const fetchUser = async () => {  
@@ -5376,6 +5380,70 @@ useEffect(() => {
             >
               General Configuration
             </h4>
+
+            {importStatus.type === 'success' && (    
+            <div    
+              style={{    
+                marginTop: '16px',    
+                padding: '16px 20px',    
+                borderRadius: '8px',    
+                fontSize: '14px',    
+                backgroundColor: '#d1fae5',    
+                color: '#065f46',    
+                border: '2px solid #10b981',    
+                display: 'flex',    
+                alignItems: 'flex-start',    
+                gap: '12px',    
+              }}    
+            >    
+              <span style={{ fontSize: '20px' }}>✓</span>    
+              <div style={{ flex: 1, whiteSpace: 'pre-line' }}>    
+                <strong style={{ fontSize: '16px' }}>Successfully Published!</strong>  
+                <div style={{ marginTop: '8px' }}>  
+                  {importStatus.message.split('\n').map((line, i) => {  
+                    // Check if line contains a URL  
+                    const urlMatch = line.match(/(https?:\/\/[^\s]+)/);  
+                    if (urlMatch) {  
+                      const url = urlMatch[1];  
+                      return (  
+                        <div key={i} style={{ marginTop: '4px' }}>  
+                          {line.split(url)[0]}  
+                          <a  
+                            href={url}  
+                            target="_blank"  
+                            rel="noopener noreferrer"  
+                            style={{  
+                              color: '#059669',  
+                              fontWeight: 'bold',  
+                              textDecoration: 'underline',  
+                              fontSize: '15px'  
+                            }}  
+                          >  
+                            {url}  
+                          </a>  
+                          {line.split(url)[1]}  
+                        </div>  
+                      );  
+                    }  
+                    return <div key={i}>{line}</div>;  
+                  })}  
+                </div>  
+              </div>    
+              <button    
+                onClick={() => setImportStatus({ message: '', type: null })}    
+                style={{    
+                  background: 'none',    
+                  border: 'none',    
+                  fontSize: '20px',    
+                  cursor: 'pointer',    
+                  color: '#065f46',    
+                }}    
+              >    
+                ×    
+              </button>    
+            </div>    
+          )}
+ 
  
             {importStatus.type === 'success' && (  
               <div  
@@ -5576,6 +5644,131 @@ useEffect(() => {
             >    
               Load to GitHub    
             </button>
+
+            <button  
+            onClick={async () => {  
+              setIsPublishing(true);  
+              const result = await publishDeployment(publishName || undefined);  
+              setIsPublishing(false);  
+               
+              if (result.success) {  
+                setImportStatus({  
+                  message: result.deploymentUrl  
+                    ? `Successfully published!\n\n Live URL: ${result.deploymentUrl}\n\nClick the URL to view your deployment.`  
+                    : `Branch created: ${result.branchUrl}\n\nDeployment is building. Check Vercel dashboard for the URL.`,  
+                  type: 'success',  
+                });  
+                setShowPublishDialog(false);  
+                setPublishName('');  
+              } else {  
+                setImportStatus({  
+                  message: `Failed: ${result.error}`,  
+                  type: 'error',  
+                });  
+              }  
+            }}  
+            disabled={isPublishing}  
+            style={{  
+              padding: "8px 16px",  
+              backgroundColor: "#10b981",  
+              color: "white",  
+              border: "none",  
+              borderRadius: "6px",  
+              cursor: isPublishing ? "not-allowed" : "pointer",  
+            }}  
+          >  
+            {isPublishing ? "Publishing..." : "Publish"}  
+          </button>  
+ 
+            {showPublishDialog && (  
+              <div style={{  
+                position: "fixed",  
+                top: 0,  
+                left: 0,  
+                right: 0,  
+                bottom: 0,  
+                backgroundColor: "rgba(0, 0, 0, 0.5)",  
+                display: "flex",  
+                alignItems: "center",  
+                justifyContent: "center",  
+                zIndex: 1000,  
+              }}>  
+                <div style={{  
+                  backgroundColor: "white",  
+                  padding: "24px",  
+                  borderRadius: "8px",  
+                  minWidth: "400px",  
+                }}>  
+                  <h3>Publish Deployment</h3>  
+                  <p>This will create a new GitHub branch and deploy to Vercel</p>  
+                   
+                  <input  
+                    type="text"  
+                    placeholder="Deployment name (optional)"  
+                    value={publishName}  
+                    onChange={(e) => setPublishName(e.target.value)}  
+                    style={{  
+                      width: "100%",  
+                      padding: "8px",  
+                      marginBottom: "16px",  
+                      border: "1px solid #d1d5db",  
+                      borderRadius: "4px",  
+                    }}  
+                  />  
+                   
+                  <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>  
+                    <button  
+                      onClick={() => {  
+                        setShowPublishDialog(false);  
+                        setPublishName('');  
+                      }}  
+                      style={{  
+                        padding: "8px 16px",  
+                        backgroundColor: "#6b7280",  
+                        color: "white",  
+                        border: "none",  
+                        borderRadius: "6px",  
+                        cursor: "pointer",  
+                      }}  
+                    >  
+                      Cancel  
+                    </button>  
+                    <button  
+                      onClick={async () => {  
+                        setIsPublishing(true);  
+                        const result = await publishDeployment(publishName || undefined);  
+                        setIsPublishing(false);  
+                         
+                        if (result.success) {  
+                          setImportStatus({  
+                            message: `Published! Branch: ${result.branchUrl}\nDeployment: ${result.deploymentUrl}`,  
+                            type: 'success',  
+                          });  
+                          setShowPublishDialog(false);  
+                          setPublishName('');  
+                        } else {  
+                          setImportStatus({  
+                            message: `Failed: ${result.error}`,  
+                            type: 'error',  
+                          });  
+                        }  
+                      }}  
+                      disabled={isPublishing}  
+                      style={{  
+                        padding: "8px 16px",  
+                        backgroundColor: "#10b981",  
+                        color: "white",  
+                        border: "none",  
+                        borderRadius: "6px",  
+                        cursor: isPublishing ? "not-allowed" : "pointer",  
+                      }}  
+                    >  
+                      {isPublishing ? "Publishing..." : "Publish"}  
+                    </button>  
+                  </div>  
+                </div>  
+              </div>  
+            )}
 
               <button
                 onClick={clearAllConfigurations}
