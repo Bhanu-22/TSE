@@ -14,74 +14,105 @@ export async function POST(request: NextRequest) {
   
     // 1. Get repository info to find default branch AND repo ID  
     const { data: repoInfo } = await octokit.repos.get({  
-    owner,  
-    repo  
+      owner,  
+      repo  
     });  
-    
-    const repoId = repoInfo.id; // GitHub's numeric repository ID  
+      
+    const repoId = repoInfo.id;  
     const defaultBranch = repoInfo.default_branch;  
-    
+      
     // 2. Get the default branch reference  
     const { data: mainBranch } = await octokit.git.getRef({  
-    owner,  
-    repo,  
-    ref: `heads/${defaultBranch}`  
-    });   
-  
-    // 3. Create new branch  
-    await octokit.git.createRef({  
       owner,  
       repo,  
-      ref: `refs/heads/${branchName}`,  
-      sha: mainBranch.object.sha  
+      ref: `heads/${defaultBranch}`  
     });  
   
-    // 4. Update DEFAULT_CONFIG in configurationService.ts  
+    // 3. Get the current configurationService.ts content from default branch  
     const configPath = 'src/services/configurationService.ts';  
     const { data: fileData } = await octokit.repos.getContent({  
       owner,  
       repo,  
       path: configPath,  
-      ref: branchName  
+      ref: defaultBranch  // Get from default branch, not the new branch  
     });  
   
-    if ('content' in fileData) {  
-      let content = Buffer.from(fileData.content, 'base64').toString();  
-        
-      const configString = JSON.stringify(configuration, null, 2);  
-      content = content.replace(  
-        /export const DEFAULT_CONFIG: ConfigurationData = \{[\s\S]*?\};/,  
-        `export const DEFAULT_CONFIG: ConfigurationData = ${configString};`  
-      );  
-  
-      await octokit.repos.createOrUpdateFileContents({  
-        owner,  
-        repo,  
-        path: configPath,  
-        message: `Bake configuration for deployment: ${branchName}`,  
-        content: Buffer.from(content).toString('base64'),  
-        branch: branchName,  
-        sha: fileData.sha  
-      });  
+    if (!('content' in fileData)) {  
+      throw new Error('Could not retrieve file content');  
     }  
+  
+    // 4. Prepare the updated content  
+    let content = Buffer.from(fileData.content, 'base64').toString();  
+    const configString = JSON.stringify(configuration, null, 2);  
+    content = content.replace(  
+      /export const DEFAULT_CONFIG: ConfigurationData = \{[\s\S]*?\};/,  
+      `export const DEFAULT_CONFIG: ConfigurationData = ${configString};`  
+    );  
+  
+    // 5. Get the tree of the default branch  
+    const { data: baseTree } = await octokit.git.getTree({  
+      owner,  
+      repo,  
+      tree_sha: mainBranch.object.sha,  
+      recursive: 'true'  
+    });  
+  
+    // 6. Create a new blob with the updated file content  
+    const { data: newBlob } = await octokit.git.createBlob({  
+      owner,  
+      repo,  
+      content: Buffer.from(content).toString('base64'),  
+      encoding: 'base64'  
+    });  
+  
+    // 7. Create a new tree with the updated file  
+    const { data: newTree } = await octokit.git.createTree({  
+      owner,  
+      repo,  
+      base_tree: baseTree.sha,  
+      tree: [  
+        {  
+          path: configPath,  
+          mode: '100644',  
+          type: 'blob',  
+          sha: newBlob.sha  
+        }  
+      ]  
+    });  
+  
+    // 8. Create a commit with the new tree  
+    const { data: newCommit } = await octokit.git.createCommit({  
+      owner,  
+      repo,  
+      message: `Bake configuration for deployment: ${branchName}`,  
+      tree: newTree.sha,  
+      parents: [mainBranch.object.sha]  
+    });  
+  
+    // 9. Create the new branch pointing to the new commit  
+    await octokit.git.createRef({  
+      owner,  
+      repo,  
+      ref: `refs/heads/${branchName}`,  
+      sha: newCommit.sha  
+    });  
   
     // 5. Trigger Vercel deployment with preview target  
     const vercelResponse = await fetch('https://api.vercel.com/v13/deployments', {  
-    method: 'POST',  
-    headers: {  
+      method: 'POST',  
+      headers: {  
         'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`,  
         'Content-Type': 'application/json'  
-    },  
-    body: JSON.stringify({  
+      },  
+      body: JSON.stringify({  
         name: process.env.VERCEL_PROJECT_ID,  
         gitSource: {  
-        type: 'github',  
-        repo: `${owner}/${repo}`,  
-        ref: branchName,  
-        repoId: repoId  
+          type: 'github',  
+          repo: `${owner}/${repo}`,  
+          ref: branchName,  
+          repoId: repoId  
         },  
-          
-    })  
+      })  
     });  
     
     if (!vercelResponse.ok) {  
