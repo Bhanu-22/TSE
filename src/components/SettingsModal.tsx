@@ -5261,6 +5261,10 @@ function ConfigurationContent({
   const [showPublishDialog, setShowPublishDialog] = useState(false);  
   const [publishName, setPublishName] = useState('');  
   const [isPublishing, setIsPublishing] = useState(false);
+  const [persistentPublishResult, setPersistentPublishResult] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
  
   useEffect(() => {  
   const fetchUser = async () => {  
@@ -5381,7 +5385,69 @@ useEffect(() => {
               General Configuration
             </h4>
 
-            {importStatus.type === 'success' && (    
+            {persistentPublishResult && (
+            <div
+              style={{
+                marginTop: '16px',
+                padding: '16px 20px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                backgroundColor: '#d1fae5',
+                color: '#065f46',
+                border: '2px solid #10b981',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '12px',
+              }}
+            >
+              <span style={{ fontSize: '20px' }}>✓</span>
+              <div style={{ flex: 1, whiteSpace: 'pre-line' }}>
+                <strong style={{ fontSize: '16px' }}>Successfully Published!</strong>
+                <div style={{ marginTop: '8px' }}>
+                  {persistentPublishResult.message.split('\n').map((line, i) => {
+                    const urlMatch = line.match(/(https?:\/\/[^\s]+)/);
+                    if (urlMatch) {
+                      const url = urlMatch[1];
+                      return (
+                        <div key={i} style={{ marginTop: '4px' }}>
+                          {line.split(url)[0]}
+                          <a
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              color: '#059669',
+                              fontWeight: 'bold',
+                              textDecoration: 'underline',
+                              fontSize: '15px'
+                            }}
+                          >
+                            {url}
+                          </a>
+                          {line.split(url)[1]}
+                        </div>
+                      );
+                    }
+                    return <div key={i}>{line}</div>;
+                  })}
+                </div>
+              </div>
+              <button
+                onClick={() => setPersistentPublishResult(null)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                  color: '#065f46',
+                }}
+              >
+                ×
+              </button>
+            </div>
+          )}
+
+            {/* {importStatus.type === 'success' && (    
             <div    
               style={{    
                 marginTop: '16px',    
@@ -5442,7 +5508,7 @@ useEffect(() => {
                 ×    
               </button>    
             </div>    
-          )}
+          )} */}
  
  
             {importStatus.type === 'success' && (  
@@ -5648,11 +5714,12 @@ useEffect(() => {
             <button  
             onClick={async () => {  
               setIsPublishing(true);  
+              setPersistentPublishResult(null);
               const result = await publishDeployment(publishName || undefined);  
               setIsPublishing(false);  
                
               if (result.success) {  
-                setImportStatus({  
+                setPersistentPublishResult({  
                   message: result.deploymentUrl  
                     ? `Successfully published!\n\n Live URL: ${result.deploymentUrl}\n\nClick the URL to view your deployment.`  
                     : `Branch created: ${result.branchUrl}\n\nDeployment is building. Check Vercel dashboard for the URL.`,  
@@ -5736,11 +5803,12 @@ useEffect(() => {
                     <button  
                       onClick={async () => {  
                         setIsPublishing(true);  
+                        setPersistentPublishResult(null);
                         const result = await publishDeployment(publishName || undefined);  
                         setIsPublishing(false);  
                          
                         if (result.success) {  
-                          setImportStatus({  
+                          setPersistentPublishResult({  
                             message: `Published! Branch: ${result.branchUrl}\nDeployment: ${result.deploymentUrl}`,  
                             type: 'success',  
                           });  
