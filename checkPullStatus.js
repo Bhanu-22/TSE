@@ -4,37 +4,41 @@ const git = simpleGit();
 
 async function checkForUpdates() {
   try {
-    // 1️ Fetch latest commits from both origin and upstream
+    // 1️ Get the current branch dynamically
+    const currentBranchSummary = await git.branch();
+    const currentBranch = currentBranchSummary.current;
+
+    // 2️ Fetch latest commits from both origin and upstream
     await git.fetch('origin');
     await git.fetch('upstream');
 
-    // 2️ Get current branch status
+    // 3️ Get status for current branch
     const status = await git.status();
 
-    // 3️ Check for uncommitted changes
+    // 4️ Check for uncommitted changes
     if (status.files.length > 0) {
       console.log('You have uncommitted changes. Please commit or stash them before pulling.');
     }
 
-    // 4️ Check if behind origin
+    // 5️ Check if behind origin
     if (status.behind > 0) {
-      console.log(`Your branch is behind origin by ${status.behind} commit(s). Please pull the latest changes.`);
+      console.log(`Your branch '${currentBranch}' is behind origin by ${status.behind} commit(s). Please pull the latest changes.`);
     }
 
-    // 5️ Check commits behind upstream/main
-    const upstreamDiff = await git.log([`${status.current}..upstream/main`]);
+    // 6️ Check commits behind upstream
+    const upstreamDiff = await git.log([`${currentBranch}..upstream/${currentBranch}`]);
     if (upstreamDiff.total > 0) {
-      console.log(`There are ${upstreamDiff.total} new commit(s) from upstream not yet in your branch.`);
+      console.log(`There are ${upstreamDiff.total} new commit(s) from upstream not yet in your branch '${currentBranch}'.`);
     }
 
-    // 6️ Check if ahead of origin
+    // 7️ Check if ahead of origin
     if (status.ahead > 0) {
-      console.log(`You have ${status.ahead} commit(s) ahead of origin. Consider pushing your changes.`);
+      console.log(`You have ${status.ahead} commit(s) ahead of origin on branch '${currentBranch}'. Consider pushing your changes.`);
     }
 
-    // 7️ If everything is fine
+    // 8️ If everything is fine
     if (status.files.length === 0 && status.behind === 0 && upstreamDiff.total === 0 && status.ahead === 0) {
-      console.log('Your branch is up-to-date with origin and upstream, and you have no uncommitted changes.');
+      console.log(`Your branch '${currentBranch}' is up-to-date with origin and upstream, and you have no uncommitted changes.`);
     }
 
   } catch (err) {
