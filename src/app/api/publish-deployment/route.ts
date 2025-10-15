@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     const { configuration, branchName } = await request.json();  
      
     const octokit = new Octokit({  
-      auth: process.env.GITHUB_TOKEN  
+      auth: process.env.GITHUB_TOKEN1  
     });  
  
     const owner = process.env.GITHUB_OWNER!;  
