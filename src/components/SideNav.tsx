@@ -179,7 +179,7 @@ export default function SideNav({
             id: customMenu.id,
             name: customMenu.name,
             icon: customMenu.icon,
-            route: `/custom/${customMenu.id}`,
+            route: getCustomMenuRoute(customMenu),
             isCustom: true,
           });
         } else {
@@ -235,7 +235,7 @@ export default function SideNav({
           id: menu.id,
           name: menu.name,
           icon: menu.icon,
-          route: `/custom/${menu.id}`,
+          route: getCustomMenuRoute(menu) ,
           isCustom: true,
         }));
 
