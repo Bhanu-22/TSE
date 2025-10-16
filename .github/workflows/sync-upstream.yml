@@ -27,8 +27,18 @@ jobs:
 
       - name: Merge upstream/main into your main branch
         run: |
-          git checkout main
-          git merge upstream/main --allow-unrelated-histories -m "Merge upstream changes"
+         if git branch -r | grep 'upstream/main'; then
+            UPSTREAM_BRANCH="upstream/main"
+          elif git branch -r | grep 'upstream/master'; then
+            UPSTREAM_BRANCH="upstream/master"
+          else
+            echo "::error::Could not find 'main' or 'master' branch on the 'upstream' remote."
+            exit 1
+          fi
+          echo "Merging changes from $UPSTREAM_BRANCH into main..."
+          # 3. Merge the found branch. The --allow-unrelated-histories flag 
+          #    is kept for initial syncs, but can be removed later.
+          git merge $UPSTREAM_BRANCH --allow-unrelated-histories -m "Merge upstream changes from Aparnaa-Marimuthu/my-app"
 
       - name: Push changes to your repository
         run: git push origin main

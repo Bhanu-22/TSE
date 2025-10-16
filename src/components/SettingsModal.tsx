@@ -5711,41 +5711,19 @@ useEffect(() => {
               Load to GitHub    
             </button>
 
-            <button  
-            onClick={async () => {  
-              setIsPublishing(true);  
-              setPersistentPublishResult(null);
-              const result = await publishDeployment(publishName || undefined);  
-              setIsPublishing(false);  
-               
-              if (result.success) {  
-                setPersistentPublishResult({  
-                  message: result.deploymentUrl  
-                    ? `Successfully published!\n\n Live URL: ${result.deploymentUrl}\n\nClick the URL to view your deployment.`  
-                    : `Branch created: ${result.branchUrl}\n\nDeployment is building. Check Vercel dashboard for the URL.`,  
-                  type: 'success',  
-                });  
-                setShowPublishDialog(false);  
-                setPublishName('');  
-              } else {  
-                setImportStatus({  
-                  message: `Failed: ${result.error}`,  
-                  type: 'error',  
-                });  
-              }  
-            }}  
-            disabled={isPublishing}  
+           <button    
+            onClick={() => setShowPublishDialog(true)}
             style={{  
-              padding: "8px 16px",  
-              backgroundColor: "#10b981",  
-              color: "white",  
-              border: "none",  
-              borderRadius: "6px",  
-              cursor: isPublishing ? "not-allowed" : "pointer",  
-            }}  
-          >  
-            {isPublishing ? "Publishing..." : "Publish"}  
-          </button>  
+              padding: "8px 16px",    
+              backgroundColor: "#10b981",    
+              color: "white",    
+              border: "none",    
+              borderRadius: "6px",    
+              cursor: "pointer",    
+            }}    
+          >    
+            Publish Deployment  
+          </button>
  
             {showPublishDialog && (  
               <div style={{  
@@ -5809,7 +5787,7 @@ useEffect(() => {
                          
                         if (result.success) {  
                           setPersistentPublishResult({  
-                            message: `Published! Branch: ${result.branchUrl}\nDeployment: ${result.deploymentUrl}`,  
+                            message:`Deployment: ${result.deploymentUrl}`,  
                             type: 'success',  
                           });  
                           setShowPublishDialog(false);  
