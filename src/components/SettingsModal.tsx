@@ -5644,39 +5644,18 @@ useEffect(() => {
               Push to GitHub    
             </button>
    
-            <button  
-            onClick={async () => {  
-              setIsPublishing(true);  
-              const result = await publishDeployment(publishName || undefined);  
-              setIsPublishing(false);  
-                
-              if (result.success) {  
-                setImportStatus({  
-                  message: result.deploymentUrl   
-                    ? `Successfully published!\n\n Live URL: ${result.deploymentUrl}\n\nClick the URL to view your deployment.`  
-                    : `Branch created: ${result.branchUrl}\n\nDeployment is building. Check Vercel dashboard for the URL.`,  
-                  type: 'success',  
-                });  
-                setShowPublishDialog(false);  
-                setPublishName('');  
-              } else {  
-                setImportStatus({  
-                  message: `Failed: ${result.error}`,  
-                  type: 'error',  
-                });  
-              }  
-            }}  
-            disabled={isPublishing}  
+            <button    
+            onClick={() => setShowPublishDialog(true)}
             style={{  
-              padding: "8px 16px",  
-              backgroundColor: "#10b981",  
-              color: "white",  
-              border: "none",  
-              borderRadius: "6px",  
-              cursor: isPublishing ? "not-allowed" : "pointer",  
-            }}  
-          >  
-            {isPublishing ? "Publishing..." : "Publish"}  
+              padding: "8px 16px",    
+              backgroundColor: "#10b981",    
+              color: "white",    
+              border: "none",    
+              borderRadius: "6px",    
+              cursor: "pointer",    
+            }}    
+          >    
+            Publish Deployment  
           </button>  
  
             {showPublishDialog && (  
@@ -5732,38 +5711,44 @@ useEffect(() => {
                     >  
                       Cancel  
                     </button>  
-                    <button  
-                      onClick={async () => {  
-                        setIsPublishing(true);  
-                        const result = await publishDeployment(publishName || undefined);  
-                        setIsPublishing(false);  
+                    <button    
+                    onClick={async () => { 
+                      // Prevent double-clicks by checking if already publishing  
+                      if (isPublishing) return;  
+                        
+                      setIsPublishing(true);                      
+                      try {  
+                        const result = await publishDeployment(publishName || undefined);    
                           
-                        if (result.success) {  
-                          setImportStatus({  
-                            message: `Published! Branch: ${result.branchUrl}\nDeployment: ${result.deploymentUrl}`,  
-                            type: 'success',  
-                          });  
-                          setShowPublishDialog(false);  
-                          setPublishName('');  
-                        } else {  
-                          setImportStatus({  
-                            message: `Failed: ${result.error}`,  
-                            type: 'error',  
-                          });  
+                        if (result.success) {    
+                          setImportStatus({    
+                            message: `Published! Branch: ${result.branchUrl}\nDeployment: ${result.deploymentUrl}`,    
+                            type: 'success',    
+                          });    
+                          setShowPublishDialog(false);    
+                          setPublishName('');    
+                        } else {    
+                          setImportStatus({    
+                            message: `Failed: ${result.error}`,    
+                            type: 'error',    
+                          });    
                         }  
-                      }}  
-                      disabled={isPublishing}  
-                      style={{  
-                        padding: "8px 16px",  
-                        backgroundColor: "#10b981",  
-                        color: "white",  
-                        border: "none",  
-                        borderRadius: "6px",  
-                        cursor: isPublishing ? "not-allowed" : "pointer",  
-                      }}  
-                    >  
-                      {isPublishing ? "Publishing..." : "Publish"}  
-                    </button>  
+                      } finally {  
+                        setIsPublishing(false);  
+                      }  
+                    }}    
+                    disabled={isPublishing}    
+                    style={{    
+                      padding: "8px 16px",    
+                      backgroundColor: "#10b981",    
+                      color: "white",    
+                      border: "none",    
+                      borderRadius: "6px",    
+                      cursor: isPublishing ? "not-allowed" : "pointer",    
+                    }}    
+                  >    
+                    {isPublishing ? "Publishing..." : "Publish"}    
+                  </button>  
                   </div>  
                 </div>  
               </div>  
