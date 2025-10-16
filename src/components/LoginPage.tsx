@@ -212,7 +212,13 @@ export default function LoginPage({
   </p>  
 </div>
  
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleLogin();    
+          }}
+          style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+        >
           {localThoughtSpotUrl ? (  
             <>
               <input
@@ -261,7 +267,7 @@ export default function LoginPage({
     Please enter and save your ThoughtSpot URL first  
   </p>  
           )}
-        </div>
+        </form>
       </div>
     </div>
   );

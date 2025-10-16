@@ -1,0 +1,58 @@
+name: Sync Upstream
+ 
+on:
+  schedule:
+    - cron: '30 20 * * *'
+  workflow_dispatch:
+ 
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout local repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+ 
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+ 
+      - name: Add upstream remote and fetch
+        run: |
+          git remote add upstream https://github.com/thoughtspot/tse-demo-builder-v2.git
+          git fetch upstream
+ 
+      - name: Merge upstream/main into your main branch
+        run: |
+          git checkout main
+          git merge upstream/main --allow-unrelated-histories -m "Merge upstream changes"
+ 
+      - name: Push changes to your repository
+        run: git push origin main
+ 
+      - name: Notify Repo Owner and Developer if Sync Fails
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: " Sync Upstream Failed - ${{ github.repository }}"
+          to: |
+            repoowner@example.com,  
+            bhanu.praksh@7dxperts.com
+          from: "GitHub Actions <no-reply@github.com>"
+          body: |
+            Hi Team,
+ 
+            The **Sync Upstream** GitHub Action has failed for the repository:
+             ${{ github.repository }}
+ 
+            Please review the latest run logs for more details:
+             ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+ 
+            — GitHub Actions Bot
