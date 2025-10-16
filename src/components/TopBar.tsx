@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
+<<<<<<< HEAD
 interface TopBarProps {  
   title: string;  
   logoUrl?: string;  
@@ -27,11 +28,39 @@ export default function TopBar({
   onLogout,  
   backgroundColor = "white",  
   foregroundColor = "#1a202c",  
+=======
+interface TopBarProps {
+  title: string;
+  logoUrl?: string;
+  users?: Array<{ id: string; name: string; avatar?: string }>;
+  currentUser?: { id: string; name: string; avatar?: string };
+  onUserChange?: (userId: string) => void;
+  backgroundColor?: string;
+  foregroundColor?: string;
+}
+
+export default function TopBar({
+  title,
+  logoUrl = "/ts.png",
+  users = [
+    { id: "1", name: "John Doe" },
+    { id: "2", name: "Jane Smith" },
+    { id: "3", name: "Bob Johnson" },
+  ],
+  currentUser = { id: "1", name: "John Doe" },
+  onUserChange,
+  backgroundColor = "white",
+  foregroundColor = "#1a202c",
+>>>>>>> upstream/main
 }: TopBarProps) {
   const [thoughtSpotVersion, setThoughtSpotVersion] = useState<string | null>(
     null
   );
+<<<<<<< HEAD
   const [processedLogoUrl, setProcessedLogoUrl] = useState<string>("/logo.png");
+=======
+  const [processedLogoUrl, setProcessedLogoUrl] = useState<string>("/ts.png");
+>>>>>>> upstream/main
   const [isLogoProcessing, setIsLogoProcessing] = useState<boolean>(false);
 
   useEffect(() => {
@@ -57,9 +86,15 @@ export default function TopBar({
       setIsLogoProcessing(true);
 
       try {
+<<<<<<< HEAD
         if (!logoUrl || logoUrl === "/logo.png") {
           console.log("[TopBar] Using default logo");
           setProcessedLogoUrl("/logo.png");
+=======
+        if (!logoUrl || logoUrl === "/ts.png") {
+          console.log("[TopBar] Using default logo");
+          setProcessedLogoUrl("/ts.png");
+>>>>>>> upstream/main
           return;
         }
 
@@ -83,14 +118,22 @@ export default function TopBar({
                 "[TopBar] Failed to load image from IndexedDB:",
                 imageId
               );
+<<<<<<< HEAD
               setProcessedLogoUrl("/logo.png");
+=======
+              setProcessedLogoUrl("/ts.png");
+>>>>>>> upstream/main
             }
           } catch (error) {
             console.error(
               "[TopBar] Failed to load image from IndexedDB:",
               error
             );
+<<<<<<< HEAD
             setProcessedLogoUrl("/logo.png");
+=======
+            setProcessedLogoUrl("/ts.png");
+>>>>>>> upstream/main
           }
         } else {
           // For other URL types, validate and use as-is
@@ -111,7 +154,11 @@ export default function TopBar({
                 "[TopBar] Unexpected IndexedDB reference, using default:",
                 logoUrl
               );
+<<<<<<< HEAD
               setProcessedLogoUrl("/logo.png");
+=======
+              setProcessedLogoUrl("/ts.png");
+>>>>>>> upstream/main
             } else if (logoUrl.startsWith("http")) {
               // Validate HTTP URLs
               new URL(logoUrl);
@@ -121,7 +168,11 @@ export default function TopBar({
                 "[TopBar] Invalid logo URL format, using default:",
                 logoUrl
               );
+<<<<<<< HEAD
               setProcessedLogoUrl("/logo.png");
+=======
+              setProcessedLogoUrl("/ts.png");
+>>>>>>> upstream/main
             }
           } catch (urlError) {
             console.error(
@@ -129,7 +180,11 @@ export default function TopBar({
               logoUrl,
               urlError
             );
+<<<<<<< HEAD
             setProcessedLogoUrl("/logo.png");
+=======
+            setProcessedLogoUrl("/ts.png");
+>>>>>>> upstream/main
           }
         }
       } finally {
@@ -174,11 +229,19 @@ export default function TopBar({
           >
             <span style={{ fontSize: "12px", color: "#9ca3af" }}>...</span>
           </div>
+<<<<<<< HEAD
         ) : processedLogoUrl && processedLogoUrl !== "/logo.png" ? (
           // Safety check: if processedLogoUrl is still an IndexedDB reference, something went wrong
           processedLogoUrl.startsWith("indexeddb://") ? (
             <img
               src="/logo.png"
+=======
+        ) : processedLogoUrl && processedLogoUrl !== "/ts.png" ? (
+          // Safety check: if processedLogoUrl is still an IndexedDB reference, something went wrong
+          processedLogoUrl.startsWith("indexeddb://") ? (
+            <img
+              src="/ts.png"
+>>>>>>> upstream/main
               alt="Logo (fallback)"
               style={{ height: "32px", width: "auto" }}
               onError={(e) => {
@@ -324,6 +387,7 @@ export default function TopBar({
               </button>
             ))}
 
+<<<<<<< HEAD
             {/* Version display */}  
             {thoughtSpotVersion && (  
               <>  
@@ -390,4 +454,33 @@ export default function TopBar({
       </div>  
     </div>  
   );  
+=======
+            {/* Version display */}
+            {thoughtSpotVersion && (
+              <>
+                <hr
+                  style={{
+                    margin: "8px 0",
+                    border: "none",
+                    borderTop: "1px solid #e2e8f0",
+                  }}
+                />
+                <div
+                  style={{
+                    padding: "8px 16px",
+                    fontSize: "12px",
+                    color: "#6b7280",
+                    textAlign: "center",
+                  }}
+                >
+                  Version {thoughtSpotVersion}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+>>>>>>> upstream/main
 }
