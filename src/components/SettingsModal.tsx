@@ -5272,15 +5272,6 @@ function ConfigurationContent({
   fetchUser();  
 }, []);
 
-useEffect(() => {
-    if (importStatus) {
-      const timer = setTimeout(() => {
-        setImportStatus({ message: "", type: null });
-      }, 10000); // Clear after 10 seconds
-      return () => clearTimeout(timer);
-    }
-  }, [importStatus]);
-
   // GitHub configuration loading state
   const [savedConfigurations, setSavedConfigurations] = useState<
     SavedConfiguration[]
@@ -5381,7 +5372,7 @@ useEffect(() => {
               General Configuration
             </h4>
 
-            {importStatus.type === 'success' && (    
+            {importStatus.type === 'success' && importStatus.message.includes('Published') && (   
             <div    
               style={{    
                 marginTop: '16px',    
@@ -5614,7 +5605,7 @@ useEffect(() => {
                   const result = await pushConfigurationToGitHub(undefined, user);    
                   if (result.success) {    
                     setImportStatus({    
-                      message: `Successfully pushed to GitHub! View at: ${result.url}`,    
+                      message: `Successfully pushed to GitHub!`,    
                       type: 'success',    
                     });    
                   } else {    
@@ -6294,7 +6285,7 @@ useEffect(() => {
                       color: "#6b7280",
                     }}
                   >
-                    Select a saved configuration to load from the ThoughtSpot
+                    Select a saved configuration to load from the
                     repository.
                   </p>
 
