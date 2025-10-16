@@ -5444,7 +5444,7 @@ useEffect(() => {
             </div>    
           )}
 
-            {/* Status Banners - Add this right after the Push to GitHub button */}  
+              
             {importStatus.type === 'success' && (  
               <div  
                 style={{  
@@ -5592,15 +5592,15 @@ useEffect(() => {
                     setShowGitHubDialog(true);
                     loadSavedConfigurations();
                   }}
-                  style={{
-                    padding: "10px 20px",
-                    backgroundColor: "#8b5cf6",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    fontSize: "14px",
-                    fontWeight: "500",
+                  style={{    
+                  padding: "10px 20px",    
+                  backgroundColor: "#7c3aed",    
+                  color: "white",    
+                  border: "none",    
+                  borderRadius: "6px",    
+                  cursor: "pointer",    
+                  fontSize: "14px",    
+                  fontWeight: "500",
                   }}
                 >
                   Load from GitHub
@@ -5631,6 +5631,22 @@ useEffect(() => {
                 }    
               }}
               style={{    
+                  padding: "10px 20px",    
+                  backgroundColor: "#7c3aed",    
+                  color: "white",    
+                  border: "none",    
+                  borderRadius: "6px",    
+                  cursor: "pointer",    
+                  fontSize: "14px",    
+                  fontWeight: "500",    
+            }}      
+            >    
+              Push to GitHub    
+            </button>
+   
+            <button    
+            onClick={() => setShowPublishDialog(true)}
+            style={{    
               padding: "10px 20px",    
               backgroundColor: "#7c3aed",    
               color: "white",    
@@ -5639,20 +5655,6 @@ useEffect(() => {
               cursor: "pointer",    
               fontSize: "14px",    
               fontWeight: "500",    
-            }}      
-            >    
-              Push to GitHub    
-            </button>
-   
-            <button    
-            onClick={() => setShowPublishDialog(true)}
-            style={{  
-              padding: "8px 16px",    
-              backgroundColor: "#10b981",    
-              color: "white",    
-              border: "none",    
-              borderRadius: "6px",    
-              cursor: "pointer",    
             }}    
           >    
             Publish Deployment  
