@@ -16,25 +16,18 @@ jobs:
           fetch-depth: 0
  
       - name: Set up Git
-    # Set the git user to the GitHub Actions bot for commit attribution
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
  
       - name: Add upstream remote and fetch
-        # Define the original repository as 'upstream' and fetch its content
         run: |
           git remote add upstream https://github.com/thoughtspot/tse-demo-builder-v2.git
           git fetch upstream
-    
-      - name: Merge upstream into your current branch (Robust Check)
-        # This step attempts to merge the correct branch from upstream (main or master).
+ 
+      - name: Merge upstream/main into your main branch
         run: |
-          # 1. Checkout the branch you want to update (always 'main' for your repo)
-          git checkout main
-          
-          # 2. Check which branch exists on the upstream remote: main or master
-          if git branch -r | grep 'upstream/main'; then
+         if git branch -r | grep 'upstream/main'; then
             UPSTREAM_BRANCH="upstream/main"
           elif git branch -r | grep 'upstream/master'; then
             UPSTREAM_BRANCH="upstream/master"
@@ -42,19 +35,15 @@ jobs:
             echo "::error::Could not find 'main' or 'master' branch on the 'upstream' remote."
             exit 1
           fi
-          
           echo "Merging changes from $UPSTREAM_BRANCH into main..."
-          
-          # 3. Merge the found branch. The --allow-unrelated-histories flag 
+          # 3. Merge the found branch. The --allow-unrelated-histories flag
           #    is kept for initial syncs, but can be removed later.
-          git merge $UPSTREAM_BRANCH --allow-unrelated-histories -m "Merge upstream changes from Aparnaa-Marimuthu/my-app"
-    
+          git merge $UPSTREAM_BRANCH --allow-unrelated-histories -m "Merge upstream changes"
+ 
       - name: Push changes to your repository
-        # Push the merged 'main' branch back to your 'origin' remote
         run: git push origin main
-    
+ 
       - name: Notify Repo Owner and Developer if Sync Fails
-        # This step runs only if any preceding step fails
         if: failure()
         uses: dawidd6/action-send-mail@v3
         with:
@@ -62,18 +51,18 @@ jobs:
           server_port: 465
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "Sync Upstream Failed - ${{ github.repository }}"
+          subject: " Sync Upstream Failed - ${{ github.repository }}"
           to: |
             repoowner@example.com,  
-            bhanu.praksh@7dxperts.com
+            aparnaa.marimuthu@7dxperts.com
           from: "GitHub Actions <no-reply@github.com>"
           body: |
             Hi Team,
-    
+ 
             The **Sync Upstream** GitHub Action has failed for the repository:
-              ${{ github.repository }}
-    
+             ${{ github.repository }}
+ 
             Please review the latest run logs for more details:
-              ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-    
+             ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+ 
             — GitHub Actions Bot
