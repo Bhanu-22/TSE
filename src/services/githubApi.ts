@@ -25,9 +25,9 @@ interface GitHubApiResponse {
 export async function fetchSavedConfigurations(): Promise<GitHubConfig[]> {
   try {
     console.log("Fetching saved configurations from GitHub...");
-    const repoOwner = "thoughtspot";
-    const repoName = "tse-demo-builders-pre-built";
-    const configsPath = "configs";
+    const repoOwner = "Aparnaa-Marimuthu";
+    const repoName = "tse-configuration";
+    const configsPath = "saved-configs";
 
     // Fetch the contents of the configs directory
     const response = await fetch(
@@ -103,9 +103,9 @@ export async function loadConfigurationFromGitHub(
 ): Promise<Record<string, unknown>> {
   try {
     console.log("Loading configuration from GitHub:", filename);
-    const repoOwner = "thoughtspot";
-    const repoName = "tse-demo-builders-pre-built";
-    const configsPath = "configs";
+    const repoOwner = "Aparnaa-Marimuthu";
+    const repoName = "tse-configuration";
+    const configsPath = "saved-configs";
 
     const response = await fetch(
       `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${configsPath}/${filename}`,

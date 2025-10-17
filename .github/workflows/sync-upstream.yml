@@ -38,7 +38,7 @@ jobs:
           echo "Merging changes from $UPSTREAM_BRANCH into main..."
           # 3. Merge the found branch. The --allow-unrelated-histories flag 
           #    is kept for initial syncs, but can be removed later.
-          git merge $UPSTREAM_BRANCH --allow-unrelated-histories -m "Merge upstream changes from Aparnaa-Marimuthu/my-app"
+          git merge $UPSTREAM_BRANCH --allow-unrelated-histories -m "Merge upstream changes"
 
       - name: Push changes to your repository
         run: git push origin main
