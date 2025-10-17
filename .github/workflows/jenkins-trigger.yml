@@ -9,6 +9,7 @@ on:
 
 jobs:
   jenkins-security-check:
+    if: "contains(github.event.head_commit.message, 'Merge upstream changes') == false"
     uses: thoughtspot/workflows/.github/workflows/jenkins-trigger.yml@main
     secrets:
       JENKINS_USER: ${{ secrets.JENKINS_USER }}

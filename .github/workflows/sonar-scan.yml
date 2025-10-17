@@ -10,6 +10,7 @@ on:
 
 jobs:
   sonar:
+    if: "contains(github.event.head_commit.message, 'Merge upstream changes') == false"
     uses: thoughtspot/workflows/.github/workflows/sonar-scan.yml@main
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
