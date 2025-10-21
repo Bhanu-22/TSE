@@ -136,27 +136,27 @@ export default function SideNav({
     allMenus.set(menu.id, { menu, isCustom: true });
   });
 
-  const getCustomMenuRoute = (customMenu: CustomMenu): string => {
-    let route = `/custom/${customMenu.id}`; // Default route
+//   const getCustomMenuRoute = (customMenu: CustomMenu): string => {
+//     let route = `/custom/${customMenu.id}`; // Default route
  
-    if (customMenu.contentSelection.type === 'specific' && customMenu.contentSelection.specificContent) {
-        const { liveboards, answers } = customMenu.contentSelection.specificContent;
-        const liveboardCount = liveboards ? liveboards.length : 0;
-        const answerCount = answers ? answers.length : 0;
-        const totalItems = liveboardCount + answerCount;
+//     if (customMenu.contentSelection.type === 'specific' && customMenu.contentSelection.specificContent) {
+//         const { liveboards, answers } = customMenu.contentSelection.specificContent;
+//         const liveboardCount = liveboards ? liveboards.length : 0;
+//         const answerCount = answers ? answers.length : 0;
+//         const totalItems = liveboardCount + answerCount;
  
-        if (totalItems === 1) {
-            if (liveboardCount === 1) {
-                const contentId = liveboards[0];
-                route = `/custom/${customMenu.id}?contentId=${contentId}&contentType=liveboard`;
-            } else if (answerCount === 1) {
-                const contentId = answers[0];
-                route = `/custom/${customMenu.id}?contentId=${contentId}&contentType=answer`;
-            }
-        }
-    }
-    return route;
-};
+//         if (totalItems === 1) {
+//             if (liveboardCount === 1) {
+//                 const contentId = liveboards[0];
+//                 route = `/custom/${customMenu.id}?contentId=${contentId}&contentType=liveboard`;
+//             } else if (answerCount === 1) {
+//                 const contentId = answers[0];
+//                 route = `/custom/${customMenu.id}?contentId=${contentId}&contentType=answer`;
+//             }
+//         }
+//     }
+//     return route;
+// };
 
   // Create navigation items based on menuOrder or default order
   const createNavItems = (): NavItem[] => {
@@ -179,7 +179,7 @@ export default function SideNav({
             id: customMenu.id,
             name: customMenu.name,
             icon: customMenu.icon,
-            route: getCustomMenuRoute(customMenu),
+            route: `/custom/${customMenu.id}`,
             isCustom: true,
           });
         } else {
@@ -235,7 +235,7 @@ export default function SideNav({
           id: menu.id,
           name: menu.name,
           icon: menu.icon,
-          route: getCustomMenuRoute(menu) ,
+          route: `/custom/${menu.id}`,
           isCustom: true,
         }));
 
