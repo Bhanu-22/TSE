@@ -26,15 +26,37 @@ function CustomMenuPageContent() {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    const contentId = searchParams.get('contentId');
-    const contentType = searchParams.get('contentType');
+  // useEffect(() => {
+  //   const contentId = searchParams.get('contentId');
+  //   const contentType = searchParams.get('contentType');
 
-    if (contentId && contentType) {
-        const fetchContentDetails = async () => {
+  //   if (contentId && contentType) {
+  //       const fetchContentDetails = async () => {
+  //           const { fetchContentByIds } = await import("../../../services/thoughtspotApi");
+  //           const liveboards = contentType === 'liveboard' ? [contentId] : [];
+  //           const answers = contentType === 'answer' ? [contentId] : [];
+  //           const content = await fetchContentByIds(liveboards, answers);
+  //           if (content.liveboards.length > 0) {
+  //               setSelectedContent(content.liveboards[0]);
+  //               setShowContentDirectly(true);
+  //           } else if (content.answers.length > 0) {
+  //               setSelectedContent(content.answers[0]);
+  //               setShowContentDirectly(true);
+  //           }
+  //       };
+  //       fetchContentDetails();
+  //   }
+  // }, [searchParams]);
+
+  const menuId = params?.id as string;
+  const customMenu = customMenus.find((menu) => menu.id === menuId);
+
+  useEffect(() => {
+    if (customMenu && customMenu.openDirectly) {
+        const fetchContentAndShow = async () => {
             const { fetchContentByIds } = await import("../../../services/thoughtspotApi");
-            const liveboards = contentType === 'liveboard' ? [contentId] : [];
-            const answers = contentType === 'answer' ? [contentId] : [];
+            const liveboards = customMenu.contentSelection.specificContent?.liveboards || [];
+            const answers = customMenu.contentSelection.specificContent?.answers || [];
             const content = await fetchContentByIds(liveboards, answers);
             if (content.liveboards.length > 0) {
                 setSelectedContent(content.liveboards[0]);
@@ -44,12 +66,9 @@ function CustomMenuPageContent() {
                 setShowContentDirectly(true);
             }
         };
-        fetchContentDetails();
+        fetchContentAndShow();
     }
-  }, [searchParams]);
-
-  const menuId = params?.id as string;
-  const customMenu = customMenus.find((menu) => menu.id === menuId);
+}, [customMenu]);
 
   const handleBackClick = () => {
     router.back();
@@ -166,7 +185,7 @@ function CustomMenuPageContent() {
           overflow: "hidden",
         }}
       >
-        {!searchParams.get('contentId') && (
+        {!customMenu.openDirectly && !searchParams.get('contentId') && (
         <div style={{ marginBottom: "24px" }}>
           <button
             onClick={handleBackToGrid}
