@@ -219,6 +219,7 @@ export interface CustomMenu {
     tagIdentifiers?: string[];
     contentType?: "answer" | "liveboard";
   };
+  openDirectly?: boolean;
 }
 
 export interface ThoughtSpotTag {

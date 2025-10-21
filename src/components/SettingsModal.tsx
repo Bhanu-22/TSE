@@ -3157,7 +3157,32 @@ function CustomMenusContent({
                 </div>
               </div>
             )}
-
+            {editingMenu.contentSelection.type === "specific" && (
+                <div style={{ marginTop: '16px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: (editingMenu.contentSelection.specificContent?.liveboards.length || 0) + (editingMenu.contentSelection.specificContent?.answers.length || 0) !== 1 ? 'not-allowed' : 'pointer' }}>
+                        <input
+                            type="checkbox"
+                            checked={editingMenu.openDirectly || false}
+                            disabled={(editingMenu.contentSelection.specificContent?.liveboards.length || 0) + (editingMenu.contentSelection.specificContent?.answers.length || 0) !== 1}
+                            onChange={(e) => {
+                                setEditingMenu({
+                                    ...editingMenu,
+                                    openDirectly: e.target.checked,
+                                });
+                            }}
+                            style={{ transform: 'scale(1.2)' }}
+                        />
+                        <span style={{ fontSize: '14px', color: (editingMenu.contentSelection.specificContent?.liveboards.length || 0) + (editingMenu.contentSelection.specificContent?.answers.length || 0) !== 1 ? '#9ca3af' : 'inherit' }}>
+                            Open directly when clicked
+                        </span>
+                    </label>
+                    <p style={{ fontSize: '12px', color: '#6b7280', margin: '4px 0 0 28px' }}>
+                        If checked, clicking the menu item will open the selected Liveboard or Answer directly.
+                        <br />
+                        This is only enabled when exactly one item is selected.
+                    </p>
+                </div>
+            )}
             {editingMenu.contentSelection.type === "tag" && (
               <div style={{ marginBottom: "16px" }}>
                 <label
