@@ -1,0 +1,224 @@
+// Auto-generated file - do not edit manually  
+// Generated from homePageContent.html  
+// Run 'npm run generate:homepage' to regenerate this file  
+ 
+export const HOME_CONTENT_HTML = `<style>  
+  .dxperts-preview {  
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;  
+    max-width: 1200px;  
+    margin: 0 auto;  
+    padding: 40px 20px;  
+    background: linear-gradient(135deg, #000000 0%, #000000 50%, #000000 100%);  
+    color: #ffffff;  
+    border-radius: 12px;  
+  }  
+   
+  .preview-header {  
+    text-align: center;  
+    margin-bottom: 50px;  
+  }  
+   
+  .preview-header h1 {  
+    font-size: 3.5em;  
+    margin: 0 0 10px 0;  
+    font-weight: 700;  
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);  
+    letter-spacing: -1px;  
+    color: #ffffff;  
+  }  
+   
+  .preview-header .tagline {  
+    font-size: 1.4em;  
+    opacity: 0.95;  
+    max-width: 800px;  
+    margin: 0 auto 10px auto;  
+    font-weight: 500;  
+    color: #e0e0e0;  
+  }  
+   
+  .preview-header .subtitle {  
+    font-size: 1.1em;  
+    opacity: 0.85;  
+    max-width: 700px;  
+    margin: 0 auto;  
+    color: #b0b0b0;  
+  }  
+   
+  .stats-row {  
+    display: flex;  
+    justify-content: space-around;  
+    flex-wrap: wrap;  
+    margin: 40px 0;  
+    gap: 20px;  
+  }  
+   
+  .stat-item {  
+    text-align: center;  
+    min-width: 150px;  
+  }  
+   
+  .stat-number {  
+    font-size: 3em;  
+    font-weight: 700;  
+    margin: 0;  
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);  
+    color: #ffffff;  
+  }  
+   
+  .stat-label {  
+    font-size: 1em;  
+    opacity: 0.9;  
+    margin-top: 5px;  
+    color: #d0d0d0;  
+  }  
+   
+  .features-grid {  
+    display: grid;  
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));  
+    gap: 30px;  
+    margin-bottom: 50px;  
+  }  
+   
+  .feature-card {  
+    background: rgba(255, 255, 255, 0.05);  
+    backdrop-filter: blur(10px);  
+    padding: 30px;  
+    border-radius: 12px;  
+    border: 1px solid rgba(255, 255, 255, 0.1);  
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;  
+  }  
+   
+  .feature-card:hover {  
+    transform: translateY(-5px);  
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);  
+    background: rgba(255, 255, 255, 0.1);  
+    border-color: rgba(255, 255, 255, 0.2);  
+  }  
+   
+  .feature-icon {  
+    font-size: 3em;  
+    margin-bottom: 15px;  
+  }  
+   
+  .feature-card h3 {  
+    font-size: 1.5em;  
+    margin: 0 0 15px 0;  
+    font-weight: 600;  
+    color: #ffffff;  
+  }  
+   
+  .feature-card p {  
+    font-size: 1em;  
+    line-height: 1.6;  
+    opacity: 0.9;  
+    margin: 0;  
+    color: #d0d0d0;  
+  }  
+   
+  .cta-section {  
+    text-align: center;  
+    padding: 40px;  
+    background: rgba(255, 255, 255, 0.05);  
+    border-radius: 12px;  
+    border: 1px solid rgba(255, 255, 255, 0.1);  
+  }  
+   
+  .cta-section h2 {  
+    color: #ffffff;  
+  }  
+   
+  .cta-section p {  
+    color: #d0d0d0;  
+  }  
+   
+  .cta-button {  
+    display: inline-block;  
+    padding: 15px 40px;  
+    background: #ffffff;  
+    color: #0a0a0a;  
+    text-decoration: none;  
+    border-radius: 8px;  
+    font-weight: 600;  
+    font-size: 1.1em;  
+    transition: all 0.3s ease;  
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);  
+  }  
+   
+  .cta-button:hover {  
+    transform: scale(1.05);  
+    box-shadow: 0 6px 20px rgba(255,255,255,0.2);  
+    background: #f5f5f5;  
+  }  
+</style>  
+ 
+<div class="dxperts-preview">  
+  <div class="preview-header">  
+    <h1>7Dxperts</h1>  
+    <p class="tagline">Empowering Digital Transformation Through Innovation</p>  
+    <p class="subtitle">Leading technology solutions provider specializing in digital innovation, cloud integration, AI development, and business automation</p>  
+  </div>  
+   
+  <div class="stats-row">  
+    <div class="stat-item">  
+      <div class="stat-number">1000+</div>  
+      <div class="stat-label">Clients Served</div>  
+    </div>  
+    <div class="stat-item">  
+      <div class="stat-number">50+</div>  
+      <div class="stat-label">Expert Consultants</div>  
+    </div>  
+    <div class="stat-item">  
+      <div class="stat-number">99.8%</div>  
+      <div class="stat-label">Client Satisfaction</div>  
+    </div>  
+    <div class="stat-item">  
+      <div class="stat-number">24/7</div>  
+      <div class="stat-label">Global Support</div>  
+    </div>  
+  </div>  
+   
+  <div class="features-grid">  
+    <div class="feature-card">  
+      <div class="feature-icon">🚀</div>  
+      <h3>Digital Transformation</h3>  
+      <p>Accelerate your business evolution with cutting-edge digital strategies and implementation expertise</p>  
+    </div>  
+     
+    <div class="feature-card">  
+      <div class="feature-icon">☁️</div>  
+      <h3>Cloud Solutions</h3>  
+      <p>Seamless cloud migration and integration services across AWS, Azure, and Google Cloud platforms</p>  
+    </div>  
+     
+    <div class="feature-card">  
+      <div class="feature-icon">🤖</div>  
+      <h3>AI & Machine Learning</h3>  
+      <p>Harness the power of artificial intelligence to automate processes and unlock data-driven insights</p>  
+    </div>  
+     
+    <div class="feature-card">  
+      <div class="feature-icon">📊</div>  
+      <h3>Business Intelligence</h3>  
+      <p>Transform raw data into actionable insights with advanced analytics and visualization tools</p>  
+    </div>  
+     
+    <div class="feature-card">  
+      <div class="feature-icon">🔒</div>  
+      <h3>Cybersecurity</h3>  
+      <p>Enterprise-grade security solutions to protect your digital assets and ensure compliance</p>  
+    </div>  
+     
+    <div class="feature-card">  
+      <div class="feature-icon">⚙️</div>  
+      <h3>Process Automation</h3>  
+      <p>Streamline operations and boost efficiency with intelligent automation and workflow optimization</p>  
+    </div>  
+  </div>  
+   
+  <div class="cta-section">  
+    <h2 style="margin-top: 0;">Ready to Transform Your Business?</h2>  
+    <p style="margin-bottom: 30px; font-size: 1.1em;">Partner with 7Dxperts to unlock your organization's full digital potential</p>  
+    <a href="#" class="cta-button">Schedule Consultation</a>  
+  </div>  
+</div>
+ `;  

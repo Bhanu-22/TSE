@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
+    "generate:homepage": "node scripts/generate-homepage-content.js",  
+    "predev": "npm run generate:homepage",  
+    "dev": "next dev --turbopack",  
+    "prebuild": "npm run generate:homepage",  
+    "build": "next build",  
+    "start": "next start",  
     "lint": "next lint"
   },
   "dependencies": {

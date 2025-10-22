@@ -11,6 +11,7 @@ import {
   ConfigurationData,
   ConfigurationSource,
 } from "../types/thoughtspot";
+import { HOME_CONTENT_HTML } from "@/content/homeContent";
 
 // Storage configuration
 const STORAGE_KEY = "tse-demo-builder-config";
@@ -28,7 +29,7 @@ export const DEFAULT_CONFIG: ConfigurationData = {
       enabled: true,
       icon: "home",
       homePageType: "html",
-      homePageValue: "<h1>7Dxperts Portal</h1>",
+      homePageValue: HOME_CONTENT_HTML,
     },
     {
       id: "favorites",
