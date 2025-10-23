@@ -1,5 +1,5 @@
 // Auto-generated file - do not edit manually  
-// Generated from homePageContent.html  
+// Generated from homePageContents.html  
 // Run 'npm run generate:homepage' to regenerate this file  
  
 export const HOME_CONTENT_HTML = `<style>  
@@ -8,7 +8,7 @@ export const HOME_CONTENT_HTML = `<style>
     max-width: 1200px;  
     margin: 0 auto;  
     padding: 40px 20px;  
-    background: linear-gradient(135deg, #000000 0%, #000000 50%, #000000 100%);  
+    background: linear-gradient(135deg, #046685 0%, #046685 50%, #046685 100%);  
     color: #ffffff;  
     border-radius: 12px;  
   }  
