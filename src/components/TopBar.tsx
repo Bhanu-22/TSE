@@ -9,7 +9,7 @@ interface TopBarProps {
   users?: Array<{ id: string; name: string; avatar?: string }>;  
   currentUser?: { id: string; name: string; avatar?: string };  
   onUserChange?: (userId: string) => void;  
-  onLogout?: () => void;  // Add this line  
+  onLogout?: () => void;
   backgroundColor?: string;  
   foregroundColor?: string;  
 }
@@ -24,7 +24,7 @@ export default function TopBar({
   ],  
   currentUser = { id: "1", name: "John Doe" },  
   onUserChange,  
-  onLogout,  // Add this line  
+  onLogout,
   backgroundColor = "white",  
   foregroundColor = "#1a202c",  
 }: TopBarProps) {
@@ -347,7 +347,7 @@ export default function TopBar({
               </>  
             )}  
               
-            {/* Logout button - ADD THIS SECTION */}  
+            {/* Logout button */}  
             {onLogout && (  
               <>  
                 <hr  

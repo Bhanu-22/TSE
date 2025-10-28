@@ -48,7 +48,6 @@ import { loginToThoughtSpot } from "../services/thoughtspotApi";
 
 import { getCurrentUser } from '../services/thoughtspotApi';  
  
-// Add this type import  
 type ThoughtSpotUser = {  
   name: string;  
   display_name: string;  
@@ -118,7 +117,6 @@ interface Tab {
   content: React.ReactNode;
 }
 
-// Add this component before the StandardMenusContent function
 function ModelSearchInput({
   onApply,
   placeholder = "Search models...",
