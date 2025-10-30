@@ -94,7 +94,7 @@ export const DEFAULT_CONFIG: ConfigurationData = {
     value: "<h1>Welcome to TSE Demo Builder</h1>",
   },
   appConfig: {
-    thoughtspotUrl: "https://techpartners.thoughtspot.cloud/",
+    thoughtspotUrl: "https://7dxperts.thoughtspot.cloud/",
     applicationName: "TSE Demo Builder",
     logo: "/logo.png",
     earlyAccessFlags: "enable-modular-home\nenable-custom-styling",
