@@ -1,0 +1,37 @@
+{
+  "standardMenus": [
+    {
+      "name": "Search",
+      "icon": "search",
+      "isVisible": true
+    },
+    {
+      "name": "Home",
+      "icon": "home",
+      "isVisible": true
+    }
+  ],
+  "customMenus": [
+    {
+      "name": "Sales Dashboard",
+      "icon": "dashboard",
+      "contentSelection": {
+        "specificContent": {
+          "liveboards": [
+            "lb-12345",
+            "lb-67890"
+          ]
+        }
+      }
+    }
+  ],
+  "appConfig": {
+    "thoughtspotUrl": "https://my-company.thoughtspot.cloud",
+    "authType": "SAMLRedirect",
+    "customizations": {
+      "style": {
+        "customCSS": ""
+      }
+    }
+  }
+}
