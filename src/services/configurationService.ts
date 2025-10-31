@@ -96,7 +96,7 @@ export const DEFAULT_CONFIG: ConfigurationData = {
     value: "<h1>7Dxperts Portal</h1>",
   },
   appConfig: {
-    thoughtspotUrl: "https://techpartners.thoughtspot.cloud",
+    thoughtspotUrl: "https://7dxperts.thoughtspot.cloud",
     authType: "TrustedAuthToken",
     applicationName: "7Dxperts Portal",
     logo: "/7dx-logo.png",
