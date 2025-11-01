@@ -1,0 +1,254 @@
+{
+  "standardMenus": [
+    {
+      "id": "home",
+      "name": "Home",
+      "enabled": true,
+      "icon": "home",
+      "homePageType": "html",
+      "homePageValue": "{\n\"standardMenus\": [\n{\n\"id\": \"home\",\n\"name\": \"Home\",\n\"enabled\": \"\",\n\"icon\": \"home\",\n\"homePageType\": \"html\",\n\"homePageValue\": \"\"\n},\n{\n\"id\": \"favorites\",\n\"name\": \"Favorites\",\n\"enabled\": \"\",\n\"icon\": \"favorites\",\n\"homePageType\": \"html\",\n\"homePageValue\": \"<h1>Favorites</h1>\"\n},\n{\n\"id\": \"my-reports\",\n\"name\": \"My Reports\",\n\"enabled\": \"\",\n\"icon\": \"my-reports\",\n\"homePageType\": \"html\",\n\"homePageValue\": \"<h1>My Reports</h1>\"\n},\n{\n\"id\": \"spotter\",\n\"name\": \"Spotter\",\n\"enabled\": \"\",\n\"icon\": \"spotter-custom.svg\",\n\"homePageType\": \"html\",\n\"homePageValue\": \"<h1>Spotter</h1>\",\n\"spotterModelId\": \"\",\n\"spotterSearchQuery\": \"\"\n},\n{\n\"id\": \"search\",\n\"name\": \"Search\",\n\"enabled\": \"\",\n\"icon\": \"search\",\n\"homePageType\": \"html\",\n\"homePageValue\": \"<h1>Search</h1>\"\n},\n{\n\"id\": \"full-app\",\n\"name\": \"Full App\",\n\"enabled\": \"\",\n\"icon\": \"full-app\",\n\"homePageType\": \"html\",\n\"homePageValue\": \"<h1>Full App</h1>\"\n},\n{\n\"id\": \"all-content\",\n\"name\": \"All Content\",\n\"enabled\": \"\",\n\"icon\": \"📚\",\n\"homePageType\": \"html\",\n\"homePageValue\": \"<h1>All Content</h1>\",\n\"excludeSystemContent\": true\n}\n],\n\"customMenus\": \"\",\n\"menuOrder\": [\"home\", \"spotter\", \"custom-1761807539262\"],\n\"homePageConfig\": {\n\"type\": \"html\",\n\"value\": \"<h1>Welcome to TSE Demo Builder</h1>\"\n},\n\"appConfig\": {\n\"thoughtspotUrl\": \"\",\n\"applicationName\": \"\",\n\"logo\": \"\",\n\"earlyAccessFlags\": \"enable-modular-home\\nenable-custom-styling\",\n\"favicon\": \"\",\n\"showFooter\": true,\n\"chatbot\": {\n\"enabled\": true,\n\"welcomeMessage\": \"Hello! I'm your AI assistant. What would you like to know about your data?\",\n\"position\": \"bottom-right\",\n\"primaryColor\": \"#3b82f6\",\n\"hoverColor\": \"#2563eb\"\n},\n\"authType\": \"None\",\n\"faviconSyncEnabled\": true\n},\n\"fullAppConfig\": {\n\"showPrimaryNavbar\": true,\n\"hideHomepageLeftNav\": false\n},\n\"stylingConfig\": {\n\"application\": {\n\"topBar\": {\n\"backgroundColor\": \"#ffffff\",\n\"foregroundColor\": \"#333333\",\n\"logoUrl\": \"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...\"\n},\n\"sidebar\": {\n\"backgroundColor\": \"#f5f5f5\",\n\"foregroundColor\": \"#333333\"\n},\n\"footer\": {\n\"backgroundColor\": \"#ffffff\",\n\"foregroundColor\": \"#333333\"\n},\n\"dialogs\": {\n\"backgroundColor\": \"#ffffff\",\n\"foregroundColor\": \"#333333\"\n},\n\"buttons\": {\n\"primary\": {\n\"backgroundColor\": \"#3182ce\",\n\"foregroundColor\": \"#ffffff\",\n\"borderColor\": \"#3182ce\",\n\"hoverBackgroundColor\": \"#2c5aa0\",\n\"hoverForegroundColor\": \"#ffffff\"\n},\n\"secondary\": {\n\"backgroundColor\": \"#ffffff\",\n\"foregroundColor\": \"#374151\",\n\"borderColor\": \"#d1d5db\",\n\"hoverBackgroundColor\": \"#f9fafb\",\n\"hoverForegroundColor\": \"#374151\"\n}\n},\n\"backgrounds\": {\n\"mainBackground\": \"#f7fafc\",\n\"contentBackground\": \"#ffffff\",\n\"cardBackground\": \"#ffffff\",\n\"borderColor\": \"#e2e8f0\"\n},\n\"typography\": {\n\"primaryColor\": \"#1f2937\",\n\"secondaryColor\": \"#6b7280\",\n\"linkColor\": \"#3182ce\",\n\"linkHoverColor\": \"#2c5aa0\"\n},\n\"selectedTheme\": \"default\"\n},\n\"embeddedContent\": {\n\"strings\": {},\n\"stringIDs\": {},\n\"cssUrl\": \"\",\n\"customCSS\": {\n\"variables\": {},\n\"rules_UNSTABLE\": {}\n}\n},\n\"embedFlags\": {\n\"liveboardEmbed\": {\n\"showLiveboardTitle\": \"\",\n\"showLiveboardDescription\": \"\",\n\"isLiveboardHeaderSticky\": \"\",\n\"hideLiveboardHeader\": \"\",\n\"disabledActions\": \"\",\n\"disabledActionReason\": \"Reason for disabling\",\n\"visibleActions\": [],\n\"hiddenActions\": \"\"\n}\n},\n\"embedDisplay\": {\n\"hideTitle\": false,\n\"hideDescription\": false\n}\n},\n\"userConfig\": {\n\"users\": [\n{\n\"id\": \"power-user\",\n\"name\": \"Power User\",\n\"description\": \"Full access - can access all features including Search and Full App\",\n\"locale\": \"en\",\n\"access\": {\n\"standardMenus\": {\n\"home\": true,\n\"favorites\": true,\n\"my-reports\": true,\n\"spotter\": true,\n\"search\": true,\n\"full-app\": true,\n\"all-content\": true\n},\n\"customMenus\": [\"custom-1761807539262\"],\n\"hiddenActions\": {\n\"enabled\": false,\n\"actions\": []\n}\n}\n},\n{\n\"id\": \"basic-user\",\n\"name\": \"Basic User\",\n\"description\": \"Limited access - cannot access Search and Full App\",\n\"locale\": \"en\",\n\"access\": {\n\"standardMenus\": {\n\"home\": true,\n\"favorites\": true,\n\"my-reports\": true,\n\"spotter\": true,\n\"search\": false,\n\"full-app\": false,\n\"all-content\": true\n},\n\"customMenus\": [],\n\"hiddenActions\": {\n\"enabled\": false,\n\"actions\": []\n}\n}\n}\n],\n\"currentUserId\": \"power-user\"\n},\n\"version\": \"1.0.0\",\n\"timestamp\": \"\",\n\"description\": \"TSE Demo Builder Configuration Export\"\n}"
+    },
+    {
+      "id": "favorites",
+      "name": "Favorites",
+      "enabled": false,
+      "icon": "favorites",
+      "homePageType": "html",
+      "homePageValue": "<h1>Favorites</h1>"
+    },
+    {
+      "id": "my-reports",
+      "name": "My Reports",
+      "enabled": false,
+      "icon": "my-reports",
+      "homePageType": "html",
+      "homePageValue": "<h1>My Reports</h1>"
+    },
+    {
+      "id": "spotter",
+      "name": "Spotter",
+      "enabled": true,
+      "icon": "spotter-custom.svg",
+      "homePageType": "html",
+      "homePageValue": "<h1>Spotter</h1>",
+      "spotterModelId": "697906bf-8426-416a-802e-de8f9a607d8b",
+      "spotterSearchQuery": "What's the current sales?"
+    },
+    {
+      "id": "search",
+      "name": "Search",
+      "enabled": false,
+      "icon": "search",
+      "homePageType": "html",
+      "homePageValue": "<h1>Search</h1>"
+    },
+    {
+      "id": "full-app",
+      "name": "Full App",
+      "enabled": false,
+      "icon": "full-app",
+      "homePageType": "html",
+      "homePageValue": "<h1>Full App</h1>"
+    },
+    {
+      "id": "all-content",
+      "name": "All Content",
+      "enabled": false,
+      "icon": "📚",
+      "homePageType": "html",
+      "homePageValue": "<h1>All Content</h1>",
+      "excludeSystemContent": true
+    }
+  ],
+  "customMenus": [
+    {
+      "id": "custom-1761975837348",
+      "name": "My Reports",
+      "description": "",
+      "icon": "my-reports",
+      "enabled": true,
+      "contentSelection": {
+        "type": "specific",
+        "specificContent": {
+          "liveboards": [
+            "32201f81-17cf-4448-9c8f-e2ef7f0754fc"
+          ],
+          "answers": []
+        }
+      }
+    }
+  ],
+  "menuOrder": [
+    "home",
+    "spotter",
+    "custom-1761807539262"
+  ],
+  "homePageConfig": {
+    "type": "html",
+    "value": "<h1>Welcome to TSE Demo Builder</h1>"
+  },
+  "appConfig": {
+    "thoughtspotUrl": "https://7dxperts.thoughtspot.cloud/",
+    "applicationName": "TSE Demo Builder",
+    "logo": "/logo.png",
+    "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
+    "favicon": "/favicon.ico",
+    "showFooter": true,
+    "chatbot": {
+      "enabled": true,
+      "welcomeMessage": "Hello! I'm your AI assistant. What would you like to know about your data?",
+      "position": "bottom-right",
+      "primaryColor": "#3b82f6",
+      "hoverColor": "#2563eb"
+    },
+    "authType": "None",
+    "faviconSyncEnabled": true
+  },
+  "fullAppConfig": {
+    "showPrimaryNavbar": true,
+    "hideHomepageLeftNav": false
+  },
+  "stylingConfig": {
+    "application": {
+      "topBar": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333",
+        "logoUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
+      },
+      "sidebar": {
+        "backgroundColor": "#f5f5f5",
+        "foregroundColor": "#333333"
+      },
+      "footer": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "dialogs": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "buttons": {
+        "primary": {
+          "backgroundColor": "#3182ce",
+          "foregroundColor": "#ffffff",
+          "borderColor": "#3182ce",
+          "hoverBackgroundColor": "#2c5aa0",
+          "hoverForegroundColor": "#ffffff"
+        },
+        "secondary": {
+          "backgroundColor": "#ffffff",
+          "foregroundColor": "#374151",
+          "borderColor": "#d1d5db",
+          "hoverBackgroundColor": "#f9fafb",
+          "hoverForegroundColor": "#374151"
+        }
+      },
+      "backgrounds": {
+        "mainBackground": "#f7fafc",
+        "contentBackground": "#ffffff",
+        "cardBackground": "#ffffff",
+        "borderColor": "#e2e8f0"
+      },
+      "typography": {
+        "primaryColor": "#1f2937",
+        "secondaryColor": "#6b7280",
+        "linkColor": "#3182ce",
+        "linkHoverColor": "#2c5aa0"
+      },
+      "selectedTheme": "default"
+    },
+    "embeddedContent": {
+      "strings": {},
+      "stringIDs": {},
+      "cssUrl": "",
+      "customCSS": {
+        "variables": {},
+        "rules_UNSTABLE": {}
+      }
+    },
+    "embedFlags": {
+      "liveboardEmbed": {
+        "showLiveboardTitle": false,
+        "showLiveboardDescription": false,
+        "isLiveboardHeaderSticky": true,
+        "hideLiveboardHeader": false,
+        "disabledActions": [
+          "download",
+          "downloadAsCSV",
+          "downloadAsPng",
+          "DRILL",
+          "share",
+          "makeACopy"
+        ],
+        "disabledActionReason": "Reason for disabling",
+        "visibleActions": [],
+        "hiddenActions": [
+          "download",
+          "downloadAsCSV",
+          "downloadAsPng",
+          "DRILL",
+          "share",
+          "makeACopy"
+        ]
+      }
+    },
+    "embedDisplay": {
+      "hideTitle": false,
+      "hideDescription": false
+    }
+  },
+  "userConfig": {
+    "users": [
+      {
+        "id": "power-user",
+        "name": "Power User",
+        "description": "Full access - can access all features including Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": true,
+            "full-app": true,
+            "all-content": true
+          },
+          "customMenus": [
+            "custom-1761807539262"
+          ],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      },
+      {
+        "id": "basic-user",
+        "name": "Basic User",
+        "description": "Limited access - cannot access Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": false,
+            "full-app": false,
+            "all-content": true
+          },
+          "customMenus": [],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      }
+    ],
+    "currentUserId": "power-user"
+  },
+  "version": "1.0.0",
+  "timestamp": "2025-11-01T05:43:57.348437",
+  "description": "TSE Demo Builder Configuration Export"
+}
