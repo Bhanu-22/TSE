@@ -62,7 +62,7 @@
   ],
   "customMenus": [
     {
-      "id": "custom-1761975837348",
+      "id": "custom-1761976231873",
       "name": "My Reports",
       "description": "",
       "icon": "my-reports",
@@ -249,6 +249,6 @@
     "currentUserId": "power-user"
   },
   "version": "1.0.0",
-  "timestamp": "2025-11-01T05:43:57.348437",
+  "timestamp": "2025-11-01T05:50:31.873738",
   "description": "TSE Demo Builder Configuration Export"
 }
