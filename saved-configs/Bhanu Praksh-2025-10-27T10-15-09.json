@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "timestamp": "2025-10-14T08:43:56.623Z",
+  "timestamp": "2025-10-27T10:15:09.772Z",
   "description": "7Dxperts TSE Demo Builder Configuration Export",
   "standardMenus": [
     {
@@ -23,7 +23,7 @@
     {
       "id": "my-reports",
       "name": "My Reports",
-      "enabled": true,
+      "enabled": false,
       "icon": "my-reports",
       "homePageType": "html",
       "homePageValue": "<h1>My Reports</h1>"
@@ -76,7 +76,7 @@
         "type": "specific",
         "specificContent": {
           "liveboards": [
-            "c745de1a-0fa1-4e9f-9ddf-167d3c36463d"
+            "8c3d50f6-d6fc-4400-9258-aad55b6b6f55"
           ],
           "answers": []
         }
@@ -92,20 +92,41 @@
         "type": "specific",
         "specificContent": {
           "liveboards": [
-            "c745de1a-0fa1-4e9f-9ddf-167d3c36463d"
+            "32201f81-17cf-4448-9c8f-e2ef7f0754fc"
           ],
           "answers": []
         }
       }
+    },
+    {
+      "id": "custom-1761560055253",
+      "name": "test json",
+      "description": "",
+      "icon": "dashboard",
+      "enabled": true,
+      "contentSelection": {
+        "type": "specific",
+        "specificContent": {
+          "liveboards": [
+            "edfe36a5-44de-4945-96f5-352b195c8ab0"
+          ],
+          "answers": []
+        }
+      },
+      "openDirectly": true
     }
   ],
   "menuOrder": [
     "home",
+    "favorites",
+    "my-reports",
     "spotter",
     "search",
+    "full-app",
+    "all-content",
     "custom-1760342080199",
     "custom-1760341867406",
-    "my-reports"
+    "custom-1761560055253"
   ],
   "homePageConfig": {
     "type": "html",
@@ -136,12 +157,12 @@
   "stylingConfig": {
     "application": {
       "topBar": {
-        "backgroundColor": "#009999",
-        "foregroundColor": "#f8f2f2",
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333",
         "logoUrl": "https://www.gatwickairport.com/on/demandware.static/-/Sites-Gatwick-Library/default/dwe6a3b12e/images/gatwick-main-logo/gatwick-official-airport-parking.svg"
       },
       "sidebar": {
-        "backgroundColor": "#c2c2c2",
+        "backgroundColor": "#f5f5f5",
         "foregroundColor": "#333333"
       },
       "footer": {
@@ -193,15 +214,14 @@
     },
     "embedFlags": {
       "liveboardEmbed": {
+        "hideLiveboardHeader": true,
+        "fullHeight": true,
+        "dataPanelV2": true,
+        "defaultHeight": 600,
         "frameParams": {
           "width": 0,
           "height": 0
-        },
-        "dataPanelV2": false,
-        "fullHeight": true,
-        "defaultHeight": 600,
-        "hideLiveboardHeader": true,
-        "hideTabPanel": true
+        }
       }
     },
     "embedDisplay": {
@@ -232,7 +252,7 @@
             "custom-1759915645846",
             "custom-1760341867406",
             "custom-1760342080199",
-            "custom-1760344743048"
+            "custom-1761560055253"
           ],
           "hiddenActions": {
             "enabled": false,
