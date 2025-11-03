@@ -79,11 +79,9 @@
     }
   ],
   "menuOrder": [
-    [
       "home",
       "spotter",
       "custom-1762165784733"
-    ]
   ],
   "homePageConfig": {
     "type": "html",
