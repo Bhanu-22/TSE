@@ -47,7 +47,7 @@ import { applyTheme } from "../types/themes";
 import { loginToThoughtSpot } from "../services/thoughtspotApi";
 
 import { getCurrentUser } from '../services/thoughtspotApi';  
- 
+
 type ThoughtSpotUser = {  
   name: string;  
   display_name: string;  
@@ -117,6 +117,7 @@ interface Tab {
   content: React.ReactNode;
 }
 
+// Add this component before the StandardMenusContent function
 function ModelSearchInput({
   onApply,
   placeholder = "Search models...",
@@ -3181,6 +3182,7 @@ function CustomMenusContent({
                     </p>
                 </div>
             )}
+
             {editingMenu.contentSelection.type === "tag" && (
               <div style={{ marginBottom: "16px" }}>
                 <label
@@ -5284,29 +5286,19 @@ function ConfigurationContent({
   const [showPublishDialog, setShowPublishDialog] = useState(false);  
   const [publishName, setPublishName] = useState('');  
   const [isPublishing, setIsPublishing] = useState(false);
-  const [persistentPublishResult, setPersistentPublishResult] = useState<{
-    message: string;
-    type: "success" | "error";
-  } | null>(null);
- 
+  const [showDeployFromGitHubDialog, setShowDeployFromGitHubDialog] = useState(false);  
+  const [selectedDeployConfig, setSelectedDeployConfig] = useState<string>("");  
+  const [deployName, setDeployName] = useState('');
+
   useEffect(() => {  
   const fetchUser = async () => {  
     const { getCurrentUser } = await import('../services/thoughtspotApi');  
     const currentUser = await getCurrentUser();  
     setUser(currentUser);  
   };  
-   
+    
   fetchUser();  
 }, []);
-
-useEffect(() => {
-    if (importStatus) {
-      const timer = setTimeout(() => {
-        setImportStatus({ message: "", type: null });
-      }, 3000);
-      return () => clearTimeout(timer); 
-    }
-  }, [importStatus]);
 
   // GitHub configuration loading state
   const [savedConfigurations, setSavedConfigurations] = useState<
@@ -5408,69 +5400,7 @@ useEffect(() => {
               General Configuration
             </h4>
 
-            {persistentPublishResult && (
-            <div
-              style={{
-                marginTop: '16px',
-                padding: '16px 20px',
-                borderRadius: '8px',
-                fontSize: '14px',
-                backgroundColor: '#d1fae5',
-                color: '#065f46',
-                border: '2px solid #10b981',
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '12px',
-              }}
-            >
-              <span style={{ fontSize: '20px' }}>✓</span>
-              <div style={{ flex: 1, whiteSpace: 'pre-line' }}>
-                <strong style={{ fontSize: '16px' }}>Successfully Published!</strong>
-                <div style={{ marginTop: '8px' }}>
-                  {persistentPublishResult.message.split('\n').map((line, i) => {
-                    const urlMatch = line.match(/(https?:\/\/[^\s]+)/);
-                    if (urlMatch) {
-                      const url = urlMatch[1];
-                      return (
-                        <div key={i} style={{ marginTop: '4px' }}>
-                          {line.split(url)[0]}
-                          <a
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                              color: '#059669',
-                              fontWeight: 'bold',
-                              textDecoration: 'underline',
-                              fontSize: '15px'
-                            }}
-                          >
-                            {url}
-                          </a>
-                          {line.split(url)[1]}
-                        </div>
-                      );
-                    }
-                    return <div key={i}>{line}</div>;
-                  })}
-                </div>
-              </div>
-              <button
-                onClick={() => setPersistentPublishResult(null)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '20px',
-                  cursor: 'pointer',
-                  color: '#065f46',
-                }}
-              >
-                ×
-              </button>
-            </div>
-          )}
-
-            {/* {importStatus.type === 'success' && (    
+            {importStatus.type === 'success' && importStatus.message.includes('Published') && (   
             <div    
               style={{    
                 marginTop: '16px',    
@@ -5497,12 +5427,12 @@ useEffect(() => {
                       return (  
                         <div key={i} style={{ marginTop: '4px' }}>  
                           {line.split(url)[0]}  
-                          <a  
-                            href={url}  
-                            target="_blank"  
+                          <a   
+                            href={url}   
+                            target="_blank"   
                             rel="noopener noreferrer"  
-                            style={{  
-                              color: '#059669',  
+                            style={{   
+                              color: '#059669',   
                               fontWeight: 'bold',  
                               textDecoration: 'underline',  
                               fontSize: '15px'  
@@ -5531,10 +5461,10 @@ useEffect(() => {
                 ×    
               </button>    
             </div>    
-          )} */}
- 
- 
-            {importStatus.type === 'success' && (  
+          )}
+
+              
+            {importStatus.type === 'success' && !importStatus.message.includes('Published') && (  
               <div  
                 style={{  
                   marginTop: '16px',  
@@ -5551,7 +5481,7 @@ useEffect(() => {
               >  
                 <span style={{ fontSize: '16px' }}>✓</span>  
                 <div style={{ flex: 1 }}>  
-                  <strong>Successfully Pushed to Github</strong> 
+                  <strong>Successfully pushed</strong>   
                 </div>  
                 <button  
                   onClick={() => setImportStatus({ message: '', type: null })}  
@@ -5682,15 +5612,15 @@ useEffect(() => {
                     setShowGitHubDialog(true);
                     loadSavedConfigurations();
                   }}
-                  style={{
-                    padding: "10px 20px",
-                    backgroundColor: "#8b5cf6",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    fontSize: "14px",
-                    fontWeight: "500",
+                  style={{    
+                  padding: "10px 20px",    
+                  backgroundColor: "#7c3aed",    
+                  color: "white",    
+                  border: "none",    
+                  borderRadius: "6px",    
+                  cursor: "pointer",    
+                  fontSize: "14px",    
+                  fontWeight: "500",
                   }}
                 >
                   Load from GitHub
@@ -5704,7 +5634,7 @@ useEffect(() => {
                   const result = await pushConfigurationToGitHub(undefined, user);    
                   if (result.success) {    
                     setImportStatus({    
-                      message: `Successfully pushed to GitHub! View at: ${result.url}`,    
+                      message: `Successfully pushed to GitHub!`,    
                       type: 'success',    
                     });    
                   } else {    
@@ -5715,12 +5645,161 @@ useEffect(() => {
                   }    
                 } catch (error) {    
                   setImportStatus({    
-                    message: 'Failed to Load to GitHub',    
+                    message: 'Failed to push to GitHub',    
                     type: 'error',    
                   });    
                 }    
               }}
               style={{    
+                  padding: "10px 20px",    
+                  backgroundColor: "#7c3aed",    
+                  color: "white",    
+                  border: "none",    
+                  borderRadius: "6px",    
+                  cursor: "pointer",    
+                  fontSize: "14px",    
+                  fontWeight: "500",    
+            }}      
+            >    
+              Push to GitHub    
+            </button>
+
+  
+            <button      
+              onClick={() => {  
+                setShowDeployFromGitHubDialog(true);  
+                loadSavedConfigurations();  // This line is critical!  
+              }}  
+              style={{      
+                padding: "10px 20px",      
+                backgroundColor: "#10b981",      
+                color: "white",      
+                border: "none",      
+                borderRadius: "6px",      
+                cursor: "pointer",      
+                fontSize: "14px",      
+                fontWeight: "500",      
+              }}      
+            >      
+              Deploy from GitHub    
+            </button>  
+              
+            {/* Dialog for deploying from GitHub */}  
+            {showDeployFromGitHubDialog && (  
+              <div style={{  
+                position: "fixed",  
+                top: 0,  
+                left: 0,  
+                right: 0,  
+                bottom: 0,  
+                backgroundColor: "rgba(0, 0, 0, 0.5)",  
+                display: "flex",  
+                alignItems: "center",  
+                justifyContent: "center",  
+                zIndex: 1000,  
+              }}>  
+                <div style={{  
+                  backgroundColor: "white",  
+                  padding: "24px",  
+                  borderRadius: "8px",  
+                  minWidth: "400px",  
+                  maxHeight: "80vh",  
+                  overflow: "auto",  
+                }}>  
+                  <h3>Deploy Configuration from GitHub</h3>  
+                  <p>Select a configuration to deploy directly</p>  
+                    
+                  <select  
+                    value={selectedDeployConfig}  
+                    onChange={(e) => setSelectedDeployConfig(e.target.value)}  
+                    style={{  
+                      width: "100%",  
+                      padding: "8px",  
+                      marginBottom: "16px",  
+                      border: "1px solid #d1d5db",  
+                      borderRadius: "4px",  
+                    }}  
+                  >  
+                    <option value="">Select a configuration...</option>  
+                    {savedConfigurations.map((config) => (  
+                      <option key={config.filename} value={config.filename}>  
+                        {config.name}  
+                      </option>  
+                    ))}  
+                  </select>  
+                    
+                  <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>  
+                    <button  
+                      onClick={() => {  
+                        setShowDeployFromGitHubDialog(false);  
+                        setSelectedDeployConfig("");  
+                        setDeployName("");  
+                      }}  
+                      style={{  
+                        padding: "8px 16px",  
+                        backgroundColor: "#6b7280",  
+                        color: "white",  
+                        border: "none",  
+                        borderRadius: "6px",  
+                        cursor: "pointer",  
+                      }}  
+                    >  
+                      Cancel  
+                    </button>  
+                    <button    
+                      onClick={async () => {    
+                        if (!selectedDeployConfig) return;    
+                            
+                        if (isPublishing) return;    
+                        setIsPublishing(true);    
+                            
+                        try {  
+                          // Extract the config name from the filename  
+                          // Remove .json extension and use as deployment name  
+                          const configName = selectedDeployConfig.replace('.json', '');  
+                            
+                          const result = await publishDeployment(    
+                            configName,  // Use the config filename as deployment name  
+                            selectedDeployConfig    
+                          );    
+                              
+                          if (result.success) {    
+                            setImportStatus({    
+                              message: `Published! Deployment: ${result.deploymentUrl}`,    
+                              type: 'success',    
+                            });    
+                            setShowDeployFromGitHubDialog(false);    
+                            setSelectedDeployConfig("");    
+                          } else {    
+                            setImportStatus({    
+                              message: `Failed: ${result.error}`,    
+                              type: 'error',    
+                            });    
+                          }    
+                        } finally {    
+                          setIsPublishing(false);    
+                        }    
+                      }}    
+                      disabled={!selectedDeployConfig || isPublishing}    
+                      style={{    
+                        padding: "8px 16px",    
+                        backgroundColor: selectedDeployConfig && !isPublishing ? "#10b981" : "#9ca3af",    
+                        color: "white",    
+                        border: "none",    
+                        borderRadius: "6px",    
+                        cursor: selectedDeployConfig && !isPublishing ? "pointer" : "not-allowed",    
+                      }}    
+                    >    
+                      {isPublishing ? "Deploying..." : "Deploy"}    
+                    </button>  
+                  </div>  
+                </div>  
+              </div>  
+            )}   
+            
+            {/* <button    
+            onClick={() => setShowPublishDialog(true)}
+            style={{    
               padding: "10px 20px",    
               backgroundColor: "#7c3aed",    
               color: "white",    
@@ -5729,24 +5808,10 @@ useEffect(() => {
               cursor: "pointer",    
               fontSize: "14px",    
               fontWeight: "500",    
-            }}      
-            >    
-              Load to GitHub    
-            </button>
-
-           <button    
-            onClick={() => setShowPublishDialog(true)}
-            style={{  
-              padding: "8px 16px",    
-              backgroundColor: "#10b981",    
-              color: "white",    
-              border: "none",    
-              borderRadius: "6px",    
-              cursor: "pointer",    
             }}    
           >    
             Publish Deployment  
-          </button>
+          </button>  
  
             {showPublishDialog && (  
               <div style={{  
@@ -5769,7 +5834,7 @@ useEffect(() => {
                 }}>  
                   <h3>Publish Deployment</h3>  
                   <p>This will create a new GitHub branch and deploy to Vercel</p>  
-                   
+                    
                   <input  
                     type="text"  
                     placeholder="Deployment name (optional)"  
@@ -5783,7 +5848,7 @@ useEffect(() => {
                       borderRadius: "4px",  
                     }}  
                   />  
-                   
+                    
                   <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>  
                     <button  
                       onClick={() => {  
@@ -5801,43 +5866,48 @@ useEffect(() => {
                     >  
                       Cancel  
                     </button>  
-                    <button  
-                      onClick={async () => {  
-                        setIsPublishing(true);  
-                        setPersistentPublishResult(null);
-                        const result = await publishDeployment(publishName || undefined);  
-                        setIsPublishing(false);  
-                         
-                        if (result.success) {  
-                          setPersistentPublishResult({  
-                            message:`Deployment: ${result.deploymentUrl}`,  
-                            type: 'success',  
-                          });  
-                          setShowPublishDialog(false);  
-                          setPublishName('');  
-                        } else {  
-                          setImportStatus({  
-                            message: `Failed: ${result.error}`,  
-                            type: 'error',  
-                          });  
+                    <button    
+                    onClick={async () => { 
+                      // Prevent double-clicks by checking if already publishing  
+                      if (isPublishing) return;  
+                        
+                      setIsPublishing(true);                      
+                      try {  
+                        const result = await publishDeployment(publishName || undefined);    
+                          
+                        if (result.success) {    
+                          setImportStatus({    
+                            message: `Published! Deployment: ${result.deploymentUrl}`,    
+                            type: 'success',    
+                          });    
+                          setShowPublishDialog(false);    
+                          setPublishName('');    
+                        } else {    
+                          setImportStatus({    
+                            message: `Failed: ${result.error}`,    
+                            type: 'error',    
+                          });    
                         }  
-                      }}  
-                      disabled={isPublishing}  
-                      style={{  
-                        padding: "8px 16px",  
-                        backgroundColor: "#10b981",  
-                        color: "white",  
-                        border: "none",  
-                        borderRadius: "6px",  
-                        cursor: isPublishing ? "not-allowed" : "pointer",  
-                      }}  
-                    >  
-                      {isPublishing ? "Publishing..." : "Publish"}  
-                    </button>  
+                      } finally {  
+                        setIsPublishing(false);  
+                      }  
+                    }}    
+                    disabled={isPublishing}    
+                    style={{    
+                      padding: "8px 16px",    
+                      backgroundColor: "#10b981",    
+                      color: "white",    
+                      border: "none",    
+                      borderRadius: "6px",    
+                      cursor: isPublishing ? "not-allowed" : "pointer",    
+                    }}    
+                  >    
+                    {isPublishing ? "Publishing..." : "Publish"}    
+                  </button>  
                   </div>  
                 </div>  
               </div>  
-            )}
+            )}               */}
 
               <button
                 onClick={clearAllConfigurations}
@@ -6061,7 +6131,7 @@ useEffect(() => {
                             updateAppConfig({
                               ...appConfig,
                               faviconSyncEnabled: false,
-                              favicon: "/7dx-logo.png",
+                              favicon:  "/7dx-logo.png",
                             });
                           }
                         }}
