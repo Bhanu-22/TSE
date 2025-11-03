@@ -32,7 +32,7 @@
       "homePageType": "html",
       "homePageValue": "<h1>Spotter</h1>",
       "spotterModelId": "5ba8363c-4940-4407-92e1-453c85308356",
-      "spotterSearchQuery": "What's the current sales?"
+      "spotterSearchQuery": "hgfjgdjddddddddddddddddddddddddddddddddddd"
     },
     {
       "id": "search",
@@ -62,7 +62,7 @@
   ],
   "customMenus": [
     {
-      "id": "custom-1762156928558",
+      "id": "custom-1762156952208",
       "name": "My Reports",
       "description": "",
       "icon": "my-reports",
@@ -249,6 +249,6 @@
     "currentUserId": "power-user"
   },
   "version": "1.0.0",
-  "timestamp": "2025-11-03T08:02:08.558288",
+  "timestamp": "2025-11-03T08:02:32.208213",
   "description": "TSE Demo Builder Configuration Export"
 }
