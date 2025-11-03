@@ -71,7 +71,7 @@
         "type": "specific",
         "specificContent": {
           "liveboards": [
-            "lb-test-001"
+            "8c3d50f6-d6fc-4400-9258-aad55b6b6f55"
           ],
           "answers": []
         }
@@ -88,7 +88,7 @@
     "value": "<h1>Welcome to TSE Demo Builder</h1>"
   },
   "appConfig": {
-    "thoughtspotUrl": "https://test.thoughtspot.cloud/",
+    "thoughtspotUrl": "https://7dxperts.thoughtspot.cloud/",
     "applicationName": "Test App",
     "logo": "/test-logo.png",
     "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
