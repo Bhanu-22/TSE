@@ -32,7 +32,7 @@
       "homePageType": "html",
       "homePageValue": "<h1>Spotter</h1>",
       "spotterModelId": "5ba8363c-4940-4407-92e1-453c85308356",
-      "spotterSearchQuery": "hgfjgdjddddddddddddddddddddddddddddddddddd"
+      "spotterSearchQuery": "hgfjgdjddddddddddddddddbbbbbbhfkjdbcvdsbkwbg"
     },
     {
       "id": "search",
@@ -62,7 +62,7 @@
   ],
   "customMenus": [
     {
-      "id": "custom-1762168153328",
+      "id": "custom-1762171974494",
       "name": "My Reports",
       "description": "",
       "icon": "my-reports",
@@ -78,11 +78,7 @@
       }
     }
   ],
-  "menuOrder": [
-    "home",
-    "spotter",
-    "custom-1762168153328"
-  ],
+  "menuOrder": "{{PLACEHOLDER_CUSTOM_MENUS_ORDERS_LISTS}}",
   "homePageConfig": {
     "type": "html",
     "value": "<h1>Welcome to TSE Demo Builder</h1>"
@@ -191,58 +187,8 @@
       "hideDescription": false
     }
   },
-  "userConfig": {
-    "users": [
-      {
-        "id": "power-user",
-        "name": "Power User",
-        "description": "Full access - can access all features including Search and Full App",
-        "locale": "en",
-        "access": {
-          "standardMenus": {
-            "home": true,
-            "favorites": true,
-            "my-reports": true,
-            "spotter": true,
-            "search": true,
-            "full-app": true,
-            "all-content": true
-          },
-          "customMenus": [
-            "custom-1762168153328"
-          ],
-          "hiddenActions": {
-            "enabled": false,
-            "actions": []
-          }
-        }
-      },
-      {
-        "id": "basic-user",
-        "name": "Basic User",
-        "description": "Limited access - cannot access Search and Full App",
-        "locale": "en",
-        "access": {
-          "standardMenus": {
-            "home": true,
-            "favorites": true,
-            "my-reports": true,
-            "spotter": true,
-            "search": false,
-            "full-app": false,
-            "all-content": true
-          },
-          "customMenus": [],
-          "hiddenActions": {
-            "enabled": false,
-            "actions": []
-          }
-        }
-      }
-    ],
-    "currentUserId": "power-user"
-  },
+  "userConfig": "{{PLACEHOLDER_USER_CONFIG}}",
   "version": "1.0.0",
-  "timestamp": "2025-11-03T11:09:13.328323",
+  "timestamp": "2025-11-03T12:12:54.494132",
   "description": "TSE Demo Builder Configuration Export"
 }
