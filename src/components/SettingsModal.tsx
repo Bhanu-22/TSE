@@ -5288,6 +5288,9 @@ function ConfigurationContent({
   const [showPublishDialog, setShowPublishDialog] = useState(false);  
   const [publishName, setPublishName] = useState('');  
   const [isPublishing, setIsPublishing] = useState(false);
+  const [showDeployFromGitHubDialog, setShowDeployFromGitHubDialog] = useState(false);  
+  const [selectedDeployConfig, setSelectedDeployConfig] = useState<string>("");  
+  const [deployName, setDeployName] = useState('');
 
   useEffect(() => {  
   const fetchUser = async () => {  
@@ -5463,7 +5466,7 @@ function ConfigurationContent({
           )}
 
               
-            {importStatus.type === 'success' && (  
+            {importStatus.type === 'success' && !importStatus.message.includes('Published') && (  
               <div  
                 style={{  
                   marginTop: '16px',  
@@ -5661,8 +5664,141 @@ function ConfigurationContent({
             >    
               Push to GitHub    
             </button>
-   
-            <button    
+
+  
+            <button      
+              onClick={() => {  
+                setShowDeployFromGitHubDialog(true);  
+                loadSavedConfigurations();  // This line is critical!  
+              }}  
+              style={{      
+                padding: "10px 20px",      
+                backgroundColor: "#10b981",      
+                color: "white",      
+                border: "none",      
+                borderRadius: "6px",      
+                cursor: "pointer",      
+                fontSize: "14px",      
+                fontWeight: "500",      
+              }}      
+            >      
+              Deploy from GitHub    
+            </button>  
+              
+            {/* Dialog for deploying from GitHub */}  
+            {showDeployFromGitHubDialog && (  
+              <div style={{  
+                position: "fixed",  
+                top: 0,  
+                left: 0,  
+                right: 0,  
+                bottom: 0,  
+                backgroundColor: "rgba(0, 0, 0, 0.5)",  
+                display: "flex",  
+                alignItems: "center",  
+                justifyContent: "center",  
+                zIndex: 1000,  
+              }}>  
+                <div style={{  
+                  backgroundColor: "white",  
+                  padding: "24px",  
+                  borderRadius: "8px",  
+                  minWidth: "400px",  
+                  maxHeight: "80vh",  
+                  overflow: "auto",  
+                }}>  
+                  <h3>Deploy Configuration from GitHub</h3>  
+                  <p>Select a configuration to deploy directly</p>  
+                    
+                  <select  
+                    value={selectedDeployConfig}  
+                    onChange={(e) => setSelectedDeployConfig(e.target.value)}  
+                    style={{  
+                      width: "100%",  
+                      padding: "8px",  
+                      marginBottom: "16px",  
+                      border: "1px solid #d1d5db",  
+                      borderRadius: "4px",  
+                    }}  
+                  >  
+                    <option value="">Select a configuration...</option>  
+                    {savedConfigurations.map((config) => (  
+                      <option key={config.filename} value={config.filename}>  
+                        {config.name}  
+                      </option>  
+                    ))}  
+                  </select>  
+                    
+                  <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>  
+                    <button  
+                      onClick={() => {  
+                        setShowDeployFromGitHubDialog(false);  
+                        setSelectedDeployConfig("");  
+                        setDeployName("");  
+                      }}  
+                      style={{  
+                        padding: "8px 16px",  
+                        backgroundColor: "#6b7280",  
+                        color: "white",  
+                        border: "none",  
+                        borderRadius: "6px",  
+                        cursor: "pointer",  
+                      }}  
+                    >  
+                      Cancel  
+                    </button>  
+                    <button    
+                      onClick={async () => {    
+                        if (!selectedDeployConfig) return;    
+                            
+                        if (isPublishing) return;    
+                        setIsPublishing(true);    
+                            
+                        try {  
+                          // Extract the config name from the filename  
+                          // Remove .json extension and use as deployment name  
+                          const configName = selectedDeployConfig.replace('.json', '');  
+                            
+                          const result = await publishDeployment(    
+                            configName,  // Use the config filename as deployment name  
+                            selectedDeployConfig    
+                          );    
+                              
+                          if (result.success) {    
+                            setImportStatus({    
+                              message: `Published! Deployment: ${result.deploymentUrl}`,    
+                              type: 'success',    
+                            });    
+                            setShowDeployFromGitHubDialog(false);    
+                            setSelectedDeployConfig("");    
+                          } else {    
+                            setImportStatus({    
+                              message: `Failed: ${result.error}`,    
+                              type: 'error',    
+                            });    
+                          }    
+                        } finally {    
+                          setIsPublishing(false);    
+                        }    
+                      }}    
+                      disabled={!selectedDeployConfig || isPublishing}    
+                      style={{    
+                        padding: "8px 16px",    
+                        backgroundColor: selectedDeployConfig && !isPublishing ? "#10b981" : "#9ca3af",    
+                        color: "white",    
+                        border: "none",    
+                        borderRadius: "6px",    
+                        cursor: selectedDeployConfig && !isPublishing ? "pointer" : "not-allowed",    
+                      }}    
+                    >    
+                      {isPublishing ? "Deploying..." : "Deploy"}    
+                    </button>  
+                  </div>  
+                </div>  
+              </div>  
+            )}   
+            
+            {/* <button    
             onClick={() => setShowPublishDialog(true)}
             style={{    
               padding: "10px 20px",    
@@ -5742,7 +5878,7 @@ function ConfigurationContent({
                           
                         if (result.success) {    
                           setImportStatus({    
-                            message: `Published! Branch: ${result.branchUrl}\nDeployment: ${result.deploymentUrl}`,    
+                            message: `Published! Deployment: ${result.deploymentUrl}`,    
                             type: 'success',    
                           });    
                           setShowPublishDialog(false);    
@@ -5772,7 +5908,7 @@ function ConfigurationContent({
                   </div>  
                 </div>  
               </div>  
-            )}              
+            )}               */}
 
               <button
                 onClick={clearAllConfigurations}

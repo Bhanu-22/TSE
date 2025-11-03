@@ -94,7 +94,7 @@ export const DEFAULT_CONFIG: ConfigurationData = {
     value: "<h1>Welcome to TSE Demo Builder</h1>",
   },
   appConfig: {
-    thoughtspotUrl: "https://techpartners.thoughtspot.cloud/",
+    thoughtspotUrl: "https://7dxperts.thoughtspot.cloud/",
     applicationName: "TSE Demo Builder",
     logo: "/logo.png",
     earlyAccessFlags: "enable-modular-home\nenable-custom-styling",
@@ -1203,49 +1203,71 @@ export const pushConfigurationToGitHub = async (
   }
 };
 
-export const publishDeployment = async (  
+export const publishDeployment = async (    
+  customName?: string,  
+  githubFilename?: string  // Add this parameter  
+): Promise<{ success: boolean; branchUrl?: string; deploymentUrl?: string; error?: string }> => {    
+  console.log("Publish Triggered")  
   
-  customName?: string  
-): Promise<{ success: boolean; branchUrl?: string; deploymentUrl?: string; error?: string }> => {  
-    console.log("Publish Triggered")
-
-  try {  
-    const config = await loadFromStorage();  
-    const exportableConfig = await convertIndexedDBReferencesToDataURLs(config);  
+  try {    
+    let config: ConfigurationData;  
       
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);  
-    const branchName = customName   
-      ? `deploy-${customName}-${timestamp}`  
-      : `deploy-${timestamp}`;  
-  
-    const response = await fetch('/api/publish-deployment', {  
-      method: 'POST',  
-      headers: {  
-        'Content-Type': 'application/json',  
-      },  
-      body: JSON.stringify({  
-        configuration: exportableConfig,  
-        branchName  
-      }),  
-    });  
-  
-    const result = await response.json();  
-  
-    if (!response.ok) {  
-      return { success: false, error: result.error || 'Failed to publish deployment' };  
+    // Load from GitHub if filename provided, otherwise from storage  
+    if (githubFilename) {  
+      console.log("Loading configuration from GitHub:", githubFilename);  
+      const configData = await loadConfigurationFromGitHub(githubFilename);  
+        
+      // Merge with defaults to ensure all required fields exist  
+      config = {  
+        standardMenus: (configData.standardMenus as StandardMenu[]) || DEFAULT_CONFIG.standardMenus,  
+        customMenus: (configData.customMenus as CustomMenu[]) || DEFAULT_CONFIG.customMenus,  
+        menuOrder: (configData.menuOrder as string[]) || DEFAULT_CONFIG.menuOrder,  
+        homePageConfig: (configData.homePageConfig as HomePageConfig) || DEFAULT_CONFIG.homePageConfig,  
+        appConfig: (configData.appConfig as AppConfig) || DEFAULT_CONFIG.appConfig,  
+        fullAppConfig: (configData.fullAppConfig as FullAppConfig) || DEFAULT_CONFIG.fullAppConfig,  
+        stylingConfig: (configData.stylingConfig as StylingConfig) || DEFAULT_CONFIG.stylingConfig,  
+        userConfig: (configData.userConfig as UserConfig) || DEFAULT_CONFIG.userConfig,  
+      };  
+    } else {  
+      // Original behavior: load from storage  
+      config = await loadFromStorage();    
     }  
-  
-    return {   
-      success: true,   
-      branchUrl: result.branchUrl,  
-      deploymentUrl: result.deploymentUrl   
-    };  
-  } catch (error) {  
-    return {  
-      success: false,  
-      error: error instanceof Error ? error.message : 'Unknown error',  
-    };  
-  }  
+      
+    const exportableConfig = await convertIndexedDBReferencesToDataURLs(config);    
+        
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);    
+    const branchName = customName     
+      ? `deploy-${customName}-${timestamp}`    
+      : `deploy-${timestamp}`;    
+    
+    const response = await fetch('/api/publish-deployment', {    
+      method: 'POST',    
+      headers: {    
+        'Content-Type': 'application/json',    
+      },    
+      body: JSON.stringify({    
+        configuration: exportableConfig,    
+        branchName    
+      }),    
+    });    
+    
+    const result = await response.json();    
+    
+    if (!response.ok) {    
+      return { success: false, error: result.error || 'Failed to publish deployment' };    
+    }    
+    
+    return {     
+      success: true,     
+      branchUrl: result.branchUrl,    
+      deploymentUrl: result.deploymentUrl     
+    };    
+  } catch (error) {    
+    return {    
+      success: false,    
+      error: error instanceof Error ? error.message : 'Unknown error',    
+    };    
+  }    
 };
 
 // Update functions interface
