@@ -1,9 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server';  
 import { Octokit } from '@octokit/rest';  
+import { loadConfigurationFromGitHub } from '../../../services/githubApi';  
+import { DEFAULT_CONFIG } from '../../../services/configurationService';  
   
 export async function POST(request: NextRequest) {  
   try {  
-    const { configuration, branchName } = await request.json();  
+    const { configuration, branchName, githubFilename } = await request.json();  
+      
+    let finalConfiguration;  
+  
+    if (githubFilename) {  
+      console.log('Loading configuration from GitHub:', githubFilename);  
+      try {  
+        const configData = await loadConfigurationFromGitHub(githubFilename);  
+          
+        // Merge with defaults to ensure all required fields exist  
+        finalConfiguration = {  
+          standardMenus: (configData.standardMenus as any) || DEFAULT_CONFIG.standardMenus,  
+          customMenus: (configData.customMenus as any) || DEFAULT_CONFIG.customMenus,  
+          menuOrder: (configData.menuOrder as any) || DEFAULT_CONFIG.menuOrder,  
+          homePageConfig: (configData.homePageConfig as any) || DEFAULT_CONFIG.homePageConfig,  
+          appConfig: (configData.appConfig as any) || DEFAULT_CONFIG.appConfig,  
+          fullAppConfig: (configData.fullAppConfig as any) || DEFAULT_CONFIG.fullAppConfig,  
+          stylingConfig: (configData.stylingConfig as any) || DEFAULT_CONFIG.stylingConfig,  
+          userConfig: (configData.userConfig as any) || DEFAULT_CONFIG.userConfig,  
+        };  
+      } catch (error) {  
+        console.error('Failed to load configuration from GitHub:', error);  
+        throw new Error(`Failed to load configuration from GitHub: ${error instanceof Error ? error.message : 'Unknown error'}`);  
+      }  
+    } else {  
+      // Use configuration from request body (existing behavior)  
+      finalConfiguration = configuration;  
+    }  
       
     const octokit = new Octokit({  
       auth: process.env.GITHUB_TOKEN  
@@ -34,20 +63,28 @@ export async function POST(request: NextRequest) {
       owner,  
       repo,  
       path: configPath,  
-      ref: defaultBranch  // Get from default branch, not the new branch  
+      ref: defaultBranch  
     });  
   
     if (!('content' in fileData)) {  
       throw new Error('Could not retrieve file content');  
     }  
-  
+    
+    
     // 4. Prepare the updated content  
-    let content = Buffer.from(fileData.content, 'base64').toString();  
-    const configString = JSON.stringify(configuration, null, 2);  
+    let content = Buffer.from(fileData.content, 'base64').toString();
+    if (!finalConfiguration) {  
+      throw new Error('Configuration is undefined - cannot proceed with deployment');  
+    }
+    const configString = JSON.stringify(finalConfiguration, null, 2);  
     content = content.replace(  
-      /export const DEFAULT_CONFIG: ConfigurationData = \{[\s\S]*?\};/,  
+      /export const DEFAULT_CONFIG: ConfigurationData = (?:\{[\s\S]*?\}|undefined);/,  
       `export const DEFAULT_CONFIG: ConfigurationData = ${configString};`  
-    );  
+    );
+    // After the replace, verify it worked
+    if (content.includes('= undefined;')) {
+      throw new Error('Failed to replace DEFAULT_CONFIG - pattern did not match');
+    }
   
     // 5. Get the tree of the default branch  
     const { data: baseTree } = await octokit.git.getTree({  
@@ -97,7 +134,7 @@ export async function POST(request: NextRequest) {
       sha: newCommit.sha  
     });  
   
-    // 5. Trigger Vercel deployment with preview target  
+    // 10. Trigger Vercel deployment  
     const vercelResponse = await fetch('https://api.vercel.com/v13/deployments', {  
       method: 'POST',  
       headers: {  
@@ -114,79 +151,77 @@ export async function POST(request: NextRequest) {
         },  
       })  
     });  
-    
+      
     if (!vercelResponse.ok) {  
-    const errorData = await vercelResponse.json();  
-    console.error('Vercel deployment failed:', errorData);  
-    throw new Error(`Vercel deployment failed: ${errorData.error?.message || 'Unknown error'}`);  
+      const errorData = await vercelResponse.json();  
+      console.error('Vercel deployment failed:', errorData);  
+      throw new Error(`Vercel deployment failed: ${errorData.error?.message || 'Unknown error'}`);  
     }  
-    
+      
     const deployment = await vercelResponse.json();  
     console.log('Vercel deployment response:', deployment);  
-    
-    // 6. Poll for deployment completion  
+      
+    // 11. Poll for deployment completion  
     let deploymentUrl = null;  
     const maxAttempts = 60;  
     let attempts = 0;  
-    
+      
     while (attempts < maxAttempts) {  
-    const statusResponse = await fetch(  
+      const statusResponse = await fetch(  
         `https://api.vercel.com/v13/deployments/${deployment.id}`,  
         {  
-        headers: {  
+          headers: {  
             'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`  
+          }  
         }  
-        }  
-    );  
-    
-    const statusData = await statusResponse.json();  
+      );  
         
-    if (statusData.readyState === 'READY') {  
-        // Get base URL  
+      const statusData = await statusResponse.json();  
+        
+      if (statusData.readyState === 'READY') {  
         const baseUrl = statusData.url   
-        ? `https://${statusData.url}`   
-        : statusData.alias?.[0]  
+          ? `https://${statusData.url}`   
+          : statusData.alias?.[0]  
             ? `https://${statusData.alias[0]}`  
             : null;  
-        
-        // Create shareable link  
+          
         if (baseUrl) {  
-        try {  
+          try {  
             const shareResponse = await fetch(  
-            `https://api.vercel.com/v1/deployments/${deployment.id}/share`,  
-            {  
+              `https://api.vercel.com/v1/deployments/${deployment.id}/share`,  
+              {  
                 method: 'POST',  
                 headers: {  
-                'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`  
+                  'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`  
                 }  
-            }  
+              }  
             );  
-            
+              
             if (shareResponse.ok) {  
-            const shareData = await shareResponse.json();  
-            deploymentUrl = `${baseUrl}?_vercel_share=${shareData.token}`;  
+              const shareData = await shareResponse.json();  
+              deploymentUrl = `${baseUrl}?_vercel_share=${shareData.token}`;  
             } else {  
-            deploymentUrl = baseUrl;  
+              deploymentUrl = baseUrl;  
             }  
-        } catch (error) {  
+          } catch (error) {  
             console.error('Failed to create share link:', error);  
             deploymentUrl = baseUrl;  
-        }  
+          }  
         }  
         break;  
-    } else if (statusData.readyState === 'ERROR' || statusData.readyState === 'CANCELED') {  
+      } else if (statusData.readyState === 'ERROR' || statusData.readyState === 'CANCELED') {  
         throw new Error(`Deployment failed with state: ${statusData.readyState}`);  
+      }  
+        
+      await new Promise(resolve => setTimeout(resolve, 5000));  
+      attempts++;  
     }  
-    
-    await new Promise(resolve => setTimeout(resolve, 5000));  
-    attempts++;  
-    }  
-    
+      
     return NextResponse.json({  
-    success: true,  
-    branchUrl: `https://github.com/${owner}/${repo}/tree/${branchName}`,  
-    deploymentUrl,  
-    deploymentId: deployment.id  
+      success: true,  
+      branchUrl: `https://github.com/${owner}/${repo}/tree/${branchName}`,  
+      deploymentUrl,  
+      deploymentId: deployment.id  
     });  
   
   } catch (error) {  
