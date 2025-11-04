@@ -1245,9 +1245,10 @@ export const publishDeployment = async (
       headers: {    
         'Content-Type': 'application/json',    
       },    
-      body: JSON.stringify({    
-        configuration: exportableConfig,    
-        branchName    
+      body: JSON.stringify({  
+        configuration: githubFilename ? undefined : exportableConfig,  
+        branchName,  
+        githubFilename  
       }),    
     });    
     
