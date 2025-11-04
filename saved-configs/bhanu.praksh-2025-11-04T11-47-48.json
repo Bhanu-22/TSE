@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "timestamp": "2025-10-13T08:38:00.573Z",
+  "timestamp": "2025-11-04T11:47:48.571Z",
   "description": "7Dxperts TSE Demo Builder Configuration Export",
   "standardMenus": [
     {
@@ -101,8 +101,12 @@
   ],
   "menuOrder": [
     "home",
+    "favorites",
+    "my-reports",
     "spotter",
     "search",
+    "full-app",
+    "all-content",
     "custom-1760342080199",
     "custom-1760341867406"
   ],
@@ -111,7 +115,7 @@
     "value": "<h1>Welcome to TSE Demo Builder</h1>"
   },
   "appConfig": {
-    "thoughtspotUrl": "https://techpartners.thoughtspot.cloud/",
+    "thoughtspotUrl": "https://7dxperts.thoughtspot.cloud/",
     "applicationName": "On time performance",
     "logo": "/ts.png",
     "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
