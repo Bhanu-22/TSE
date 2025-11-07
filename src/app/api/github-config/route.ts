@@ -12,8 +12,8 @@ export async function GET(request: NextRequest) {
       );  
     }  
  
-    const repoOwner = "Bhanu-22";  
-    const repoName = "TSE";  
+    const repoOwner = "Aparnaa-Marimuthu";  
+    const repoName = "tse-configuration";  
     const configsPath = "saved-configs";  
  
     const response = await fetch(  
