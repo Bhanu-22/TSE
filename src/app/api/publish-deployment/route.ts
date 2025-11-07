@@ -174,7 +174,7 @@ export async function POST(request: NextRequest) {
     const vercelResponse = await fetch('https://api.vercel.com/v13/deployments', {    
       method: 'POST',    
       headers: {    
-        'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`,    
+        'Authorization': `Bearer ${process.env.VERCEL_PROJECT_NAME}`,    
         'Content-Type': 'application/json'    
       },    
       body: JSON.stringify({    
