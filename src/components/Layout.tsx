@@ -2402,6 +2402,7 @@ export default function Layout({ children }: LayoutProps) {
                 menuOrder={menuOrder}
                 onMenuOrderChange={setMenuOrder}
                 userConfig={userConfig}
+                appConfig={appConfig}
                 backgroundColor={
                   stylingConfig.application.sidebar.backgroundColor
                 }

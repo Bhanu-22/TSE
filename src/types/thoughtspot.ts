@@ -162,6 +162,7 @@ export interface AppConfig {
     hoverColor?: string;
     spotgptApiKey?: string;
   };
+  isPreviewDeployment?: boolean; 
 }
 
 export interface FullAppConfig {

@@ -133,54 +133,54 @@ export default function LoginPage({
             {error}
           </div>
         )}
-        <div style={{ marginBottom: "24px" }}>  
-  <label   
-    style={{   
-      display: "block",   
-      marginBottom: "8px",   
-      fontWeight: "500",  
-      color: "#374151",  
-      fontSize: "14px"  
-    }}  
-  >  
-    ThoughtSpot URL  
-  </label>  
-  <div style={{ display: "flex", gap: "8px" }}>  
-    <input  
-      type="url"  
-      value={localThoughtSpotUrl}  
-      onChange={(e) => setLocalThoughtSpotUrl(e.target.value)}  
-      placeholder="https://your-instance.thoughtspot.cloud"  
-      style={{  
-        flex: 1,  
-        padding: "10px 12px",  
-        border: "1px solid #d1d5db",  
-        borderRadius: "6px",  
-        fontSize: "14px",  
-      }}  
-    />  
-    <button  
-      onClick={handleSaveUrl}  
-      disabled={isSavingUrl || localThoughtSpotUrl === thoughtspotUrl}  
-      style={{  
-        padding: "10px 16px",  
-        backgroundColor: "#3182ce",  
-        color: "white",  
-        border: "none",  
-        borderRadius: "6px",  
-        cursor: isSavingUrl || localThoughtSpotUrl === thoughtspotUrl ? "not-allowed" : "pointer",  
-        fontSize: "14px",  
-        fontWeight: "500",  
-        opacity: isSavingUrl || localThoughtSpotUrl === thoughtspotUrl ? 0.6 : 1,  
-      }}  
-    >  
-      {isSavingUrl ? "Saving..." : "Save"}  
-    </button>  
-  </div>  
-  <p style={{ fontSize: "12px", color: "#6b7280", marginTop: "4px" }}>  
-    Enter your ThoughtSpot instance URL and save before logging in  
-  </p>  
-</div>
+        {/* <div style={{ marginBottom: "24px" }}>  
+          <label   
+            style={{   
+              display: "block",   
+              marginBottom: "8px",   
+              fontWeight: "500",  
+              color: "#374151",  
+              fontSize: "14px"  
+            }}  
+          >  
+            ThoughtSpot URL  
+          </label>  
+          <div style={{ display: "flex", gap: "8px" }}>  
+            <input  
+              type="url"  
+              value={localThoughtSpotUrl}  
+              onChange={(e) => setLocalThoughtSpotUrl(e.target.value)}  
+              placeholder="https://your-instance.thoughtspot.cloud"  
+              style={{  
+                flex: 1,  
+                padding: "10px 12px",  
+                border: "1px solid #d1d5db",  
+                borderRadius: "6px",  
+                fontSize: "14px",  
+              }}  
+            />  
+            <button  
+              onClick={handleSaveUrl}  
+              disabled={isSavingUrl || localThoughtSpotUrl === thoughtspotUrl}  
+              style={{  
+                padding: "10px 16px",  
+                backgroundColor: "#3182ce",  
+                color: "white",  
+                border: "none",  
+                borderRadius: "6px",  
+                cursor: isSavingUrl || localThoughtSpotUrl === thoughtspotUrl ? "not-allowed" : "pointer",  
+                fontSize: "14px",  
+                fontWeight: "500",  
+                opacity: isSavingUrl || localThoughtSpotUrl === thoughtspotUrl ? 0.6 : 1,  
+              }}  
+            >  
+              {isSavingUrl ? "Saving..." : "Save"}  
+            </button>  
+          </div>  
+          <p style={{ fontSize: "12px", color: "#6b7280", marginTop: "4px" }}>  
+            Enter your ThoughtSpot instance URL and save before logging in  
+          </p>  
+        </div> */}
 
         <form
           onSubmit={(e) => {

@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import { useState, useRef, useCallback, useEffect } from "react";
-import { CustomMenu, UserConfig, StandardMenu } from "../types/thoughtspot";
+import { CustomMenu, UserConfig, StandardMenu, AppConfig } from "../types/thoughtspot";
 import MaterialIcon from "./MaterialIcon";
 
 // Utility function to generate appropriate colors based on background and foreground
@@ -68,6 +68,7 @@ interface SideNavProps {
   menuOrder?: string[];
   onMenuOrderChange?: (newMenuOrder: string[]) => void;
   userConfig?: UserConfig;
+  appConfig?: AppConfig; 
   backgroundColor?: string;
   foregroundColor?: string;
   hoverColor?: string;
@@ -87,6 +88,7 @@ export default function SideNav({
   hoverColor,
   selectedColor,
   selectedTextColor,
+  appConfig
 }: SideNavProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -486,14 +488,15 @@ export default function SideNav({
         }}
       >
         <button
-          onClick={onSettingsClick}
+          onClick={appConfig?.isPreviewDeployment ? undefined : onSettingsClick}  
+          disabled={appConfig?.isPreviewDeployment}  
           style={{
             width: "100%",
             padding: isHovered ? "12px 16px" : "12px 8px",
             border: "none",
             background: "transparent",
             color: foregroundColor,
-            cursor: "pointer",
+            cursor: appConfig?.isPreviewDeployment ? "not-allowed" : "pointer",
             textAlign: "left",
             display: "flex",
             alignItems: "center",
@@ -502,6 +505,7 @@ export default function SideNav({
             fontWeight: "400",
             transition: "all 0.2s",
             justifyContent: isHovered ? "flex-start" : "center",
+            opacity: appConfig?.isPreviewDeployment ? 0.5 : 1,  
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = navColors.hoverColor;

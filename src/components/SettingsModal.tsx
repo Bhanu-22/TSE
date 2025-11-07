@@ -6665,7 +6665,6 @@ export default function SettingsModal({
   setStorageError,
   loadConfigurationSynchronously,
   setIsImportingConfiguration,
-
   initialTab,
   initialSubTab,
   onTabChange,
@@ -7239,9 +7238,46 @@ export default function SettingsModal({
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
+          position: "relative", 
         }}
         onClick={(e) => e.stopPropagation()}
       >
+         {pendingAppConfig.isPreviewDeployment && (  
+        <div  
+          style={{  
+            position: "absolute",  
+            top: 0,  
+            left: 0,  
+            right: 0,  
+            bottom: 0,  
+            backgroundColor: "rgba(128, 128, 128, 0.7)",  
+            zIndex: 9999,  
+            display: "flex",  
+            alignItems: "center",  
+            justifyContent: "center",  
+            borderRadius: "12px",  
+            pointerEvents: "all",  
+            cursor: "not-allowed",  
+          }}  
+        >  
+          <div  
+            style={{  
+              backgroundColor: "white",  
+              padding: "24px",  
+              borderRadius: "8px",  
+              textAlign: "center",  
+              maxWidth: "400px",  
+            }}  
+          >  
+            <h3 style={{ margin: "0 0 12px 0", fontSize: "18px" }}>  
+              Settings Disabled  
+            </h3>  
+            <p style={{ margin: 0, color: "#6b7280", fontSize: "14px" }}>  
+              Settings cannot be modified in preview deployments.  
+            </p>  
+          </div>  
+        </div>  
+        )}  
         {/* Header */}
         <div
           style={{
