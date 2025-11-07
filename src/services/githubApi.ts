@@ -240,8 +240,8 @@ export async function loadConfigurationFromGitHub(
 // ): Promise<Record<string, unknown>> {
 //   try {
 //     console.log("Loading configuration from GitHub:", filename);
-//     const repoOwner = "Bhanu-22";
-//     const repoName = "TSE";
+//     const repoOwner = "blitzdemos";
+//     const repoName = "tsebuilder_blitzdemos";
 //     const configsPath = "saved-configs";
 
 //     const response = await fetch(
