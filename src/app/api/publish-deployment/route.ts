@@ -171,7 +171,7 @@ export async function POST(request: NextRequest) {
     });    
     
     // 10. Trigger Vercel deployment    
-    const vercelResponse = await fetch('https://api.vercel.com/v13/deployments', {    
+    const vercelResponse = await fetch('https://api.vercel.com/v13/deployments?skipAutoDetectionConfirmation=1', {    
       method: 'POST',    
       headers: {    
         'Authorization': `Bearer ${process.env.VERCEL_PROJECT_NAME}`,    
