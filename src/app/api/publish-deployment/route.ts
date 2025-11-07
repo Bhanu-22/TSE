@@ -178,7 +178,7 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json'    
       },    
       body: JSON.stringify({    
-        name: process.env.VERCEL_PROJECT_ID,    
+        name: process.env.VERCEL_PROJECT_NAME,    
         gitSource: {    
           type: 'github',    
           repo: `${owner}/${repo}`,    
