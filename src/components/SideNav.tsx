@@ -74,6 +74,7 @@ interface SideNavProps {
   hoverColor?: string;
   selectedColor?: string;
   selectedTextColor?: string;
+  hideSettings?: boolean;
 }
 
 export default function SideNav({
@@ -88,7 +89,8 @@ export default function SideNav({
   hoverColor,
   selectedColor,
   selectedTextColor,
-  appConfig
+  appConfig,
+  hideSettings = false,
 }: SideNavProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -487,16 +489,16 @@ export default function SideNav({
           borderTop: "1px solid #e2e8f0",
         }}
       >
+        {!hideSettings && onSettingsClick && (
         <button
-          onClick={appConfig?.isPreviewDeployment ? undefined : onSettingsClick}  
-          disabled={appConfig?.isPreviewDeployment}  
+          onClick={onSettingsClick}  
           style={{
             width: "100%",
             padding: isHovered ? "12px 16px" : "12px 8px",
             border: "none",
             background: "transparent",
             color: foregroundColor,
-            cursor: appConfig?.isPreviewDeployment ? "not-allowed" : "pointer",
+            cursor:"pointer",
             textAlign: "left",
             display: "flex",
             alignItems: "center",
@@ -505,7 +507,6 @@ export default function SideNav({
             fontWeight: "400",
             transition: "all 0.2s",
             justifyContent: isHovered ? "flex-start" : "center",
-            opacity: appConfig?.isPreviewDeployment ? 0.5 : 1,  
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = navColors.hoverColor;
@@ -517,6 +518,7 @@ export default function SideNav({
           <MaterialIcon icon="settings" size={26} color="currentColor" />
           {isHovered && <span>Settings</span>}
         </button>
+        )}
       </div>
     </div>
   );

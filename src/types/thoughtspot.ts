@@ -152,6 +152,7 @@ export interface AppConfig {
   favicon?: string;
   faviconSyncEnabled?: boolean;
   showFooter: boolean;
+  disableSettings?: boolean; 
   chatbot?: {
     enabled: boolean;
     defaultModelId?: string;
@@ -162,7 +163,6 @@ export interface AppConfig {
     hoverColor?: string;
     spotgptApiKey?: string;
   };
-  isPreviewDeployment?: boolean; 
 }
 
 export interface FullAppConfig {
