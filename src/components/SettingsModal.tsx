@@ -6666,11 +6666,39 @@ export default function SettingsModal({
   setStorageError,
   loadConfigurationSynchronously,
   setIsImportingConfiguration,
-
   initialTab,
   initialSubTab,
   onTabChange,
 }: SettingsModalProps) {
+  if (appConfig.disableSettings) {  
+    return (  
+      <div  
+        style={{  
+          position: "fixed",  
+          top: 0,  
+          left: 0,  
+          right: 0,  
+          bottom: 0,  
+          backgroundColor: "rgba(0, 0, 0, 0.5)",  
+          display: isOpen ? "flex" : "none",  
+          alignItems: "center",  
+          justifyContent: "center",  
+          zIndex: 1000,  
+        }}  
+      >  
+        <div  
+          style={{  
+            backgroundColor: "white",  
+            padding: "24px",  
+            borderRadius: "8px",  
+            maxWidth: "400px",  
+          }}  
+        >  
+          <p>Settings cannot be modified in preview deployments</p>  
+        </div>  
+      </div>  
+    );  
+  }  
   const [connectionUsername, setConnectionUsername] = useState<string>("");
   const [connectionPassword, setConnectionPassword] = useState<string>("");
   const [activeTab, setActiveTab] = useState(initialTab || "connection");

@@ -100,6 +100,7 @@ export const DEFAULT_CONFIG: ConfigurationData = {
     earlyAccessFlags: "enable-modular-home\nenable-custom-styling",
     favicon: "/logo.png",
     showFooter: true,
+    disableSettings: false,
     chatbot: {
       enabled: true,
       defaultModelId: undefined,

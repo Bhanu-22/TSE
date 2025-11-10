@@ -152,6 +152,7 @@ export interface AppConfig {
   favicon?: string;
   faviconSyncEnabled?: boolean;
   showFooter: boolean;
+  disableSettings?: boolean;
   chatbot?: {
     enabled: boolean;
     defaultModelId?: string;

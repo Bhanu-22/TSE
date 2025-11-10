@@ -107,20 +107,20 @@ export async function POST(request: NextRequest) {
     }    
       
       
-    // 4. Prepare the updated content    
+    // 4. Prepare the updated content  
     let content = Buffer.from(fileData.content, 'base64').toString();  
-    if (!finalConfiguration) {    
-      throw new Error('Configuration is undefined - cannot proceed with deployment');    
+    if (!finalConfiguration) {  
+      throw new Error('Configuration is undefined - cannot proceed with deployment');  
     }  
-    const configString = JSON.stringify(finalConfiguration, null, 2);    
-    content = content.replace(    
-      /export const DEFAULT_CONFIG: ConfigurationData = (?:\{[\s\S]*?\}|undefined);/,    
-      `export const DEFAULT_CONFIG: ConfigurationData = ${configString};`    
+     
+    // Set disableSettings to true for deployments  
+    finalConfiguration.appConfig.disableSettings = true;  
+     
+    const configString = JSON.stringify(finalConfiguration, null, 2);  
+    content = content.replace(  
+      /export const DEFAULT_CONFIG: ConfigurationData = (?:\{[\s\S]*?\}|undefined);/,  
+      `export const DEFAULT_CONFIG: ConfigurationData = ${configString};`  
     );  
-    // After the replace, verify it worked  
-    if (content.includes('= undefined;')) {  
-      throw new Error('Failed to replace DEFAULT_CONFIG - pattern did not match');  
-    }  
     
     // 5. Get the tree of the default branch    
     const { data: baseTree } = await octokit.git.getTree({    
