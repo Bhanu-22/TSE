@@ -31,8 +31,8 @@
       "icon": "spotter-custom.svg",
       "homePageType": "html",
       "homePageValue": "<h1>Spotter</h1>",
-      "spotterModelId": "4cbc6f2a-04f5-4efc-b3fb-2571cee855e4",
-      "spotterSearchQuery": "What was the passenger traffic growth rate last month?"
+      "spotterModelId": "922182c4-b745-485e-b2ff-5aab81e97e16",
+      "spotterSearchQuery": "What was our total online sales revenue last month?"
     },
     {
       "id": "search",
@@ -62,7 +62,7 @@
   ],
   "customMenus": [
     {
-      "id": "custom-1762434279049",
+      "id": "custom-1762685624661",
       "name": "My Reports",
       "description": "",
       "icon": "my-reports",
@@ -71,7 +71,7 @@
         "type": "specific",
         "specificContent": {
           "liveboards": [
-            "1f63b1d4-f138-4742-9369-39e6c116ba94"
+            "e9d7e353-855a-48c3-a714-8f6c86a8b41b"
           ],
           "answers": []
         }
@@ -81,7 +81,7 @@
   "menuOrder": [
     "home",
     "spotter",
-    "custom-1762434279049"
+    "custom-1762685624661"
   ],
   "homePageConfig": {
     "type": "html",
@@ -168,18 +168,14 @@
     },
     "embedFlags": {
       "liveboardEmbed": {
-        "showLiveboardTitle": true,
-        "showLiveboardDescription": true,
+        "showLiveboardTitle": false,
+        "showLiveboardDescription": false,
         "isLiveboardHeaderSticky": false,
         "hideLiveboardHeader": false,
-        "disabledActions": [
-          "Share"
-        ],
+        "disabledActions": [],
         "disabledActionReason": "Reason for disabling",
         "visibleActions": [],
-        "hiddenActions": [
-          "Download"
-        ]
+        "hiddenActions": []
       }
     },
     "embedDisplay": {
@@ -205,7 +201,7 @@
             "all-content": true
           },
           "customMenus": [
-            "custom-1762434279049"
+            "custom-1762685624661"
           ],
           "hiddenActions": {
             "enabled": true,
@@ -239,6 +235,6 @@
     "currentUserId": "power-user"
   },
   "version": "1.0.0",
-  "timestamp": "2025-11-06T13:04:39.049474",
+  "timestamp": "2025-11-09T10:53:44.661154",
   "description": "TSE Demo Builder Configuration Export"
 }
