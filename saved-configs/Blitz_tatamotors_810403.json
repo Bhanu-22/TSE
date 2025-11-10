@@ -62,7 +62,7 @@
   ],
   "customMenus": [
     {
-      "id": "custom-1762767729602",
+      "id": "custom-1762767966282",
       "name": "My Reports",
       "description": "",
       "icon": "my-reports",
@@ -81,7 +81,7 @@
   "menuOrder": [
     "home",
     "spotter",
-    "custom-1762767729602"
+    "custom-1762767966282"
   ],
   "homePageConfig": {
     "type": "html",
@@ -168,17 +168,14 @@
     },
     "embedFlags": {
       "liveboardEmbed": {
-        "showLiveboardTitle": true,
-        "showLiveboardDescription": true,
+        "showLiveboardTitle": false,
+        "showLiveboardDescription": false,
         "isLiveboardHeaderSticky": false,
         "hideLiveboardHeader": false,
         "disabledActions": [],
         "disabledActionReason": "Reason for disabling",
         "visibleActions": [],
-        "hiddenActions": [
-          "Download",
-          "Download as PNG"
-        ]
+        "hiddenActions": []
       }
     },
     "embedDisplay": {
@@ -204,7 +201,7 @@
             "all-content": true
           },
           "customMenus": [
-            "custom-1762767729602"
+            "custom-1762767966282"
           ],
           "hiddenActions": {
             "enabled": true,
@@ -238,6 +235,6 @@
     "currentUserId": "power-user"
   },
   "version": "1.0.0",
-  "timestamp": "2025-11-10T09:42:09.602867",
+  "timestamp": "2025-11-10T09:46:06.282798",
   "description": "TSE Demo Builder Configuration Export"
 }
