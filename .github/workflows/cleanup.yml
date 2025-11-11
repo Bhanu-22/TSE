@@ -32,7 +32,7 @@ jobs:
           node << 'EOF'
           const { Octokit } = require("@octokit/rest");
  
-          const octokit = new Octokit({ auth: process.env.PAT_GIT_WRITE });
+          const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
           const owner = process.env.REPO_OWNER;
           const repo = process.env.REPO_NAME;
           const folderToDelete = "saved-configs/";
