@@ -130,6 +130,11 @@ export async function POST(request: NextRequest) {
       recursive: 'true'    
     });    
         
+    // Filter out saved-configs directory    
+    const filteredTree = baseTree.tree.filter(item =>     
+      !item.path?.startsWith('saved-configs/')    
+    );    
+        
     // 6. Create a new blob with the updated file content    
     const { data: newBlob } = await octokit.git.createBlob({    
       owner,    
@@ -138,36 +143,25 @@ export async function POST(request: NextRequest) {
       encoding: 'base64'    
     });    
         
-    // 7. Create a new tree with the updated file and deleted saved-configs  
-    const treeItems: any[] = [  
-      // Update configurationService.ts  
-      {    
-        path: configPath,    
-        mode: '100644' as const,    
-        type: 'blob' as const,    
-        sha: newBlob.sha    
-      }  
-    ];  
-      
-    // Add deletion entries for all saved-configs files  
-    const savedConfigsFiles = baseTree.tree.filter(item =>   
-      item.path?.startsWith('saved-configs/')  
-    );  
-      
-    savedConfigsFiles.forEach(item => {  
-      treeItems.push({  
-        path: item.path,  
-        mode: '100644' as const,  
-        type: 'blob' as const,  
-        sha: null  // Setting sha to null deletes the file  
-      });  
-    });  
-      
+    // 7. Create a new tree WITHOUT base_tree  
     const { data: newTree } = await octokit.git.createTree({    
       owner,    
-      repo,    
-      base_tree: baseTree.sha,  // Keep base_tree  
-      tree: treeItems  
+      repo,  
+      // IMPORTANT: Do NOT include base_tree parameter  
+      tree: [    
+        ...filteredTree.map(item => ({    
+          path: item.path!,  
+          mode: item.mode as '100644' | '100755' | '040000' | '160000' | '120000',    
+          type: item.type as 'tree' | 'blob' | 'commit',    
+          sha: item.sha!  
+        })),    
+        {    
+          path: configPath,    
+          mode: '100644' as const,    
+          type: 'blob' as const,    
+          sha: newBlob.sha    
+        }    
+      ]    
     });
     
     // // 5. Get the tree of the default branch    
