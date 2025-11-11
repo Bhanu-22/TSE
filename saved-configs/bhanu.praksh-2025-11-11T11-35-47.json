@@ -1,0 +1,261 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2025-11-11T11:35:47.868Z",
+  "description": "7Dxperts TSE Demo Builder Configuration Export",
+  "standardMenus": [
+    {
+      "id": "home",
+      "name": "Home",
+      "enabled": true,
+      "icon": "home",
+      "homePageType": "html",
+      "homePageValue": "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Blitz | Home</title>\n    <style>\n        body {\n            font-family: Arial, sans-serif;\n            margin: 0;\n            background-color: #f5f5f5;\n            color: #333;\n        }\n\n        header {\n            background-color: #0078D7;\n            color: white;\n            padding: 20px;\n            text-align: center;\n        }\n\n        main {\n            padding: 40px 20px;\n            text-align: center;\n        }\n\n        .product {\n            background: white;\n            padding: 30px;\n            margin: 0 auto;\n            max-width: 600px;\n            border-radius: 10px;\n            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);\n        }\n\n        .btn {\n            display: inline-block;\n            margin-top: 20px;\n            padding: 10px 20px;\n            background-color: #0078D7;\n            color: white;\n            text-decoration: none;\n            border-radius: 5px;\n        }\n\n        .btn:hover {\n            background-color: #005fa3;\n        }\n\n        footer {\n            background-color: #222;\n            color: white;\n            text-align: center;\n            padding: 15px;\n            margin-top: 40px;\n        }\n    </style>\n</head>\n\n<body>\n    <header>\n        <h1>Welcome to Blitz</h1>\n    </header>\n\n    <main>\n        <div class=\"product\">\n            <h2>Accelerate your data & AI JOURNEY with our experts</h2><br>\n            <p>Empower your business with intelligent solutions and expert guidance to stay ahead in the digital era.\n            </p>\n            <a href=\"#buy\" class=\"btn\">Learn More</a>\n        </div>\n    </main>\n\n    <footer>\n        <p>&copy; 2025 Blitz. All rights reserved.</p>\n    </footer>\n</body>\n\n</html>"
+    },
+    {
+      "id": "favorites",
+      "name": "Favorites",
+      "enabled": false,
+      "icon": "favorites",
+      "homePageType": "html",
+      "homePageValue": "<h1>Favorites</h1>"
+    },
+    {
+      "id": "my-reports",
+      "name": "My Reports",
+      "enabled": false,
+      "icon": "my-reports",
+      "homePageType": "html",
+      "homePageValue": "<h1>My Reports</h1>"
+    },
+    {
+      "id": "spotter",
+      "name": "Spotter",
+      "enabled": true,
+      "icon": "spotter-custom.svg",
+      "homePageType": "html",
+      "homePageValue": "<h1>Spotter</h1>",
+      "spotterModelId": "697906bf-8426-416a-802e-de8f9a607d8b",
+      "spotterSearchQuery": "What's the current sales?"
+    },
+    {
+      "id": "search",
+      "name": "Search",
+      "enabled": false,
+      "icon": "search",
+      "homePageType": "html",
+      "homePageValue": "<h1>Search</h1>"
+    },
+    {
+      "id": "full-app",
+      "name": "Full App",
+      "enabled": false,
+      "icon": "full-app",
+      "homePageType": "html",
+      "homePageValue": "<h1>Full App</h1>"
+    },
+    {
+      "id": "all-content",
+      "name": "All Content",
+      "enabled": false,
+      "icon": "📚",
+      "homePageType": "html",
+      "homePageValue": "<h1>All Content</h1>",
+      "excludeSystemContent": true
+    }
+  ],
+  "customMenus": [
+    {
+      "id": "custom-1762850846586",
+      "name": "My Reports",
+      "description": "",
+      "icon": "my-reports",
+      "enabled": true,
+      "contentSelection": {
+        "type": "specific",
+        "specificContent": {
+          "liveboards": [
+            "2e681b20-6b70-455a-b676-f87a12fc69ac"
+          ],
+          "answers": []
+        }
+      },
+      "openDirectly": true
+    }
+  ],
+  "menuOrder": [
+    "home",
+    "favorites",
+    "my-reports",
+    "spotter",
+    "search",
+    "full-app",
+    "all-content",
+    "custom-1762850846586"
+  ],
+  "homePageConfig": {
+    "type": "html",
+    "value": "<h1>Welcome to TSE Demo Builder</h1>"
+  },
+  "appConfig": {
+    "thoughtspotUrl": "https://7dxperts.thoughtspot.cloud/",
+    "applicationName": "I_AM_SALLAR",
+    "logo": "/logo.png",
+    "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
+    "favicon": "/logo.png",
+    "showFooter": true,
+    "disableSettings": false,
+    "chatbot": {
+      "enabled": true,
+      "welcomeMessage": "Hello! I'm your AI assistant. What would you like to know about your data?",
+      "position": "bottom-right",
+      "primaryColor": "#3b82f6",
+      "hoverColor": "#2563eb"
+    },
+    "authType": "None",
+    "faviconSyncEnabled": true
+  },
+  "fullAppConfig": {
+    "showPrimaryNavbar": true,
+    "hideHomepageLeftNav": false
+  },
+  "stylingConfig": {
+    "application": {
+      "topBar": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333",
+        "logoUrl": "/logo.png"
+      },
+      "sidebar": {
+        "backgroundColor": "#f5f5f5",
+        "foregroundColor": "#333333"
+      },
+      "footer": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "dialogs": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "buttons": {
+        "primary": {
+          "backgroundColor": "#3182ce",
+          "foregroundColor": "#ffffff",
+          "borderColor": "#3182ce",
+          "hoverBackgroundColor": "#2c5aa0",
+          "hoverForegroundColor": "#ffffff"
+        },
+        "secondary": {
+          "backgroundColor": "#ffffff",
+          "foregroundColor": "#374151",
+          "borderColor": "#d1d5db",
+          "hoverBackgroundColor": "#f9fafb",
+          "hoverForegroundColor": "#374151"
+        }
+      },
+      "backgrounds": {
+        "mainBackground": "#f7fafc",
+        "contentBackground": "#ffffff",
+        "cardBackground": "#ffffff",
+        "borderColor": "#e2e8f0"
+      },
+      "typography": {
+        "primaryColor": "#1f2937",
+        "secondaryColor": "#6b7280",
+        "linkColor": "#3182ce",
+        "linkHoverColor": "#2c5aa0"
+      },
+      "selectedTheme": "default"
+    },
+    "embeddedContent": {
+      "strings": {},
+      "stringIDs": {},
+      "cssUrl": "",
+      "customCSS": {
+        "variables": {},
+        "rules_UNSTABLE": {}
+      }
+    },
+    "embedFlags": {
+      "liveboardEmbed": {
+        "showLiveboardTitle": false,
+        "showLiveboardDescription": false,
+        "isLiveboardHeaderSticky": true,
+        "hideLiveboardHeader": false,
+        "disabledActions": [
+          "download",
+          "downloadAsCSV",
+          "downloadAsPng",
+          "DRILL",
+          "share",
+          "makeACopy"
+        ],
+        "disabledActionReason": "Reason for disabling",
+        "visibleActions": [],
+        "hiddenActions": [
+          "download",
+          "downloadAsCSV",
+          "downloadAsPng",
+          "DRILL",
+          "share",
+          "makeACopy"
+        ]
+      }
+    },
+    "embedDisplay": {
+      "hideTitle": false,
+      "hideDescription": false
+    }
+  },
+  "userConfig": {
+    "users": [
+      {
+        "id": "power-user",
+        "name": "Power User",
+        "description": "Full access - can access all features including Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": true,
+            "full-app": true,
+            "all-content": true
+          },
+          "customMenus": [
+            "custom-1762850846586"
+          ],
+          "hiddenActions": {
+            "enabled": true,
+            "actions": []
+          }
+        }
+      },
+      {
+        "id": "basic-user",
+        "name": "Basic User",
+        "description": "Limited access - cannot access Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": false,
+            "full-app": false,
+            "all-content": true
+          },
+          "customMenus": [],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      }
+    ],
+    "currentUserId": "power-user"
+  }
+}
