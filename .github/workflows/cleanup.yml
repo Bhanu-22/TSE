@@ -1,0 +1,50 @@
+name: Daily Cleanup
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Runs every day at midnight UTC
+  workflow_dispatch:       # Allows manual trigger
+
+jobs:
+  cleanup:
+    # Run only if branch is not main
+    if: github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Load environment variables
+        run: |
+          if [ -f env.local ]; then
+            echo "Loading environment variables from env.local"
+            export $(grep -v '^#' env.local | xargs)
+          else
+            echo "⚠️ env.local not found, skipping"
+          fi
+
+      - name: Verify branch
+        run: echo "Running cleanup on branch: ${GITHUB_REF#refs/heads/}"
+
+      - name: Clean up folder
+        run: |
+          echo "Cleaning up target folder..."
+          # 👇 Replace the folder path below with your actual folder
+          TARGET_FOLDER="saved-configs"
+          if [ -d "$TARGET_FOLDER" ]; then
+            rm -rf "$TARGET_FOLDER"/*
+            echo " Cleaned $TARGET_FOLDER"
+          else
+            echo " Folder not found: $TARGET_FOLDER"
+          fi
+
+      - name: Commit and push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A
+          git commit -m "Automated daily cleanup" || echo "No changes to commit"
+          git push
