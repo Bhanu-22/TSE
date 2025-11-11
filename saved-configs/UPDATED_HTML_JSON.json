@@ -62,7 +62,7 @@
   ],
   "customMenus": [
     {
-      "id": "custom-1762846927233",
+      "id": "custom-1762847326869",
       "name": "My Reports",
       "description": "",
       "icon": "my-reports",
@@ -71,7 +71,7 @@
         "type": "specific",
         "specificContent": {
           "liveboards": [
-            "32201f81-17cf-4448-9c8f-e2ef7f0754fc"
+            "2e681b20-6b70-455a-b676-f87a12fc69ac"
           ],
           "answers": []
         }
@@ -82,7 +82,7 @@
   "menuOrder": [
     "home",
     "spotter",
-    "custom-1762846927233"
+    "custom-1762847326869"
   ],
   "homePageConfig": {
     "type": "html",
@@ -90,7 +90,7 @@
   },
   "appConfig": {
     "thoughtspotUrl": "https://7dxperts.thoughtspot.cloud/",
-    "applicationName": "TSE Demo Builder",
+    "applicationName": "I am SALAAR_AJITH BHANU_VARADHA",
     "logo": "/logo.png",
     "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
     "favicon": "/logo.png",
@@ -216,7 +216,7 @@
             "all-content": true
           },
           "customMenus": [
-            "custom-1762846927233"
+            "custom-1762847326869"
           ],
           "hiddenActions": {
             "enabled": true,
@@ -250,6 +250,6 @@
     "currentUserId": "power-user"
   },
   "version": "1.0.0",
-  "timestamp": "2025-11-11T07:42:07.233278",
+  "timestamp": "2025-11-11T07:48:46.869768",
   "description": "TSE Demo Builder Configuration Export"
 }
