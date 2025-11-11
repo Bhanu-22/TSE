@@ -122,46 +122,48 @@ export async function POST(request: NextRequest) {
       `export const DEFAULT_CONFIG: ConfigurationData = ${configString};`  
     );
     
-    // 5. Get the tree of the default branch    
-    const { data: baseTree } = await octokit.git.getTree({    
-      owner,    
-      repo,    
-      tree_sha: mainBranch.object.sha,    
-      recursive: 'true'    
-    });    
-        
-    // Filter out saved-configs directory    
-    const filteredTree = baseTree.tree.filter(item =>     
-      !item.path?.startsWith('saved-configs/')    
-    );    
-        
-    // 6. Create a new blob with the updated file content    
-    const { data: newBlob } = await octokit.git.createBlob({    
-      owner,    
-      repo,    
-      content: Buffer.from(content).toString('base64'),    
-      encoding: 'base64'    
-    });    
-        
-    // 7. Create a new tree WITHOUT base_tree  
-    const { data: newTree } = await octokit.git.createTree({    
-      owner,    
+    // 5. Get the NON-RECURSIVE tree of the default branch  
+    const { data: baseTree } = await octokit.git.getTree({  
+      owner,  
       repo,  
-      // IMPORTANT: Do NOT include base_tree parameter  
-      tree: [    
-        ...filteredTree.map(item => ({    
+      tree_sha: mainBranch.object.sha,  
+      recursive: 'false'  // Changed to false  
+    });  
+      
+    // Filter out saved-configs directory from root level  
+    const filteredTree = baseTree.tree.filter(item =>   
+      item.path !== 'saved-configs'  
+    );  
+      
+    // 6. Create a new blob with the updated file content  
+    const { data: newBlob } = await octokit.git.createBlob({  
+      owner,  
+      repo,  
+      content: Buffer.from(content).toString('base64'),  
+      encoding: 'base64'  
+    });  
+      
+    // 7. Create a new tree with base_tree but excluding saved-configs  
+    const { data: newTree } = await octokit.git.createTree({  
+      owner,  
+      repo,  
+      base_tree: baseTree.sha,  
+      tree: [  
+        // Explicitly include all root-level items except saved-configs  
+        ...filteredTree.map(item => ({  
           path: item.path!,  
-          mode: item.mode as '100644' | '100755' | '040000' | '160000' | '120000',    
-          type: item.type as 'tree' | 'blob' | 'commit',    
+          mode: item.mode as '100644' | '100755' | '040000' | '160000' | '120000',  
+          type: item.type as 'tree' | 'blob' | 'commit',  
           sha: item.sha!  
-        })),    
-        {    
-          path: configPath,    
-          mode: '100644' as const,    
-          type: 'blob' as const,    
-          sha: newBlob.sha    
-        }    
-      ]    
+        })),  
+        // Add the modified configurationService.ts  
+        {  
+          path: configPath,  
+          mode: '100644' as const,  
+          type: 'blob' as const,  
+          sha: newBlob.sha  
+        }  
+      ]  
     });
     
     // // 5. Get the tree of the default branch    
