@@ -564,6 +564,7 @@ export default function Layout({ children }: LayoutProps) {
                 icon: menu.icon || "📋",
                 enabled: menu.enabled,
                 contentSelection: menu.contentSelection,
+                openDirectly: menu.openDirectly,
               };
 
               if (!seenIds.has(normalizedMenu.id)) {
@@ -777,6 +778,7 @@ export default function Layout({ children }: LayoutProps) {
             icon: menu.icon || "📋",
             enabled: menu.enabled,
             contentSelection: menu.contentSelection,
+            openDirectly: menu.openDirectly,
           };
 
           if (!seenIds.has(normalizedMenu.id)) {
