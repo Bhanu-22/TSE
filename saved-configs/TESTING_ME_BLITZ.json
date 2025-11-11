@@ -62,7 +62,7 @@
   ],
   "customMenus": [
     {
-      "id": "custom-1762843138293",
+      "id": "custom-1762843182538",
       "name": "My Reports",
       "description": "",
       "icon": "my-reports",
@@ -81,7 +81,7 @@
   "menuOrder": [
     "home",
     "spotter",
-    "custom-1762843138293"
+    "custom-1762843182538"
   ],
   "homePageConfig": {
     "type": "html",
@@ -215,7 +215,7 @@
             "all-content": true
           },
           "customMenus": [
-            "custom-1762843138293"
+            "custom-1762843182538"
           ],
           "hiddenActions": {
             "enabled": true,
@@ -249,6 +249,6 @@
     "currentUserId": "power-user"
   },
   "version": "1.0.0",
-  "timestamp": "2025-11-11T06:38:58.293780",
+  "timestamp": "2025-11-11T06:39:42.538807",
   "description": "TSE Demo Builder Configuration Export"
 }
