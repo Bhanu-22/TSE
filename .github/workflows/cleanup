@@ -1,0 +1,125 @@
+name: Cleanup Saved Configs From All Branches
+ 
+on:
+  workflow_dispatch:     # ✅ Manual trigger via Actions tab
+  schedule:
+    - cron: "0 3 * * 1"  # ✅ Runs every Monday at 3 AM UTC (8:30 AM IST)
+ 
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # ✅ Required to access all branches
+ 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+ 
+      - name: Install Octokit
+        run: npm install @octokit/rest
+ 
+      - name: Run cleanup script
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: |
+          node << 'EOF'
+          const { Octokit } = require("@octokit/rest");
+ 
+          const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+          const owner = process.env.REPO_OWNER;
+          const repo = process.env.REPO_NAME;
+          const folderToDelete = "saved-configs/";
+ 
+          (async () => {
+            try {
+              console.log("📌 Fetching branches...");
+              const { data: branches } = await octokit.repos.listBranches({ owner, repo });
+              const branchesToClean = branches.filter(b => b.name !== "main");
+              console.log("✅ Branches to clean:", branchesToClean.map(b => b.name));
+ 
+              for (const branch of branchesToClean) {
+                console.log(`\n⏳ Cleaning branch: ${branch.name}`);
+ 
+                // Get latest commit SHA of the branch
+                const { data: refData } = await octokit.git.getRef({
+                  owner,
+                  repo,
+                  ref: `heads/${branch.name}`,
+                });
+                const commitSha = refData.object.sha;
+ 
+                // Get the commit data to find the tree SHA
+                const { data: commitData } = await octokit.git.getCommit({
+                  owner,
+                  repo,
+                  commit_sha: commitSha,
+                });
+                const treeSha = commitData.tree.sha;
+ 
+                // Get full tree (recursive)
+                const { data: treeData } = await octokit.git.getTree({
+                  owner,
+                  repo,
+                  tree_sha: treeSha,
+                  recursive: "true",
+                });
+ 
+                // Build delete entries for each saved-configs file
+                const deleteEntries = treeData.tree
+                  .filter(item => item.path.startsWith(folderToDelete))
+                  .map(item => ({
+                    path: item.path,
+                    mode: "100644",
+                    sha: null, // this deletes the file
+                  }));
+ 
+                if (deleteEntries.length === 0) {
+                  console.log(`⚠️ Nothing to delete in ${branch.name}`);
+                  continue;
+                }
+ 
+                console.log(`🗑️ Deleting ${deleteEntries.length} items in ${branch.name}`);
+ 
+                // Create new tree with deletions
+                const { data: newTree } = await octokit.git.createTree({
+                  owner,
+                  repo,
+                  base_tree: treeSha,
+                  tree: deleteEntries,
+                });
+ 
+                // Create new commit
+                const { data: newCommit } = await octokit.git.createCommit({
+                  owner,
+                  repo,
+                  message: "Cleanup: deleted saved-configs folder",
+                  tree: newTree.sha,
+                  parents: [commitSha],
+                });
+ 
+                // Update the branch reference
+                await octokit.git.updateRef({
+                  owner,
+                  repo,
+                  ref: `heads/${branch.name}`,
+                  sha: newCommit.sha,
+                  force: true,
+                });
+ 
+                console.log(`✅ Updated branch ${branch.name}`);
+              }
+ 
+              console.log("\n🎉 Cleanup complete for all branches!");
+            } catch (error) {
+              console.error("❌ ERROR:", error);
+              process.exit(1);
+            }
+          })();
+          EOF
