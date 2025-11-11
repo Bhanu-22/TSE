@@ -1,9 +1,9 @@
 name: Cleanup Saved Configs From All Branches
  
 on:
-  workflow_dispatch:     # ✅ Manual trigger via Actions tab
+  workflow_dispatch:     # Manual trigger via Actions tab
   schedule:
-    - cron: "0 3 * * 1"  # ✅ Runs every Monday at 3 AM UTC (8:30 AM IST)
+    - cron: "0 3 * * 1"  # Runs every Monday at 3 AM UTC (8:30 AM IST)
  
 jobs:
   cleanup:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # ✅ Required to access all branches
+          fetch-depth: 0  # Required to access all branches
  
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -42,10 +42,10 @@ jobs:
               console.log("📌 Fetching branches...");
               const { data: branches } = await octokit.repos.listBranches({ owner, repo });
               const branchesToClean = branches.filter(b => b.name !== "main");
-              console.log("✅ Branches to clean:", branchesToClean.map(b => b.name));
+              console.log("Branches to clean:", branchesToClean.map(b => b.name));
  
               for (const branch of branchesToClean) {
-                console.log(`\n⏳ Cleaning branch: ${branch.name}`);
+                console.log(`\n Cleaning branch: ${branch.name}`);
  
                 // Get latest commit SHA of the branch
                 const { data: refData } = await octokit.git.getRef({
@@ -81,11 +81,11 @@ jobs:
                   }));
  
                 if (deleteEntries.length === 0) {
-                  console.log(`⚠️ Nothing to delete in ${branch.name}`);
+                  console.log(` Nothing to delete in ${branch.name}`);
                   continue;
                 }
  
-                console.log(`🗑️ Deleting ${deleteEntries.length} items in ${branch.name}`);
+                console.log(` Deleting ${deleteEntries.length} items in ${branch.name}`);
  
                 // Create new tree with deletions
                 const { data: newTree } = await octokit.git.createTree({
@@ -113,12 +113,12 @@ jobs:
                   force: true,
                 });
  
-                console.log(`✅ Updated branch ${branch.name}`);
+                console.log(` Updated branch ${branch.name}`);
               }
  
-              console.log("\n🎉 Cleanup complete for all branches!");
+              console.log("\n Cleanup complete for all branches!");
             } catch (error) {
-              console.error("❌ ERROR:", error);
+              console.error(" ERROR:", error);
               process.exit(1);
             }
           })();
