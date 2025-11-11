@@ -21,22 +21,21 @@ jobs:
             echo "Loading environment variables from env.local"
             export $(grep -v '^#' env.local | xargs)
           else
-            echo "⚠️ env.local not found, skipping"
+            echo "env.local not found, skipping"
           fi
 
       - name: Verify branch
-        run: echo "Running cleanup on branch: ${GITHUB_REF#refs/heads/}"
+        run: echo "Running cleanup on branch:${GITHUB_REF#refs/heads/}"
 
       - name: Clean up folder
         run: |
           echo "Cleaning up target folder..."
-          # 👇 Replace the folder path below with your actual folder
           TARGET_FOLDER="saved-configs"
           if [ -d "$TARGET_FOLDER" ]; then
             rm -rf "$TARGET_FOLDER"/*
-            echo " Cleaned $TARGET_FOLDER"
+            echo "Cleaned $TARGET_FOLDER"
           else
-            echo " Folder not found: $TARGET_FOLDER"
+            echo "Folder not found: $TARGET_FOLDER"
           fi
 
       - name: Commit and push changes
