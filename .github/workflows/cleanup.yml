@@ -1,49 +1,201 @@
-name: Daily Cleanup
-
+name: Cleanup Saved Configs From All Branches
+ 
 on:
+
+  workflow_dispatch:   # ✅ Manual trigger
+
   schedule:
-    - cron: "0 0 * * *"  # Runs every day at midnight UTC
-  workflow_dispatch:       # Allows manual trigger
 
+    - cron: "0 3 * * 1"  # ✅ Optional: Runs every Monday at 3 AM
+ 
 jobs:
-  cleanup:
-    # Run only if branch is not main
-    if: github.ref != 'refs/heads/main'
-    runs-on: ubuntu-latest
 
+  cleanup:
+
+    runs-on: ubuntu-latest
+ 
     steps:
+
       - name: Checkout repository
+
         uses: actions/checkout@v4
 
-      - name: Load environment variables
+        with:
+
+          fetch-depth: 0 # ✅ Required to access all branches
+ 
+      - name: Setup Node
+
+        uses: actions/setup-node@v4
+
+        with:
+
+          node-version: 20
+ 
+      - name: Install Octokit
+
         run: |
-          if [ -f env.local ]; then
-            echo "Loading environment variables from env.local"
-            export $(grep -v '^#' env.local | xargs)
-          else
-            echo "env.local not found, skipping"
-          fi
 
-      - name: Verify branch
-        run: echo "Running cleanup on branch:${GITHUB_REF#refs/heads/}"
+          npm install @octokit/rest
+ 
+      - name: Run cleanup script
 
-      - name: Clean up folder
-        run: |
-          echo "Cleaning up target folder..."
-          TARGET_FOLDER="saved-configs"
-          if [ -d "$TARGET_FOLDER" ]; then
-            rm -rf "$TARGET_FOLDER"/*
-            echo "Cleaned $TARGET_FOLDER"
-          else
-            echo "Folder not found: $TARGET_FOLDER"
-          fi
-
-      - name: Commit and push changes
         env:
+
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          REPO_OWNER: ${{ github.repository_owner }}
+
+          REPO_NAME: ${{ github.event.repository.name }}
+
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add -A
-          git commit -m "Automated daily cleanup" || echo "No changes to commit"
-          git push
+
+          node << 'EOF'
+
+          const { Octokit } = require("@octokit/rest");
+ 
+          const octokit = new Octokit({
+
+            auth: process.env.GITHUB_TOKEN
+
+          });
+ 
+          const owner = process.env.REPO_OWNER;
+
+          const repo = process.env.REPO_NAME;
+ 
+          (async () => {
+
+            try {
+
+              console.log("📌 Fetching branches...");
+ 
+              // ✅ 1. List all branches
+
+              const { data: branches } = await octokit.repos.listBranches({
+
+                owner,
+
+                repo
+
+              });
+ 
+              const branchesToClean = branches.filter(b => b.name !== "main");
+ 
+              console.log("✅ Branches to clean:", branchesToClean.map(b => b.name));
+ 
+              for (const branch of branchesToClean) {
+
+                console.log(`\n⏳ Cleaning branch: ${branch.name}`);
+ 
+                // ✅ 2. Get branch reference
+
+                const { data: refData } = await octokit.git.getRef({
+
+                  owner,
+
+                  repo,
+
+                  ref: `heads/${branch.name}`,
+
+                });
+ 
+                const branchSha = refData.object.sha;
+ 
+                // ✅ 3. Get full tree
+
+                const { data: treeData } = await octokit.git.getTree({
+
+                  owner,
+
+                  repo,
+
+                  tree_sha: branchSha,
+
+                  recursive: "true"
+
+                });
+ 
+                // ✅ 4. Remove saved-configs/ folder
+
+                const filteredTree = treeData.tree.filter(item => {
+
+                  return !item.path.startsWith("saved-configs/");
+
+                });
+ 
+                console.log(
+
+                  `📁 Removed ${
+
+                    treeData.tree.length - filteredTree.length
+
+                  } items from ${branch.name}`
+
+                );
+ 
+                // ✅ 5. Create new tree
+
+                const { data: newTree } = await octokit.git.createTree({
+
+                  owner,
+
+                  repo,
+
+                  base_tree: treeData.sha,
+
+                  tree: filteredTree
+
+                });
+ 
+                // ✅ 6. Create commit
+
+                const { data: newCommit } = await octokit.git.createCommit({
+
+                  owner,
+
+                  repo,
+
+                  message: "Cleanup: removed saved-configs folder",
+
+                  tree: newTree.sha,
+
+                  parents: [branchSha]
+
+                });
+ 
+                // ✅ 7. Update branch pointer
+
+                await octokit.git.updateRef({
+
+                  owner,
+
+                  repo,
+
+                  ref: `heads/${branch.name}`,
+
+                  sha: newCommit.sha,
+
+                  force: true
+
+                });
+ 
+                console.log(`✅ Updated branch ${branch.name}`);
+
+              }
+ 
+              console.log("\n🎉 Cleanup complete for all branches!");
+
+            } catch (error) {
+
+              console.error("❌ ERROR:", error);
+
+              process.exit(1);
+
+            }
+
+          })();
+
+          EOF
+
+ 
