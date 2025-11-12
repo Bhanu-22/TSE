@@ -1,0 +1,52 @@
+{
+  "standardMenus": [
+    {
+      "id": "home",
+      "enabled": true
+    },
+    {
+      "id": "favorites",
+      "enabled": false
+    },
+    {
+      "id": "my-reports",
+      "enabled": false
+    },
+    {
+      "id": "spotter",
+      "enabled": true,
+      "spotterModelId": "c38b3fb1-be18-42a7-9ff9-6e730f4dde29"
+    },
+    {
+      "id": "search",
+      "enabled": false
+    },
+    {
+      "id": "full-app",
+      "enabled": false
+    },
+    {
+      "id": "all-content",
+      "enabled": false
+    }
+  ],
+  "customMenus": [
+    {
+      "name": "My Reports",
+      "enabled": true,
+      "contentSelection": {
+        "type": "specific",
+        "specificContent": {
+          "liveboards": [
+            "3fe7faa5-8c84-45c6-9aca-93cc4effcb23"
+          ],
+          "answers": []
+        }
+      }
+    }
+  ],
+  "appConfig": {
+    "thoughtspotUrl": "https://7dxperts.thoughtspot.cloud/",
+    "applicationName": "SALLAR"
+  }
+}
