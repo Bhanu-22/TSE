@@ -68,43 +68,32 @@ The `SPOTGPT_API_KEY` is a credential for the SpotGPT service, which provides th
 
 ## Deployment to Vercel
 
-Deploying to Vercel is the recommended way to host this application.
+1. **Push to Git**: Ensure your code is on GitHub, GitLab, or Bitbucket
+2. **Import Project**: In Vercel Dashboard, import the project from your Git repository
+3. **Configure Environment Variables**:
+   - Go to Settings → Environment Variables
+   - Add `SPOTGPT_API_KEY` (optional)
+   - Select all environments (Production, Preview, Development)
+4. **Deploy**: Click Deploy - Vercel handles the build automatically
 
-1.  **Push to Git**: Make sure your code is on a GitHub, GitLab, or Bitbucket repository.
+## Testing Your Deployment
 
-2.  **Import Project**: In your Vercel Dashboard, import the project from your Git repository. Vercel will automatically detect it as a Next.js app.
-
-3.  **Configure Environment Variables**:
-    - Go to your project's **Settings** → **Environment Variables**.
-    - Add a new variable:
-      - **Name**: `SPOTGPT_API_KEY`
-      - **Value**: Paste your actual SpotGPT API key.
-      - **Environment**: Select all environments (Production, Preview, Development).
-    - Click **Save**.
-    *(Note: You can skip this step if you don't have a key).*
-
-4.  **Deploy**: Click the **Deploy** button. Vercel will handle the build and deployment process automatically. You do **not** need to configure any build or output settings.
-
-## Testing and Troubleshooting
-
-### The Test Endpoint
-
-To verify your `SPOTGPT_API_KEY` configuration, the application includes a built-in test endpoint.
+Visit the test endpoint to verify configuration:
 
 - **Local**: http://localhost:3000/api/spotgpt/test
-- **Deployed**: `https://your-app-name.vercel.app/api/spotgpt/test`
+- **Deployed**: https://your-app-name.vercel.app/api/spotgpt/test
 
-This endpoint provides a JSON response detailing whether the key exists, its format, and the status of the connection to the SpotGPT API. It's the first place to check if you suspect an issue.
+## Troubleshooting
 
 ### Common Issues
 
-- **API Key Not Found**:
-  - **Local**: Ensure your file is named `.env.local` and you have restarted the dev server (`npm run dev`) after changing it.
-  - **Vercel**: Double-check the variable name is exactly `SPOTGPT_API_KEY` and that you have redeployed after adding it.
+**API Key Not Found**:
+- **Local**: Ensure `.env.local` exists and restart dev server
+- **Vercel**: Verify environment variable name is exactly `SPOTGPT_API_KEY` and redeploy
 
-- **Network Errors**:
-  - Check your server logs (in the terminal for local, or Vercel Dashboard for deployed) for detailed error messages from the API.
-  - Verify your API key is valid and has the correct permissions.
+**Network Errors**:
+- Check server logs for detailed error messages
+- Verify API key is valid and has correct permissions
 
 ## Security
 
