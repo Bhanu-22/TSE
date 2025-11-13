@@ -1,4 +1,4 @@
-# ThoughtSpot AI Chat Application
+# ThoughtSpot Demo Builder Application
 
 ## How It Works (Architecture)
 
