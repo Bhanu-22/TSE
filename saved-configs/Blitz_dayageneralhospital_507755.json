@@ -95,6 +95,7 @@
     "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
     "favicon": "/logo.png",
     "showFooter": true,
+    "disableSettings": true,
     "chatbot": {
       "enabled": true,
       "welcomeMessage": "Hello! I'm your AI assistant. What would you like to know about your data?",
