@@ -1,111 +1,70 @@
-# TSE Demo Builder  
-  
-A configurable ThoughtSpot embedding platform that enables rapid prototyping and demonstration of ThoughtSpot analytics embedded in custom applications.  
-  
-## Overview  
-  
-TSE Demo Builder is a Next.js-based web application that provides a visual interface for configuring and previewing ThoughtSpot embedded analytics. The application supports multiple embedding scenarios including liveboards, search, Spotter (AI Analyst), and full application embeds.  
-  
-## Key Features  
-  
-### Configuration Management  
-- **Visual Configuration Editor**: Modify all settings through an intuitive settings modal without editing code  
-- **Auto-Save**: Changes are automatically persisted with 1-second debouncing  
-- **Import/Export**: Save and share configurations as JSON files  
-- **GitHub Integration**: Store configurations in GitHub repositories for version control  
-  
-### Menu System  
-- **Standard Menus**: Pre-configured pages for Home, Favorites, My Reports, Spotter, Search, Full App, and All Content  
-- **Custom Menus**: Create unlimited custom pages with specific ThoughtSpot content  
-- **Drag-and-Drop Ordering**: Reorder menu items visually  
-  
-### Multi-User Support  
-- **User Profiles**: Define multiple user personas with different access levels  
-- **Access Control**: Configure which menus and features each user can access  
-- **Runtime Filters**: Apply user-specific data filters  
-  
-### Styling & Branding  
-- **Application Chrome**: Customize colors, logos, and layout  
-- **Embedded Content**: Apply custom CSS to ThoughtSpot embeds  
-- **Responsive Design**: Works across desktop and mobile devices  
-  
-### Storage  
-- **Hybrid Storage System**: Automatically uses localStorage for small configs (<1MB) and IndexedDB for larger configurations with images  
-  
-## Getting Started  
-  
-### Prerequisites  
-- Node.js 16+ and npm/yarn  
-- Access to a ThoughtSpot instance  
-- ThoughtSpot user credentials  
-  
-### Installation  
-  
-```bash  
-# Clone the repository
-git clone https://github.com/Bhanu-22/TSE.git  
-cd TSE  
-  
-# Install dependencies
-npm install  
-  
-# Start development server
-npm run dev
-```
+# ThoughtSpot Demo Builder Application
 
-Open http://localhost:3000 in your browser to see the application.
+## How It Works (Architecture)
 
-## Configuration
+The application uses a modern, secure client-server architecture built with Next.js.
 
-- Open the application in your browser (typically http://localhost:3000)
-- Click the settings icon to open the configuration modal
-- Configure your ThoughtSpot instance URL in the "App Config" tab
-- Customize menus, styling, and user profiles as needed
-- Changes are automatically saved
+1. **Client (Browser)**: The user interacts with the chatbot UI. When a user sends a message, client-side functions (defined in `spotgptClient.ts`) are called.
+2. **API Routes (Server)**: Instead of calling external services directly from the browser, the client-side functions make requests to internal Next.js API routes (e.g., `/api/spotgpt/chat`). This acts as a secure proxy.
+3. **Server-Side Logic**: These API routes, running on the server, securely read the `SPOTGPT_API_KEY` from environment variables. They then make the actual calls to the SpotGPT service and return the response to the client.
 
-## Environment Variables
+This architecture ensures the `SPOTGPT_API_KEY` is never exposed to the user's browser.
 
-Create a `.env.local` file in the root directory:
+---
 
-```bash
-# .env.local
-SPOTGPT_API_KEY=your_spotgpt_api_key_here
-```
+## Getting Started
 
-**Note**: The `SPOTGPT_API_KEY` is optional. If not provided:
+Follow these steps to run the application on your local machine.
 
-- Data questions will still work using standard ThoughtSpot integration
-- General/conversational chat will be disabled
-- Question classification will use rule-based methods instead of AI
+### Prerequisites
 
-## Architecture
+- Node.js (LTS version recommended)
+- npm or yarn
 
-The application follows a three-tier architecture:
+### Local Setup
 
-- **Presentation Layer**: React components with centralized state management via AppContext
-- **Service Layer**: Abstraction for ThoughtSpot API, configuration storage, and GitHub integration
-- **Storage Layer**: Hybrid localStorage/IndexedDB system for configuration persistence
+1.  **Clone the Repository**
+    ```bash
+    git clone <your-repository-url>
+    cd <repository-folder>
+    ```
 
-## How It Works
+2.  **Install Dependencies**
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
 
-- **Client (Browser)**: Users interact with the chatbot UI and configuration interface
-- **API Routes (Server)**: Next.js API routes act as secure proxies to external services
-- **Server-Side Logic**: API routes securely access environment variables and make calls to ThoughtSpot and SpotGPT services
+3.  **Configure Environment Variables**
+    Create a file named `.env.local` in the root of your project. This file is for local secrets and should not be committed to Git.
 
-This architecture ensures API keys are never exposed to the user's browser.
+    ```bash
+    # .env.local
+    SPOTGPT_API_KEY=your_spotgpt_api_key_here
+    ```
+    *If you don't have a `SPOTGPT_API_KEY`, you can leave it blank. See Fallback Behavior.*
 
-## SpotGPT Integration
+4.  **Run the Development Server**
+    ```bash
+    npm run dev
+    ```
+    Open http://localhost:3000 in your browser to see the application.
 
-The application includes optional AI chatbot capabilities powered by SpotGPT:
+## Configuration: The `SPOTGPT_API_KEY`
 
-```javascript
-import { SpotGPTClient } from './services/spotgptService';  
-  
-const client = new SpotGPTClient('your-api-key');  
-const response = await client.chat("What are top products by sales?");
-```
+### What is SpotGPT?
 
-See SPOTGPT_USAGE_EXAMPLE.md for complete usage examples.
+The `SPOTGPT_API_KEY` is a credential for the SpotGPT service, which provides the generative AI capabilities for this application (general chat, AI-powered question classification). You would typically get this key from your organization's ThoughtSpot administrator or a SpotGPT developer portal.
+
+### Fallback Behavior (Without API Key)
+
+**You can run and deploy the application without a `SPOTGPT_API_KEY`**. If the key is not provided:
+- **Data questions will still work perfectly** using the standard ThoughtSpot integration.
+- General/conversational chat will be disabled.
+- Question classification will use a simpler, rule-based method instead of AI.
+
+---
 
 ## Deployment to Vercel
 
@@ -138,6 +97,17 @@ Visit the test endpoint to verify configuration:
 
 ## Security
 
-- **No Exposed Keys**: API keys are only accessed server-side
-- **.gitignore**: `.env.local` is excluded from version control by default
-- **Vercel Security**: Environment variables are encrypted and secure
+This application is built with security as a top priority.
+
+- **No Exposed Keys**: The `SPOTGPT_API_KEY` is **only** accessed on the server-side. It is never sent to the user's browser.
+- **`.gitignore`**: The `.env.local` file is included in the `.gitignore` file by default in Next.js, preventing you from accidentally committing secrets.
+- **Vercel Security**: Vercel's environment variable system is encrypted and secure for storing production secrets.
+
+---
+
+## Additional Documentation
+
+For more detailed information on specific features, please refer to the following documents:
+
+- **Authentication Enhancements**: Describes the modernized login page and logout functionality.
+- **SpotGPT API Setup**: Guide for setting up the SpotGPT API for chatbot features.
