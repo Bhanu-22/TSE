@@ -127,7 +127,10 @@ export default function SearchPage({
               style: {
                 customCSSUrl: cssUrl || undefined,
                 customCSS: {
-                  variables: customCSS.variables || {},
+                  variables: Object.fromEntries(
+                    Object.entries(customCSS.variables || {})
+                      .filter(([, value]) => value !== undefined)
+                  ) as Record<string, string>,
                   rules_UNSTABLE: customCSS.rules_UNSTABLE || {},
                 },
               },

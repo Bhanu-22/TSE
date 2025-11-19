@@ -119,8 +119,11 @@ export default function SpotterPage({
               },
               style: {
                 customCSSUrl: cssUrl || undefined,
-                customCSS: {
-                  variables: customCSS.variables || {},
+               customCSS: {
+                  variables: Object.fromEntries(
+                    Object.entries(customCSS.variables || {})
+                      .filter(([, value]) => value !== undefined)
+                  ) as Record<string, string>,
                   rules_UNSTABLE: customCSS.rules_UNSTABLE || {},
                 },
               },

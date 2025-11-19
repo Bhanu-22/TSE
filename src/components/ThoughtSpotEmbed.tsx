@@ -259,11 +259,13 @@ export default function ThoughtSpotEmbed({
               stringIDs: stringIDs || {},
             },
             style: {
-              customCSSUrl: cssUrl || undefined,
               customCSS: {
-                variables: customCSS.variables || {},
-                rules_UNSTABLE: customCSS.rules_UNSTABLE || {},
-              },
+              variables: Object.fromEntries(
+                Object.entries(customCSS.variables || {})
+                  .filter(([, value]) => value !== undefined)
+              ) as Record<string, string>,
+              rules_UNSTABLE: customCSS.rules_UNSTABLE || {},
+            },
             },
           },
         };
