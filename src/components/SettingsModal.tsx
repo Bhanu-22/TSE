@@ -4281,7 +4281,10 @@ function StylingContent({
             {/* CSS Variables */}
             <CSSVariablesEditor
               variables={
-                stylingConfig.embeddedContent.customCSS.variables || {}
+                Object.fromEntries(
+                  Object.entries(stylingConfig.embeddedContent.customCSS.variables || {})
+                    .filter(([_, value]) => value !== undefined)
+                ) as Record<string, string>
               }
               onChange={(value) =>
                 updateEmbeddedContent("customCSS", {
