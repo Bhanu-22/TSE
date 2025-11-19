@@ -73,6 +73,7 @@ interface SideNavProps {
   hoverColor?: string;
   selectedColor?: string;
   selectedTextColor?: string;
+  hideSettings?: boolean;
 }
 
 export default function SideNav({
@@ -87,6 +88,7 @@ export default function SideNav({
   hoverColor,
   selectedColor,
   selectedTextColor,
+  hideSettings = false,
 }: SideNavProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -485,6 +487,7 @@ export default function SideNav({
           borderTop: "1px solid #e2e8f0",
         }}
       >
+        {!hideSettings && onSettingsClick && (
         <button
           onClick={onSettingsClick}
           style={{
@@ -513,6 +516,7 @@ export default function SideNav({
           <MaterialIcon icon="settings" size={26} color="currentColor" />
           {isHovered && <span>Settings</span>}
         </button>
+        )}
       </div>
     </div>
   );

@@ -2415,6 +2415,7 @@ export default function Layout({ children }: LayoutProps) {
                 selectedTextColor={
                   stylingConfig.application.sidebar.selectedTextColor
                 }
+                hideSettings={appConfig.disableSettings === true}
               />
 
               {/* Content Area */}
