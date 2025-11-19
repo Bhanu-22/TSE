@@ -1,0 +1,255 @@
+{
+  "standardMenus": [
+    {
+      "id": "home",
+      "name": "Home",
+      "enabled": true,
+      "icon": "home",
+      "homePageType": "html",
+      "homePageValue": "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Blitz | Home</title>\n    <style>\n        body {\n            font-family: Arial, sans-serif;\n            margin: 0;\n            background-color: #f5f5f5;\n            color: #333;\n        }\n\n        header {\n            background-color: #0078D7;\n            color: white;\n            padding: 20px;\n            text-align: center;\n        }\n\n        main {\n            padding: 40px 20px;\n            text-align: center;\n        }\n\n        .product {\n            background: white;\n            padding: 30px;\n            margin: 0 auto;\n            max-width: 600px;\n            border-radius: 10px;\n            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);\n        }\n\n        .btn {\n            display: inline-block;\n            margin-top: 20px;\n            padding: 10px 20px;\n            background-color: #0078D7;\n            color: white;\n            text-decoration: none;\n            border-radius: 5px;\n        }\n\n        .btn:hover {\n            background-color: #005fa3;\n        }\n\n        footer {\n            background-color: #222;\n            color: white;\n            text-align: center;\n            padding: 15px;\n            margin-top: 40px;\n        }\n    </style>\n</head>\n\n<body>\n    <header>\n        <h1>Welcome to Blitz</h1>\n    </header>\n\n    <main>\n        <div class=\"product\">\n            <h2>Accelerate your data & AI JOURNEY with our experts</h2><br>\n            <p>Empower your business with intelligent solutions and expert guidance to stay ahead in the digital era.\n            </p>\n            <a href=\"#buy\" class=\"btn\">Learn More</a>\n        </div>\n    </main>\n\n    <footer>\n        <p>&copy; 2025 Blitz. All rights reserved.</p>\n    </footer>\n</body>\n\n</html>"
+    },
+    {
+      "id": "favorites",
+      "name": "Favorites",
+      "enabled": false,
+      "icon": "favorites",
+      "homePageType": "html",
+      "homePageValue": "<h1>Favorites</h1>"
+    },
+    {
+      "id": "my-reports",
+      "name": "My Reports",
+      "enabled": false,
+      "icon": "my-reports",
+      "homePageType": "html",
+      "homePageValue": "<h1>My Reports</h1>"
+    },
+    {
+      "id": "spotter",
+      "name": "Spotter",
+      "enabled": true,
+      "icon": "spotter-custom.svg",
+      "homePageType": "html",
+      "homePageValue": "<h1>Spotter</h1>",
+      "spotterModelId": "c38b3fb1-be18-42a7-9ff9-6e730f4dde29",
+      "spotterSearchQuery": "What is the current employee benefit adoption rate for this quarter?"
+    },
+    {
+      "id": "search",
+      "name": "Search",
+      "enabled": false,
+      "icon": "search",
+      "homePageType": "html",
+      "homePageValue": "<h1>Search</h1>"
+    },
+    {
+      "id": "full-app",
+      "name": "Full App",
+      "enabled": false,
+      "icon": "full-app",
+      "homePageType": "html",
+      "homePageValue": "<h1>Full App</h1>"
+    },
+    {
+      "id": "all-content",
+      "name": "All Content",
+      "enabled": false,
+      "icon": "📚",
+      "homePageType": "html",
+      "homePageValue": "<h1>All Content</h1>",
+      "excludeSystemContent": true
+    }
+  ],
+  "customMenus": [
+    {
+      "id": "custom-1762867957713",
+      "name": "My Reports",
+      "description": "",
+      "icon": "my-reports",
+      "enabled": true,
+      "contentSelection": {
+        "type": "specific",
+        "specificContent": {
+          "liveboards": [
+            "3fe7faa5-8c84-45c6-9aca-93cc4effcb23"
+          ],
+          "answers": []
+        }
+      },
+      "openDirectly": true
+    }
+  ],
+  "menuOrder": [
+    "home",
+    "spotter",
+    "custom-1762867957713"
+  ],
+  "homePageConfig": {
+    "type": "html",
+    "value": "<h1>Welcome to TSE Demo Builder</h1>"
+  },
+  "appConfig": {
+    "thoughtspotUrl": "https://7dxperts.thoughtspot.cloud/",
+    "applicationName": "I_AM_SALAAR",
+    "logo": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAJQAlAMBEQACEQEDEQH/xAAcAAEAAgMBAQEAAAAAAAAAAAAAAgMBBgcEBQj/xABHEAACAQICBgQHCwoHAAAAAAAAAQIDBAURBgcSITFxE0FRwSIyYZGxstEUIzM0VHOBk6HC8RVCQ0RScqKz4vAXJVOCg5KU/8QAGgEBAQADAQEAAAAAAAAAAAAAAAECAwQFBv/EADERAQABAwIEBAMHBQAAAAAAAAABAgMRBAUSEzFRITJBkVJhcRUigbHB0eEUNEKh8P/aAAwDAQACEQMRAD8A7iAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABhtLiwIutSXGpBc5ILiVbvLZcbmiudREzC8FU+iuWJWMeN7bLnVj7RmO68uv4ZR/KuH/AC+1+uj7RxR3Xk3Phn2Pyrh/y+0+uj7RxR3OTd+GfYWK4f8AL7X66PtHFHc5Nz4Z9k1iNjLxb23fKrH2jMJy6+0pxu7aXi3FF8poZhOCqPRbGpCXizi+TKmJSCAAAAAAYlJRTbeSSzbYHOtJtYfQVp22DxjLZbTryWeb8iOeu9jwh7Wl2vijiu+zTLrSzGrltzxCuk+qM2vQaZrqn1etRodPT0peGpi1/V8e7rvnUZjme7dFm1HSmPZ553NeXjVqj/3MjZFNMekKJSnLjOf/AGZMNkVfJVKOfFy85MMouK3ST635xhnFyeyt0V2sjLmz2QlSXawvNlB0wvNlhSlB5ptZBeLL1W+K3Vu/AafPPuZYmYaq7NFfWH2bDTK8tZJudzHL/SuppeZvIzi5MOO7t1FcentDfdF9PpXLUK1T3TFeNGaUasV6H/e86Ld7LxNXtfB4xGPydFtbildUIVqElKnNZxaN8Tl4lVM0zNMrSoAANV1kYnLDdHKipS2alzJUk/I+Jru1Ypd+22ebfjPSPFxTazebZxPq8AAAAyCmyFRcSLlCUSKqlEMlbQVCcSMolS1vDZlHgFWW9epbVoVqE3CpB5podGNdFNcYl3LVtjKvraVLPdOn0yj+zJPKa8+R3Wasvjtz0/Kqz+H7N4NzygABzbXHUk6OH0k/BTlOS8yXec9/0e3s0RxVS5ijme+kgAADIUzS47gsDIuEJICqSIyVtBUJIESrlEjOJVtBmi1kGTftUWIdHpBRtZS3TjUilzSfpibrE/ew8TerOdPNf0dvXA7nyQAA5ZrcqbV3Th1QhT+3pH3I5r73tnjwz9f0c6RzvdSCMgZAw3kswN21Zxp1rfEXOnCXhxg9qKeay4cjpsRGJeBu92qK6OGcPZjehFvc7VbCJRtqz/QTfvcn5Hxj6CV2c+VdJvFVP3b8Zjv6tEv7G5sLh297QnQqrqkuK7U+DXI5piY6vftXKLtPFROYeSUSNiuSAgURkiLlVKJGcSraDPL7+r+q6GmOFSzyTrqL+lNGdqcVw5Nxp49Hc+j9GHovhAAByTWtJvEZ9inTX8Dfect7q+h2jy+/5/w0E0PaZQEkEMwK6r3FYzPg3vVX8VxH52HqnTZ6S+d3bz0/RvRueUovbS2v6Dt72hCvSf5s1wfanxT5Eqpirq22b1yzVxW5xLRsc0Gr0dqtg0ncUt7dCb98XLql6eZy12MeNL6DS7xRXim9GJ7+n8NMrU5U5yhUi4Ti8pRksmn5V1GjD2ImJjMKWiiDCoyRFyhKJGUS+hotJ09JsLkuPuqn6yMqPNDXqozprkfKX6WPSfAgBgch1qv/ADGp85D+Wct/q+i2jy/h+rQ0zQ9pkIJgSzCKqnBlYVN81V/FMR+dh6p02ekvnt289P0b2jc8phgeLE8UssLo9NfXEKafCLfhSfkXWyTVFPVttWbl2cURlzPSnG4Y7fQr07dUY04bClLx57+Mu45LlUVTmH1Gg01WmtcNU5y+HJGt3ZQaCoEVhoivbo4s9JMLy4+6oesi0+aGOo/trn0l+lT0nwQAA5DrXTWJ1exypPzwku45b/V9HtHk9/zhoBoeykmBnMqGYRCpwDCpvuqv4piPzsPVOmz0l89u3no+jdq1elQoyq16kadOKzlKbySNzy6YmqcU9Wk47p7CO1QwSHSS4O4qLwV+6us0V3vSl6+m2uavG74fJpNxXr3lw695WnWqy4ym8/wNEzM9XuWrVFuMUxhgxbUZIKrkFQZFYCvraG0el0swqKX6xF/aZW4zXDTrasaS59H6LPQfDgADk2t2GziKf7dOi/M6qOW/1fQ7POaff9HOzQ9szCMlAIxN5oMKn29F9JJ4BRuoRtVWdZqUW57Oy0st/kNlFzhh52q0X9TVTOcYePFsWxDGau3fV3KKecaUd0I/R3kqrmrq6LGkt2YxTDxxjkYOuITIoBhgVSCoMisBk2jVrb9PphZPLdT2p+ZM2WYzXDh3Ovh0lXzd5O58eAAOV67oVKTwq5ivepuVKo+xrJx+8cuoifCXv7JVEzXT6uatmh7gAzAygBUmGUgkRhKIEiKzmBgA+AMq5FWJVviRUesg6BqftnUx6vXa3UqD3+VtI36ePvZeTvNzFmKe8uxHW+ZAAHxNLsBo6R4NUsa635qdNr82S/FmNdPFGHRpdRVp7nHS4DidjdYLeSssRpuFSOexNrdUj2o4Zpmnwl9dZv0XqeKhTmureRsCjIVkgymUZCMphGcyBmAzKK5MLlW2RWacXUkoxTbbySXWMMZriI8XctXGj88EwXpLqGzdXWU5x64x6kdlqjhh8tuOq/qLvh0htxteeAAAHy8awDDsbt3RxC3hVT62k2n28zGqmKurbav3LU5onDn2I6naVSvKeH4vK3g+FOVJyS+naNM2O0vVo3mqI+9Tl8+pqfxaPwWN20uzapyXtMeRPdujeqPWiXmlqm0ni/e7/DJLy1Jp+oORU2RvNjHln/X7qZasNLYcJ4fPlWffEnJrZRu+nn0lB6t9Lo/oLSXK4Q5NbKN203zR/wAO9L1+pW/18ScqtftXTd59klq80t67Gh/6IjlVn2ppe8+yUdXWlj42tsudwhya0ndNL3n2Wx1a6UvjCxXO4/pLya2P2rpvn7Lqeq7SSfwlbDof80n9wvJqYTu1j0if+/F6KeqbF5fC4nZR/dU5dyLyJ7tc7xb9KZe231QybXunGN3X0VHf9rLFj5tdW8T/AI0Nt0c0FwbAZxrUqcri5jwrV8m1yXBGym3FLgv669e8JnENoNjjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf/9k=",
+    "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
+    "favicon": "data:image/jpeg;base64,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",
+    "showFooter": true,
+    "chatbot": {
+      "enabled": true,
+      "welcomeMessage": "Hello! I'm your AI assistant. What would you like to know about your data?",
+      "position": "bottom-right",
+      "primaryColor": "#3b82f6",
+      "hoverColor": "#2563eb"
+    },
+    "authType": "None",
+    "faviconSyncEnabled": true
+  },
+  "fullAppConfig": {
+    "showPrimaryNavbar": true,
+    "hideHomepageLeftNav": false
+  },
+  "stylingConfig": {
+    "application": {
+      "topBar": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333",
+        "logoUrl": "data:image/jpeg;base64,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"
+      },
+      "sidebar": {
+        "backgroundColor": "#f5f5f5",
+        "foregroundColor": "#333333"
+      },
+      "footer": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "dialogs": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "buttons": {
+        "primary": {
+          "backgroundColor": "#3182ce",
+          "foregroundColor": "#ffffff",
+          "borderColor": "#3182ce",
+          "hoverBackgroundColor": "#2c5aa0",
+          "hoverForegroundColor": "#ffffff"
+        },
+        "secondary": {
+          "backgroundColor": "#ffffff",
+          "foregroundColor": "#374151",
+          "borderColor": "#d1d5db",
+          "hoverBackgroundColor": "#f9fafb",
+          "hoverForegroundColor": "#374151"
+        }
+      },
+      "backgrounds": {
+        "mainBackground": "#f7fafc",
+        "contentBackground": "#ffffff",
+        "cardBackground": "#ffffff",
+        "borderColor": "#e2e8f0"
+      },
+      "typography": {
+        "primaryColor": "#1f2937",
+        "secondaryColor": "#6b7280",
+        "linkColor": "#3182ce",
+        "linkHoverColor": "#2c5aa0"
+      },
+      "selectedTheme": "default"
+    },
+    "embeddedContent": {
+      "strings": {},
+      "stringIDs": {},
+      "cssUrl": "",
+      "customCSS": {
+        "variables": {},
+        "rules_UNSTABLE": {}
+      }
+    },
+    "embedFlags": {
+      "liveboardEmbed": {
+        "showLiveboardTitle": false,
+        "showLiveboardDescription": false,
+        "isLiveboardHeaderSticky": true,
+        "hideLiveboardHeader": false,
+        "disabledActions": [
+          "download",
+          "downloadAsCSV",
+          "downloadAsPng",
+          "DRILL",
+          "share",
+          "makeACopy"
+        ],
+        "disabledActionReason": "Reason for disabling",
+        "visibleActions": [],
+        "hiddenActions": [
+          "download",
+          "downloadAsCSV",
+          "downloadAsPng",
+          "DRILL",
+          "share",
+          "makeACopy"
+        ]
+      }
+    },
+    "embedDisplay": {
+      "hideTitle": false,
+      "hideDescription": false
+    }
+  },
+  "userConfig": {
+    "users": [
+      {
+        "id": "power-user",
+        "name": "Power User",
+        "description": "Full access - can access all features including Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": true,
+            "full-app": true,
+            "all-content": true
+          },
+          "customMenus": [
+            "custom-1762867957713"
+          ],
+          "hiddenActions": {
+            "enabled": true,
+            "actions": []
+          }
+        }
+      },
+      {
+        "id": "basic-user",
+        "name": "Basic User",
+        "description": "Limited access - cannot access Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": false,
+            "full-app": false,
+            "all-content": true
+          },
+          "customMenus": [],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      }
+    ],
+    "currentUserId": "power-user"
+  },
+  "version": "1.0.0",
+  "timestamp": "2025-11-11T13:32:37.713562",
+  "description": "TSE Demo Builder Configuration Export"
+}
