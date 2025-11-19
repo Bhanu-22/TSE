@@ -172,7 +172,9 @@ export const DEFAULT_CONFIG: ConfigurationData = {
       stringIDs: {},
       cssUrl: "",
       customCSS: {
-        variables: {},
+        variables: {
+          "--ts-var-button--primary-background": "#32C256"
+        },
         rules_UNSTABLE: {},
       },
     },

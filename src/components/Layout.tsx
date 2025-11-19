@@ -1300,8 +1300,10 @@ export default function Layout({ children }: LayoutProps) {
           style: {
             customCSSUrl: stylingConfig.embeddedContent.cssUrl || undefined,
             customCSS: {
-              variables:
-                stylingConfig.embeddedContent.customCSS.variables || {},
+                variables: Object.fromEntries(
+                Object.entries(stylingConfig.embeddedContent?.customCSS?.variables || {})
+                  .filter(([_, value]) => value !== undefined)
+              ) as Record<string, string>,
               rules_UNSTABLE: mergedRules,
             },
           },

@@ -147,7 +147,9 @@ export interface AppConfig {
   thoughtspotUrl: string;
   authType: "None" | "SSO" | "TrustedAuthToken";
   applicationName: string;
-  logo: string;
+  logo?: string;
+  background_color?: string;
+  logo_url?: string;
   earlyAccessFlags: string;
   favicon?: string;
   faviconSyncEnabled?: boolean;
@@ -331,7 +333,10 @@ export interface EmbeddedContentCustomization {
   stringIDs: Record<string, string>;
   cssUrl?: string;
   customCSS: {
-    variables?: Record<string, string>;
+    variables?: {
+      "--ts-var-button--primary-background"?: string;
+      [key: string]: string | undefined;
+    }
     rules_UNSTABLE?: Record<string, Record<string, string>>;
   };
 }

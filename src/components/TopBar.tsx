@@ -208,6 +208,7 @@ export default function TopBar({
               height={32}
               width={32}
               style={{ height: "32px", width: "auto" }}
+              unoptimized={true}
               onError={(e) => {
                 console.error(
                   "Next.js Image failed to load:",
