@@ -165,7 +165,7 @@
       "cssUrl": "",
       "customCSS": {
         "variables": {
-          "--ts-var-button--primary-background": "rgba(7, 117, 220, 1.0)",
+          "--ts-var-button--primary-background": "rgba(211, 211, 211, 1.0)",
           "--ts-var-button--primary-color": "rgba(255, 255, 255, 1.0)",
           "--ts-var-button--primary--hover-background": "rgba(7, 117, 220, 0.8)",
           "--ts-var-button--primary--active-background": "rgba(7, 117, 220, 0.6)",
