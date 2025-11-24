@@ -46,6 +46,7 @@ export default function RuntimeFiltersEditor({
     columnName: "",
     operator: RuntimeFilterOp.EQ,
     values: [""],
+    dropdownOptions: []
   });
 
   // Debug: Log the runtime filters when they change
@@ -65,6 +66,7 @@ export default function RuntimeFiltersEditor({
         columnName: "",
         operator: RuntimeFilterOp.EQ,
         values: [""],
+        dropdownOptions: []
       });
     }
   };

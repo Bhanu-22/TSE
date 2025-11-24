@@ -5,7 +5,8 @@ import { useState, useEffect } from "react";
 import { useAppContext } from "../../../components/Layout";
 import ContentGrid from "../../../components/ContentGrid";
 import ThoughtSpotEmbed from "../../../components/ThoughtSpotEmbed";
-import { ThoughtSpotContent } from "../../../types/thoughtspot";
+import { RuntimeFilter, ThoughtSpotContent } from "../../../types/thoughtspot";
+import InteractiveFilters from "@/components/InteractiveFilters";
 
 type ContentType = "all" | "answer" | "liveboard";
 
@@ -20,6 +21,7 @@ function CustomMenuPageContent() {
   const [selectedContent, setSelectedContent] =
     useState<ThoughtSpotContent | null>(null);
   const [showContentDirectly, setShowContentDirectly] = useState(false);
+  const [currentFilterValues, setCurrentFilterValues] = useState<RuntimeFilter[]>([]);
 
   // Prevent hydration mismatch
   useEffect(() => {
@@ -69,6 +71,12 @@ function CustomMenuPageContent() {
         fetchContentAndShow();
     }
 }, [customMenu]);
+
+  useEffect(() => {  
+    if (customMenu?.runtimeFilters) {  
+      setCurrentFilterValues(customMenu.runtimeFilters);  
+    }  
+  }, [customMenu]);
 
   const handleBackClick = () => {
     router.back();
@@ -213,6 +221,14 @@ function CustomMenuPageContent() {
           </button>
         </div>
         )}
+
+        {customMenu?.runtimeFilters && customMenu.runtimeFilters.length > 0 && (  
+          <InteractiveFilters  
+            filters={currentFilterValues}  
+            onFilterChange={setCurrentFilterValues}  
+          />  
+        )}  
+        
         {!stylingConfig.embedDisplay?.hideTitle ||
         (selectedContent.description &&
           !stylingConfig.embedDisplay?.hideDescription) ? (
@@ -272,6 +288,7 @@ function CustomMenuPageContent() {
             >
               <ThoughtSpotEmbed
                 content={selectedContent}
+                runtimeFilters={currentFilterValues} 
                 width="100%"
                 height="100%"
                 onLoad={() => {}}
@@ -298,6 +315,7 @@ function CustomMenuPageContent() {
           >
             <ThoughtSpotEmbed
               content={selectedContent}
+              runtimeFilters={currentFilterValues} 
               width="100%"
               height="100%"
               onLoad={() => {}}

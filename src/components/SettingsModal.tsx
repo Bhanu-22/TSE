@@ -28,6 +28,8 @@ import {
   AppConfig,
   FullAppConfig,
   StandardMenu,
+  RuntimeFilter,
+  RuntimeFilterOp,
 } from "../types/thoughtspot";
 import HiddenActionsEditor from "./HiddenActionsEditor";
 import TagFilterComponent from "./TagFilterComponent";
@@ -2579,6 +2581,8 @@ function CustomMenusContent({
     Array<{ id: string; name: string; color: string }>
   >([]);
   const [isLoadingContent, setIsLoadingContent] = useState(false);
+  const [filterSearchText, setFilterSearchText] = useState("");  
+  const availableFilterOptions = ["Airline Name", "Departure Station Name"];
 
   // Icon picker state is no longer needed for the new IconPicker component
 
@@ -3243,6 +3247,185 @@ function CustomMenusContent({
               </div>
             )}
           </div>
+
+          {/* Runtime Filters Section - Conditional */}  
+          <div style={{ marginBottom: "20px" }}>  
+            <h5  
+              style={{  
+                fontSize: "14px",  
+                fontWeight: "600",  
+                marginBottom: "12px",  
+              }}  
+            >  
+              Runtime Filters  
+            </h5>  
+              
+            {/* Check if a liveboard is selected */}  
+            {editingMenu.contentSelection.type === "specific" &&   
+             editingMenu.contentSelection.specificContent?.liveboards?.length === 0 ? (  
+              <div  
+                style={{  
+                  padding: "12px",  
+                  backgroundColor: "#fef3c7",  
+                  border: "1px solid #fbbf24",  
+                  borderRadius: "4px",  
+                  fontSize: "14px",  
+                  color: "#92400e",  
+                }}  
+              >  
+                ⚠️ Select a liveboard to enable runtime filters  
+              </div>  
+            ) : editingMenu.contentSelection.type === "tag" ? (  
+              <div  
+                style={{  
+                  padding: "12px",  
+                  backgroundColor: "#fef3c7",  
+                  border: "1px solid #fbbf24",  
+                  borderRadius: "4px",  
+                  fontSize: "14px",  
+                  color: "#92400e",  
+                }}  
+              >  
+                ⚠️ Runtime filters are only available for specific liveboard selection  
+              </div>  
+            ) : (  
+              <>  
+                <p  
+                  style={{  
+                    fontSize: "12px",  
+                    color: "#6b7280",  
+                    marginBottom: "12px",  
+                  }}  
+                >  
+                  Select which filters should appear above the liveboard for end users.  
+                </p>  
+                  
+                {/* Hardcoded filter options dropdown */}  
+                <div style={{ marginBottom: "16px" }}>  
+                  <label  
+                    style={{  
+                      display: "block",  
+                      marginBottom: "8px",  
+                      fontSize: "14px",  
+                      fontWeight: "500",  
+                    }}  
+                  >  
+                    Available Filter Options  
+                  </label>  
+                    
+                  {/* Add filter input */}  
+                  <input  
+                    type="text"  
+                    placeholder="Search filter options..."  
+                    value={filterSearchText}  
+                    onChange={(e) => setFilterSearchText(e.target.value)}  
+                    style={{  
+                      width: "100%",  
+                      padding: "8px 12px",  
+                      border: "1px solid #d1d5db",  
+                      borderRadius: "4px",  
+                      fontSize: "14px",  
+                      marginBottom: "8px",  
+                    }}  
+                  />  
+                    
+                  <select  
+                    multiple  
+                    value={editingMenu.runtimeFilters?.map(f => f.columnName) || []}  
+                    onChange={(e) => {  
+                      const selectedOptions = Array.from(  
+                        e.target.selectedOptions,  
+                        (option) => option.value  
+                      );  
+                        
+                      // Hardcoded filter configurations  
+                      const filterConfigs: Record<string, RuntimeFilter> = {  
+                        "Airline Name": {  
+                          columnName: "Airline Name",  
+                          operator: RuntimeFilterOp.IN,  
+                          values: [],  
+                          dropdownOptions: [  
+                            "easyJet",  
+                            "emirates"
+                          ],  
+                        },  
+                        "Departure Station Name": {  
+                          columnName: "Departure Station Name",  
+                          operator: RuntimeFilterOp.EQ,  
+                          values: [],  
+                          dropdownOptions: [  
+                            "london gatwick airport",  
+                            "dubai international",  
+                            "London Luton Airport",  
+                            "london stansted airport"
+                          ],  
+                        },  
+                      };  
+                        
+                      const newFilters = selectedOptions.map(  
+                        (option) => filterConfigs[option]  
+                      );  
+                        
+                      setEditingMenu({  
+                        ...editingMenu,  
+                        runtimeFilters: newFilters,  
+                      });  
+                    }}  
+                    style={{  
+                      width: "100%",  
+                      padding: "8px 12px",  
+                      border: "1px solid #d1d5db",  
+                      borderRadius: "4px",  
+                      fontSize: "14px",  
+                      minHeight: "120px",  
+                      backgroundColor: "white",  
+                    }}  
+                  >  
+                    {availableFilterOptions  
+                      .filter(option =>   
+                        option.toLowerCase().includes(filterSearchText.toLowerCase())  
+                      )  
+                      .map((option) => (  
+                        <option key={option} value={option}>  
+                          {option}  
+                        </option>  
+                      ))}  
+                  </select>  
+                    
+                  <p  
+                    style={{  
+                      fontSize: "12px",  
+                      color: "#6b7280",  
+                      marginTop: "4px",  
+                    }}  
+                  >  
+                    Hold Ctrl/Cmd to select multiple filters. Selected filters will appear above the liveboard for end users.  
+                  </p>  
+                </div>
+                  
+                {/* Display selected filters */}  
+                {editingMenu.runtimeFilters && editingMenu.runtimeFilters.length > 0 && (  
+                  <div  
+                    style={{  
+                      padding: "12px",  
+                      backgroundColor: "#f3f4f6",  
+                      borderRadius: "4px",  
+                      fontSize: "14px",  
+                    }}  
+                  >  
+                    <strong>Selected Filters:</strong>  
+                    <ul style={{ marginTop: "8px", paddingLeft: "20px" }}>  
+                      {editingMenu.runtimeFilters.map((filter, idx) => (  
+                        <li key={idx}>  
+                          {filter.columnName} ({filter.operator})  
+                        </li>  
+                      ))}  
+                    </ul>  
+                  </div>  
+                )}  
+              </>  
+            )}  
+          </div>  
 
           {/* Save and Cancel buttons */}
           <div

@@ -6,6 +6,7 @@ import {
   ThoughtSpotContent,
   VizPointDoubleClickEvent,
   ThoughtSpotBaseEmbedConfig,
+  RuntimeFilter,
 } from "../types/thoughtspot";
 import { VizPointClickDataType } from "../types/data-classes-types";
 import { useAppContext } from "./Layout";
@@ -18,6 +19,7 @@ interface ThoughtSpotEmbedProps {
   height?: string;
   onLoad?: () => void;
   onError?: (error: string) => void;
+  runtimeFilters?: RuntimeFilter[];
 }
 
 export default function ThoughtSpotEmbed({
@@ -26,6 +28,7 @@ export default function ThoughtSpotEmbed({
   height = "600px",
   onLoad,
   onError,
+  runtimeFilters,
 }: ThoughtSpotEmbedProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -241,7 +244,24 @@ export default function ThoughtSpotEmbed({
         const { visibleActions, ...filteredEmbedFlags } = embedFlags;
 
         // Get runtime filters from current user
-        const runtimeFilters = currentUser?.access.runtimeFilters || [];
+        // Get runtime filters from current user  
+        const userFilters = currentUser?.access.runtimeFilters || [];  
+  
+        // Get runtime filters from props (menu-level filters)  
+        const menuFilters = runtimeFilters || [];  
+          
+        // Merge filters with menu-level taking precedence  
+        // If a menu filter exists for a column, exclude the user filter for that column  
+        const menuFilterColumns = new Set(menuFilters.map(f => f.columnName));  
+        const filteredUserFilters = userFilters.filter(  
+          f => !menuFilterColumns.has(f.columnName)  
+        );  
+          
+        // Combine: menu filters first, then non-conflicting user filters  
+        const allRuntimeFilters = [...menuFilters, ...filteredUserFilters]; 
+        console.log("[ThoughtSpotEmbed] User filters:", userFilters);  
+        console.log("[ThoughtSpotEmbed] Menu filters:", menuFilters);  
+        console.log("[ThoughtSpotEmbed] All runtime filters:", allRuntimeFilters)
 
         // Base embed configuration with customizations
         const baseEmbedConfig: ThoughtSpotBaseEmbedConfig = {
@@ -252,7 +272,7 @@ export default function ThoughtSpotEmbed({
           locale: userLocale,
           ...filteredEmbedFlags,
           ...(hiddenActions.length > 0 && { hiddenActions }),
-          ...(runtimeFilters.length > 0 && { runtimeFilters }),
+          ...(allRuntimeFilters.length > 0 && { runtimeFilters: allRuntimeFilters }),
           customizations: {
             content: {
               strings: strings || {},

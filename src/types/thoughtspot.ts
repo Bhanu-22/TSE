@@ -223,6 +223,7 @@ export interface CustomMenu {
     contentType?: "answer" | "liveboard";
   };
   openDirectly?: boolean;
+  runtimeFilters?: RuntimeFilter[];  
 }
 
 export interface ThoughtSpotTag {
@@ -428,6 +429,7 @@ export interface RuntimeFilter {
   columnName: string;
   operator: RuntimeFilterOp;
   values: (string | number | boolean)[];
+  dropdownOptions: (string | number | boolean)[];  
 }
 
 // Double-click event data structure
