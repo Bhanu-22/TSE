@@ -1,0 +1,252 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2025-11-25T12:23:57.896Z",
+  "description": "7Dxperts TSE Demo Builder Configuration Export",
+  "standardMenus": [
+    {
+      "id": "home",
+      "name": "Home",
+      "enabled": true,
+      "icon": "home",
+      "homePageType": "html",
+      "homePageValue": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>easyJet Ops – Turnaround Performance</title>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n\n  <!-- Optional: Google Font -->\n  <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n\n  <style>\n    :root {\n      --ej-orange: #ff5a00;\n      --ej-dark: #111827;\n      --ej-light-bg: #f3f4f6;\n      --panel-bg: #111827;       /* dark cards */\n      --panel-bg-soft: #1f2937;\n      --panel-border: #0f172a1a; /* subtle border */\n    }\n\n    * {\n      box-sizing: border-box;\n      margin: 0;\n      padding: 0;\n    }\n\n    body {\n      font-family: \"Inter\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif;\n      color: var(--ej-dark);\n      min-height: 100vh;\n      display: flex;\n      align-items: stretch;\n      justify-content: center;\n      background:\n        radial-gradient(circle at 5% 0%, #ffffff, transparent 55%),\n        radial-gradient(circle at 100% 0%, #e5f0ff, transparent 60%),\n        linear-gradient(180deg, #ffffff 0%, var(--ej-light-bg) 55%, #e5e7eb 100%);\n    }\n\n    .page-wrap {\n      width: 100%;\n      max-width: 1280px;\n      padding: 20px 20px 28px;\n      display: flex;\n      flex-direction: column;\n      gap: 18px;\n    }\n\n    /* HEADER */\n    header {\n      display: flex;\n      align-items: center;\n      justify-content: space-between;\n      gap: 16px;\n    }\n\n    .brand {\n      display: flex;\n      flex-direction: column;\n      gap: 4px;\n    }\n\n    .brand-main {\n      display: inline-flex;\n      align-items: center;\n      gap: 8px;\n    }\n\n    .badge-logo {\n      background: transparent;\n      color: var(--ej-orange);\n      font-weight: 700;\n      text-transform: lowercase;\n      letter-spacing: 0.08em;\n      font-size: 22px;\n    }\n\n    .badge-sub {\n      font-size: 13px;\n      font-weight: 500;\n      text-transform: uppercase;\n      letter-spacing: 0.16em;\n      color: #9ca3af;\n    }\n\n    .brand-tagline {\n      font-size: 13px;\n      color: #6b7280; /* darker so visible on light bg */\n      max-width: 440px;\n    }\n\n    nav {\n      display: flex;\n      align-items: center;\n      gap: 10px;\n      font-size: 13px;\n    }\n\n    .nav-pill {\n      padding: 6px 14px;\n      border-radius: 999px;\n      border: 1px solid #0f172a1a;\n      background: #020617;\n      color: #f9fafb;\n      display: inline-flex;\n      align-items: center;\n      gap: 8px;\n      cursor: default;\n      white-space: nowrap;\n      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.4);\n    }\n\n    .nav-pill-dot {\n      width: 8px;\n      height: 8px;\n      border-radius: 50%;\n      background: #22c55e;\n      box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);\n    }\n\n    .nav-link {\n      padding: 6px 10px;\n      border-radius: 999px;\n      border: 1px solid transparent;\n      cursor: pointer;\n      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s;\n      color: #9ca3af; /* visible on white */\n    }\n\n    .nav-link:hover {\n      background: #e5e7eb;\n      border-color: #cbd5f5;\n      transform: translateY(-1px);\n      color: #374151;\n    }\n\n    .nav-link-primary {\n      border-color: #fed7aa;\n      background: linear-gradient(135deg, #ffe4d5 0%, #ffb48a 45%, #ff9243 100%);\n      color: #7c2d12;\n      font-weight: 600;\n      box-shadow: 0 10px 30px rgba(248, 113, 113, 0.45);\n    }\n\n    /* MAIN LAYOUT */\n    .main {\n      display: grid;\n      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);\n      gap: 24px;\n      margin-top: 6px;\n    }\n\n    .panel {\n      border-radius: 24px;\n      background: radial-gradient(circle at 0 0, #1e293b, #020617 80%);\n      border: 1px solid var(--panel-border);\n      box-shadow:\n        0 40px 70px rgba(15, 23, 42, 0.45),\n        0 0 0 1px rgba(15, 23, 42, 0.4);\n      padding: 22px 22px 22px;\n      position: relative;\n      overflow: hidden;\n      color: #e5e7eb; /* IMPORTANT: light text on dark card */\n    }\n\n    .panel::before {\n      content: \"\";\n      position: absolute;\n      inset: -60%;\n      opacity: 0.16;\n      background:\n        radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.14), transparent 55%),\n        radial-gradient(circle at 100% 100%, rgba(255, 90, 0, 0.22), transparent 60%);\n      pointer-events: none;\n    }\n\n    .panel-content {\n      position: relative;\n      z-index: 1;\n    }\n\n    /* HERO LEFT */\n    .hero-heading {\n      font-size: clamp(26px, 3vw, 32px);\n      font-weight: 700;\n      margin-bottom: 8px;\n      color: #f9fafb;\n    }\n\n    .hero-accent {\n      color: #fed7aa;\n      font-weight: 600;\n    }\n\n    .hero-sub {\n      font-size: 14px;\n      color: #cbd5f5;\n      max-width: 460px;\n      margin-bottom: 14px;\n    }\n\n    .hero-tags {\n      display: flex;\n      flex-wrap: wrap;\n      gap: 8px;\n      margin-bottom: 18px;\n      font-size: 11px;\n    }\n\n    .hero-tag {\n      padding: 4px 10px;\n      border-radius: 999px;\n      border: 1px solid rgba(148, 163, 184, 0.7);\n      background: rgba(15, 23, 42, 0.9);\n      display: inline-flex;\n      align-items: center;\n      gap: 6px;\n      color: #e5e7eb;\n    }\n\n    /* KPI ROW */\n    .kpi-row {\n      display: grid;\n      grid-template-columns: repeat(3, minmax(0, 1fr));\n      gap: 12px;\n      margin-bottom: 14px;\n    }\n\n    .kpi-card {\n      border-radius: 16px;\n      padding: 12px 13px;\n      background: radial-gradient(circle at 0 0, #111827, #020617 80%);\n      border: 1px solid rgba(148, 163, 184, 0.6);\n      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.9);\n      position: relative;\n      overflow: hidden;\n      color: #f9fafb;\n    }\n\n    .kpi-card::after {\n      content: \"\";\n      position: absolute;\n      right: -26px;\n      bottom: -26px;\n      width: 80px;\n      height: 80px;\n      border-radius: 999px;\n      background: radial-gradient(circle at center, rgba(255, 90, 0, 0.55), transparent 70%);\n      opacity: 0.6;\n    }\n\n    .kpi-label {\n      font-size: 11px;\n      text-transform: uppercase;\n      letter-spacing: 0.14em;\n      color: #9ca3af;\n      margin-bottom: 4px;\n    }\n\n    .kpi-value {\n      font-size: 20px;\n      font-weight: 600;\n      margin-bottom: 2px;\n    }\n\n    .kpi-delta {\n      font-size: 11px;\n      color: #bbf7d0;\n    }\n\n    .kpi-delta.bad {\n      color: #fecaca;\n    }\n\n    /* MINI TILES / LINKS */\n    .links-row {\n      display: grid;\n      grid-template-columns: repeat(3, minmax(0, 1fr));\n      gap: 12px;\n      font-size: 12px;\n      margin-top: 8px;\n    }\n\n    .link-tile {\n      border-radius: 16px;\n      padding: 10px 12px;\n      background: #020617;\n      border: 1px solid rgba(148, 163, 184, 0.7);\n      cursor: pointer;\n      position: relative;\n      overflow: hidden;\n      transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;\n      color: #e5e7eb;\n    }\n\n    .link-tile:hover {\n      transform: translateY(-2px);\n      background: #111827;\n      border-color: #e5e7eb;\n    }\n\n    .link-label {\n      font-size: 10px;\n      text-transform: uppercase;\n      letter-spacing: 0.11em;\n      opacity: 0.9;\n      margin-bottom: 2px;\n      color: #9ca3af;\n    }\n\n    .link-title {\n      font-weight: 500;\n      margin-bottom: 2px;\n    }\n\n    .link-meta {\n      font-size: 11px;\n      opacity: 0.95;\n      color: #cbd5f5;\n    }\n\n    /* RIGHT PANEL */\n    .right-title {\n      font-size: 16px;\n      font-weight: 600;\n      margin-bottom: 6px;\n      color: #f9fafb;\n    }\n\n    .right-sub {\n      font-size: 12px;\n      color: #cbd5f5;\n      margin-bottom: 12px;\n    }\n\n    .status-list {\n      list-style: none;\n      font-size: 12px;\n      margin-bottom: 14px;\n    }\n\n    .status-item {\n      display: flex;\n      align-items: flex-start;\n      gap: 6px;\n      margin-bottom: 6px;\n      color: #e5e7eb;\n    }\n\n    .status-dot {\n      width: 7px;\n      height: 7px;\n      border-radius: 50%;\n      margin-top: 4px;\n      flex-shrink: 0;\n    }\n\n    .status-dot.green { background: #22c55e; }\n    .status-dot.amber { background: #fbbf24; }\n    .status-dot.red   { background: #ef4444; }\n\n    .status-text strong {\n      color: #fed7aa;\n      font-weight: 600;\n    }\n\n    .mini-grid {\n      display: grid;\n      grid-template-columns: repeat(2, minmax(0, 1fr));\n      gap: 10px;\n      font-size: 11px;\n    }\n\n    .mini-card {\n      border-radius: 16px;\n      padding: 9px 11px;\n      background: #020617;\n      border: 1px solid rgba(148, 163, 184, 0.7);\n      color: #e5e7eb;\n    }\n\n    .mini-label {\n      text-transform: uppercase;\n      letter-spacing: 0.12em;\n      color: #9ca3af;\n      margin-bottom: 4px;\n      font-size: 10px;\n    }\n\n    .mini-value {\n      font-weight: 600;\n      margin-bottom: 2px;\n      color: #f9fafb;\n    }\n\n    .mini-trend.good { color: #bbf7d0; }\n    .mini-trend.bad  { color: #fecaca; }\n\n    /* FOOTER */\n    footer {\n      margin-top: 10px;\n      font-size: 11px;\n      color: #6b7280;\n      text-align: center;\n    }\n\n    /* RESPONSIVE */\n    @media (max-width: 900px) {\n      .main {\n        grid-template-columns: minmax(0, 1fr);\n      }\n\n      .kpi-row,\n      .links-row {\n        grid-template-columns: repeat(2, minmax(0, 1fr));\n      }\n    }\n\n    @media (max-width: 640px) {\n      header {\n        flex-direction: column;\n        align-items: flex-start;\n      }\n\n      nav {\n        align-self: stretch;\n        justify-content: flex-start;\n        flex-wrap: wrap;\n      }\n\n      .kpi-row,\n      .links-row {\n        grid-template-columns: minmax(0, 1fr);\n      }\n\n      .page-wrap {\n        padding-inline: 14px;\n      }\n    }\n  </style>\n</head>\n<body>\n<div class=\"page-wrap\">\n  <header>\n    <div class=\"brand\">\n      <div class=\"brand-main\">\n        <div class=\"badge-logo\">easyjet</div>\n        <div class=\"badge-sub\">ops control</div>\n      </div>\n      <p class=\"brand-tagline\">\n        Turnaround &amp; departure performance at a glance for operations, ground and network management.\n      </p>\n    </div>\n\n    <nav>\n      <div class=\"nav-pill\">\n        <span class=\"nav-pill-dot\"></span>\n        Live – Today\n      </div>\n      <div class=\"nav-link\">Network overview</div>\n      <div class=\"nav-link\">Bases &amp; stations</div>\n      <div class=\"nav-link\">Delay analytics</div>\n      <div class=\"nav-link nav-link-primary\">Open dashboard</div>\n    </nav>\n  </header>\n\n  <main class=\"main\">\n    <!-- LEFT: HERO / SUMMARY -->\n    <section class=\"panel\">\n      <div class=\"panel-content\">\n        <h1 class=\"hero-heading\">\n          Easy, on-time turns for the <span class=\"hero-accent\">whole network.</span>\n        </h1>\n        <p class=\"hero-sub\">\n          Monitor turnaround performance, ground-driven delays and departure punctuality from a single easyJet-branded home page.\n        </p>\n\n        <div class=\"hero-tags\">\n          <div class=\"hero-tag\"><span>⏱</span><span>Turnaround time • D0 / D+15</span></div>\n          <div class=\"hero-tag\"><span>🧭</span><span>By base, station &amp; route group</span></div>\n          <div class=\"hero-tag\"><span>📊</span><span>Ready for AODB / data-warehouse feeds</span></div>\n        </div>\n\n        <div class=\"kpi-row\">\n          <div class=\"kpi-card\">\n            <div class=\"kpi-label\">Avg. turnaround</div>\n            <div class=\"kpi-value\">38 min</div>\n            <div class=\"kpi-delta\">▲ 3 min better vs last week</div>\n          </div>\n          <div class=\"kpi-card\">\n            <div class=\"kpi-label\">OTP (D+15)</div>\n            <div class=\"kpi-value\">87%</div>\n            <div class=\"kpi-delta bad\">▼ 2 pts vs yesterday</div>\n          </div>\n          <div class=\"kpi-card\">\n            <div class=\"kpi-label\">Flights today</div>\n            <div class=\"kpi-value\">126</div>\n            <div class=\"kpi-delta\">▲ +9 vs forecast</div>\n          </div>\n        </div>\n\n        <div class=\"links-row\">\n          <div class=\"link-tile\">\n            <div class=\"link-label\">Network</div>\n            <div class=\"link-title\">Turnaround overview</div>\n            <div class=\"link-meta\">See TAT by hour, base &amp; route mix.</div>\n          </div>\n          <div class=\"link-tile\">\n            <div class=\"link-label\">Delay</div>\n            <div class=\"link-title\">Ground drivers</div>\n            <div class=\"link-meta\">Late inbound, ramp, bags, crew &amp; more.</div>\n          </div>\n          <div class=\"link-tile\">\n            <div class=\"link-label\">Stations</div>\n            <div class=\"link-title\">Base league table</div>\n            <div class=\"link-meta\">Highlight best and constrained bases.</div>\n          </div>\n        </div>\n      </div>\n    </section>\n\n    <!-- RIGHT: STATUS SNAPSHOT -->\n    <aside class=\"panel\">\n      <div class=\"panel-content\">\n        <h2 class=\"right-title\">Today’s snapshot</h2>\n        <p class=\"right-sub\">\n          Quick read-out for the morning briefing or OCC huddle.\n        </p>\n\n        <ul class=\"status-list\">\n          <li class=\"status-item\">\n            <span class=\"status-dot green\"></span>\n            <span class=\"status-text\">\n              <strong>LGW, MXP, BSL</strong> operating within TAT target on &gt; 80% of departures.\n            </span>\n          </li>\n          <li class=\"status-item\">\n            <span class=\"status-dot amber\"></span>\n            <span class=\"status-text\">\n              <strong>MAN</strong> experiencing mild pressure: avg TAT 44 min, OTP D+15 at 83% with late inbound as the main driver.\n            </span>\n          </li>\n          <li class=\"status-item\">\n            <span class=\"status-dot red\"></span>\n            <span class=\"status-text\">\n              <strong>JTR</strong> constrained 14:00–17:00 due to ramp congestion and stand availability.\n            </span>\n          </li>\n        </ul>\n\n        <div class=\"mini-grid\">\n          <div class=\"mini-card\">\n            <div class=\"mini-label\">Best base (tat)</div>\n            <div class=\"mini-value\">LGW · 35 min</div>\n            <div class=\"mini-trend good\">93% within target &le; 40 min</div>\n          </div>\n          <div class=\"mini-card\">\n            <div class=\"mini-label\">Most constrained</div>\n            <div class=\"mini-value\">JTR · 47 min</div>\n            <div class=\"mini-trend bad\">Ground delay +8 min vs network avg</div>\n          </div>\n          <div class=\"mini-card\">\n            <div class=\"mini-label\">Best route group</div>\n            <div class=\"mini-value\">Domestic UK · 90%</div>\n            <div class=\"mini-trend good\">Stable vs last 7 days</div>\n          </div>\n          <div class=\"mini-card\">\n            <div class=\"mini-label\">Watchlist routes</div>\n            <div class=\"mini-value\">Med leisure · 82%</div>\n            <div class=\"mini-trend bad\">Turn times +4 min vs last week</div>\n          </div>\n        </div>\n      </div>\n    </aside>\n  </main>\n\n  <footer>\n    This is a static easyJet-themed home page. Wire metrics and tiles to your real AODB / RMS / data-warehouse feeds to make it live.\n  </footer>\n</div>\n</body>\n</html>\n"
+    },
+    {
+      "id": "favorites",
+      "name": "Search",
+      "enabled": false,
+      "icon": "search",
+      "homePageType": "html",
+      "homePageValue": "<h1>Favorites</h1>",
+      "tagFilter": ""
+    },
+    {
+      "id": "my-reports",
+      "name": "My Reports",
+      "enabled": false,
+      "icon": "my-reports",
+      "homePageType": "html",
+      "homePageValue": "<h1>My Reports</h1>"
+    },
+    {
+      "id": "spotter",
+      "name": "Spotter",
+      "enabled": false,
+      "icon": "spotter-custom.svg",
+      "homePageType": "html",
+      "homePageValue": "<h1>Spotter</h1>",
+      "spotterModelId": "5ba8363c-4940-4407-92e1-453c85308356",
+      "spotterSearchQuery": ""
+    },
+    {
+      "id": "search",
+      "name": "Search",
+      "enabled": true,
+      "icon": "search",
+      "homePageType": "html",
+      "homePageValue": "<h1>Search</h1>",
+      "searchDataSource": "5ba8363c-4940-4407-92e1-453c85308356"
+    },
+    {
+      "id": "full-app",
+      "name": "Full App",
+      "enabled": false,
+      "icon": "full-app",
+      "homePageType": "html",
+      "homePageValue": "<h1>Full App</h1>"
+    },
+    {
+      "id": "all-content",
+      "name": "All Content",
+      "enabled": false,
+      "icon": "📚",
+      "homePageType": "html",
+      "homePageValue": "<h1>All Content</h1>",
+      "excludeSystemContent": true
+    }
+  ],
+  "customMenus": [
+    {
+      "id": "custom-1760342080199",
+      "name": "Ontime Performance",
+      "description": "",
+      "icon": "analytics",
+      "enabled": true,
+      "contentSelection": {
+        "type": "specific",
+        "specificContent": {
+          "liveboards": [
+            "a670a3b9-e1dc-41eb-a815-c321d7001045"
+          ],
+          "answers": []
+        }
+      },
+      "openDirectly": true
+    }
+  ],
+  "menuOrder": [
+    "home",
+    "search",
+    "custom-1760342080199"
+  ],
+  "homePageConfig": {
+    "type": "html",
+    "value": "<h1>Welcome to TSE Demo Builder</h1>"
+  },
+  "appConfig": {
+    "thoughtspotUrl": "https://techpartners.thoughtspot.cloud/",
+    "applicationName": "Turn Performance ",
+    "logo": "/ts.png",
+    "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
+    "favicon": "",
+    "showFooter": true,
+    "disableSettings": false,
+    "chatbot": {
+      "enabled": false,
+      "welcomeMessage": "Hello! I'm your AI assistant. What would you like to know about your data?",
+      "position": "bottom-right",
+      "primaryColor": "#3b82f6",
+      "hoverColor": "#2563eb",
+      "selectedModelIds": []
+    },
+    "authType": "None",
+    "faviconSyncEnabled": true
+  },
+  "fullAppConfig": {
+    "showPrimaryNavbar": false,
+    "hideHomepageLeftNav": false
+  },
+  "stylingConfig": {
+    "application": {
+      "topBar": {
+        "backgroundColor": "#ea580c",
+        "foregroundColor": "#ffffff"
+      },
+      "sidebar": {
+        "backgroundColor": "#fed7aa",
+        "foregroundColor": "#9a3412"
+      },
+      "footer": {
+        "backgroundColor": "#ea580c",
+        "foregroundColor": "#ffffff"
+      },
+      "dialogs": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#9a3412"
+      },
+      "buttons": {
+        "primary": {
+          "backgroundColor": "#ea580c",
+          "foregroundColor": "#ffffff",
+          "borderColor": "#ea580c",
+          "hoverBackgroundColor": "#dc2626",
+          "hoverForegroundColor": "#ffffff"
+        },
+        "secondary": {
+          "backgroundColor": "#fed7aa",
+          "foregroundColor": "#9a3412",
+          "borderColor": "#fdba74",
+          "hoverBackgroundColor": "#fdba74",
+          "hoverForegroundColor": "#9a3412"
+        }
+      },
+      "backgrounds": {
+        "mainBackground": "#fff7ed",
+        "contentBackground": "#ffffff",
+        "cardBackground": "#ffffff",
+        "borderColor": "#fed7aa"
+      },
+      "typography": {
+        "primaryColor": "#9a3412",
+        "secondaryColor": "#374151",
+        "linkColor": "#ea580c",
+        "linkHoverColor": "#dc2626"
+      },
+      "selectedTheme": "orange"
+    },
+    "embeddedContent": {
+      "strings": {},
+      "stringIDs": {},
+      "cssUrl": "",
+      "customCSS": {
+        "variables": {},
+        "rules_UNSTABLE": {}
+      }
+    },
+    "embedFlags": {
+      "liveboardEmbed": {
+        "frameParams": {
+          "width": 0,
+          "height": 0
+        },
+        "fullHeight": true
+      }
+    },
+    "embedDisplay": {
+      "hideTitle": true,
+      "hideDescription": true
+    },
+    "doubleClickHandling": {
+      "enabled": true,
+      "showDefaultModal": true,
+      "customJavaScript": "",
+      "modalTitle": "Double-Click Event Data"
+    }
+  },
+  "userConfig": {
+    "users": [
+      {
+        "id": "power-user",
+        "name": "Power User",
+        "description": "Full access - can access all features including Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": true,
+            "full-app": true,
+            "all-content": true
+          },
+          "customMenus": [
+            "custom-1759847126747",
+            "custom-1759850260956",
+            "custom-1759915645846",
+            "custom-1760341867406",
+            "custom-1760342080199",
+            "custom-1760344743048"
+          ],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      },
+      {
+        "id": "basic-user",
+        "name": "Basic User",
+        "description": "Limited access - cannot access Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": false,
+            "full-app": false,
+            "all-content": true
+          },
+          "customMenus": [],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      }
+    ],
+    "currentUserId": "power-user"
+  }
+}
