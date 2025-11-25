@@ -20,169 +20,254 @@ const LARGE_OBJECT_THRESHOLD = 1024 * 1024; // 1MB threshold for using IndexedDB
 
 // Default configuration
 export const DEFAULT_CONFIG: ConfigurationData = {
-  standardMenus: [
+  "standardMenus": [
     {
-      id: "home",
-      name: "Home",
-      enabled: true,
-      icon: "home",
-      homePageType: "html",
-      homePageValue: "<h1>Welcome to TSE Demo Builder</h1>",
+      "id": "home",
+      "name": "Home",
+      "enabled": true,
+      "icon": "home",
+      "homePageType": "html",
+      "homePageValue": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>easyJet – Turnaround Performance Home</title>\n\n  <!-- Optional: Google Font -->\n  <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n\n  <style>\n    * {\n      box-sizing: border-box;\n    }\n\n    :root {\n      --ej-orange: #ff5a00;\n      --ej-orange-soft: #ff8a40;\n      --ej-dark: #111827;\n      --ej-bg: #f3f4f6;\n    }\n\n    body {\n      margin: 0;\n      font-family: \"Inter\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif;\n      background: linear-gradient(135deg, var(--ej-orange) 0%, #b63c00 40%, #2b0b00 100%);\n      color: var(--ej-dark);\n    }\n\n    header {\n      padding: 16px 28px;\n      color: #f9fafb;\n      border-bottom: 1px solid rgba(255, 255, 255, 0.16);\n      display: flex;\n      align-items: center;\n      justify-content: space-between;\n      gap: 16px;\n    }\n\n    .brand {\n      display: flex;\n      flex-direction: column;\n      gap: 4px;\n    }\n\n    .brand-logo {\n      font-size: 22px;\n      font-weight: 700;\n      text-transform: lowercase;\n      letter-spacing: 0.04em;\n      display: inline-flex;\n      align-items: center;\n      gap: 6px;\n    }\n\n    .brand-logo span {\n      padding: 2px 8px 3px;\n      border-radius: 4px;\n      background: #ffffff;\n      color: var(--ej-orange);\n    }\n\n    .brand-logo small {\n      font-size: 13px;\n      font-weight: 500;\n      color: #fef3c7;\n    }\n\n    .brand-subtitle {\n      font-size: 12px;\n      opacity: 0.9;\n    }\n\n    .header-meta {\n      display: flex;\n      flex-wrap: wrap;\n      gap: 10px;\n      align-items: center;\n      font-size: 12px;\n      justify-content: flex-end;\n    }\n\n    .pill {\n      padding: 4px 10px;\n      border-radius: 999px;\n      background: rgba(15, 23, 42, 0.75);\n      border: 1px solid rgba(248, 250, 252, 0.35);\n      color: #e5e7eb;\n      display: inline-flex;\n      align-items: center;\n      gap: 6px;\n      white-space: nowrap;\n    }\n\n    .pill-dot {\n      width: 8px;\n      height: 8px;\n      border-radius: 50%;\n      background: #22c55e;\n    }\n\n    /* Layout */\n    .page {\n      padding: 20px 24px 32px;\n      max-width: 1320px;\n      margin: 0 auto;\n    }\n\n    .grid-main {\n      display: grid;\n      grid-template-columns: 2.2fr 1.2fr;\n      gap: 18px;\n      margin-bottom: 18px;\n    }\n\n    .grid-second {\n      display: grid;\n      grid-template-columns: 1.4fr 1.3fr;\n      gap: 18px;\n      margin-bottom: 18px;\n    }\n\n    .panel {\n      background: #ffffff;\n      border-radius: 16px;\n      padding: 16px 18px 14px;\n      box-shadow: 0 16px 42px rgba(15, 23, 42, 0.45);\n      position: relative;\n      border: 1px solid #e5e7eb;\n    }\n\n    .panel-header {\n      display: flex;\n      justify-content: space-between;\n      align-items: center;\n      margin-bottom: 10px;\n    }\n\n    .panel-title {\n      font-size: 14px;\n      font-weight: 600;\n      color: #111827;\n    }\n\n    .panel-subtitle {\n      font-size: 12px;\n      color: #6b7280;\n      margin-top: 2px;\n    }\n\n    .panel-actions {\n      font-size: 11px;\n      color: #6b7280;\n      display: flex;\n      gap: 8px;\n    }\n\n    .panel-actions span {\n      cursor: default;\n      padding: 3px 9px;\n      border-radius: 999px;\n      border: 1px solid #e5e7eb;\n      background: #f9fafb;\n    }\n\n    .panel-actions span:first-child {\n      background: rgba(255, 90, 0, 0.08);\n      border-color: rgba(255, 90, 0, 0.8);\n      color: var(--ej-orange);\n      font-weight: 500;\n    }\n\n    /* KPI strip */\n    .kpi-strip {\n      display: grid;\n      grid-template-columns: repeat(4, minmax(0, 1fr));\n      gap: 10px;\n      margin-bottom: 16px;\n    }\n\n    .kpi-card {\n      background: #ffffff;\n      color: var(--ej-dark);\n      border-radius: 12px;\n      padding: 10px 12px;\n      position: relative;\n      overflow: hidden;\n      border: 1px solid rgba(249, 250, 251, 0.5);\n      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.35);\n    }\n\n    .kpi-card::after {\n      content: \"\";\n      position: absolute;\n      right: -30px;\n      bottom: -30px;\n      width: 80px;\n      height: 80px;\n      border-radius: 999px;\n      background: radial-gradient(circle at center, rgba(255, 90, 0, 0.26), transparent 70%);\n    }\n\n    .kpi-label {\n      font-size: 10px;\n      text-transform: uppercase;\n      letter-spacing: 0.08em;\n      color: #9ca3af;\n      margin-bottom: 4px;\n    }\n\n    .kpi-value {\n      font-size: 18px;\n      font-weight: 600;\n      margin-bottom: 3px;\n      color: #111827;\n    }\n\n    .kpi-delta {\n      font-size: 11px;\n      display: inline-flex;\n      align-items: center;\n      gap: 4px;\n    }\n\n    .kpi-delta.pos {\n      color: #16a34a;\n    }\n\n    .kpi-delta.neg {\n      color: #b91c1c;\n    }\n\n    .kpi-badge {\n      position: absolute;\n      right: 8px;\n      top: 8px;\n      font-size: 9px;\n      padding: 2px 6px;\n      border-radius: 10px;\n      background: rgba(255, 90, 0, 0.08);\n      color: var(--ej-orange);\n      border: 1px solid rgba(255, 90, 0, 0.5);\n    }\n\n    /* Today summary */\n    .summary-list {\n      list-style: none;\n      padding: 0;\n      margin: 8px 0 0;\n      font-size: 12px;\n      color: #4b5563;\n    }\n\n    .summary-list li {\n      margin-bottom: 6px;\n      display: flex;\n      gap: 6px;\n      align-items: flex-start;\n    }\n\n    .summary-dot {\n      width: 6px;\n      height: 6px;\n      border-radius: 50%;\n      margin-top: 5px;\n      flex-shrink: 0;\n    }\n\n    .summary-dot.green {\n      background: #16a34a;\n    }\n\n    .summary-dot.amber {\n      background: #f59e0b;\n    }\n\n    .summary-dot.red {\n      background: #ef4444;\n    }\n\n    /* Mini stats */\n    .mini-grid {\n      display: grid;\n      grid-template-columns: repeat(2, minmax(0, 1fr));\n      gap: 10px;\n      margin-top: 10px;\n    }\n\n    .mini-card {\n      border-radius: 10px;\n      background: var(--ej-bg);\n      padding: 8px 10px;\n      border: 1px solid #e5e7eb;\n    }\n\n    .mini-label {\n      font-size: 10px;\n      color: #6b7280;\n      margin-bottom: 3px;\n    }\n\n    .mini-value {\n      font-size: 13px;\n      font-weight: 600;\n      color: #111827;\n    }\n\n    .mini-trend {\n      font-size: 11px;\n      margin-top: 2px;\n    }\n\n    .mini-trend.good {\n      color: #16a34a;\n    }\n\n    .mini-trend.bad {\n      color: #b91c1c;\n    }\n\n    /* chart sizing */\n    .chart-container {\n      width: 100%;\n      height: 260px;\n    }\n\n    .chart-container-sm {\n      width: 100%;\n      height: 220px;\n    }\n\n    canvas {\n      width: 100% !important;\n      height: 100% !important;\n    }\n\n    /* Footer */\n    footer {\n      font-size: 11px;\n      color: #e5e7eb;\n      text-align: center;\n      margin-top: 6px;\n      opacity: 0.9;\n    }\n\n    @media (max-width: 1024px) {\n      .grid-main,\n      .grid-second {\n        grid-template-columns: 1fr;\n      }\n\n      .kpi-strip {\n        grid-template-columns: repeat(2, minmax(0, 1fr));\n      }\n    }\n\n    @media (max-width: 640px) {\n      header {\n        flex-direction: column;\n        align-items: flex-start;\n      }\n\n      .page {\n        padding: 16px;\n      }\n\n      .kpi-strip {\n        grid-template-columns: 1fr;\n      }\n\n      .header-meta {\n        justify-content: flex-start;\n      }\n    }\n  </style>\n</head>\n<body>\n<header>\n  <div class=\"brand\">\n    <div class=\"brand-logo\">\n      <span>easyJet</span>\n      <small>ops control</small>\n    </div>\n    <div class=\"brand-subtitle\">\n      Network turnaround and departure performance – high level view.\n    </div>\n  </div>\n  <div class=\"header-meta\">\n    <div class=\"pill\">\n      <span class=\"pill-dot\"></span>\n      Live – Today\n    </div>\n    <div class=\"pill\">\n      Network: All bases & stations\n    </div>\n    <div class=\"pill\">\n      Time Window: 00:00 – 23:59 (Local)\n    </div>\n  </div>\n</header>\n\n<div class=\"page\">\n  <!-- KPI strip -->\n  <div class=\"kpi-strip\">\n    <div class=\"kpi-card\">\n      <div class=\"kpi-label\">Avg. Turnaround Time</div>\n      <div class=\"kpi-value\" id=\"kpiAvgTat\">38 min</div>\n      <div class=\"kpi-delta pos\">\n        ▲ 3 min better vs last week\n      </div>\n      <div class=\"kpi-badge\">Target ≤ 40</div>\n    </div>\n    <div class=\"kpi-card\">\n      <div class=\"kpi-label\">On-Time Departure (D+15)</div>\n      <div class=\"kpi-value\" id=\"kpiOtp\">87%</div>\n      <div class=\"kpi-delta neg\">\n        ▼ 2 pts vs yesterday\n      </div>\n      <div class=\"kpi-badge\">Target ≥ 90%</div>\n    </div>\n    <div class=\"kpi-card\">\n      <div class=\"kpi-label\">Flights Handled Today</div>\n      <div class=\"kpi-value\" id=\"kpiFlights\">126</div>\n      <div class=\"kpi-delta pos\">\n        ▲ +9 vs forecast\n      </div>\n      <div class=\"kpi-badge\">Network total</div>\n    </div>\n    <div class=\"kpi-card\">\n      <div class=\"kpi-label\">Avg. Ground Delay</div>\n      <div class=\"kpi-value\" id=\"kpiDelay\">6 min</div>\n      <div class=\"kpi-delta pos\">\n        ▲ 1 min better vs last week\n      </div>\n      <div class=\"kpi-badge\">TAT-linked only</div>\n    </div>\n  </div>\n\n  <!-- MAIN: big chart + right summary panel -->\n  <div class=\"grid-main\">\n    <section class=\"panel\">\n      <div class=\"panel-header\">\n        <div>\n          <div class=\"panel-title\">Turnaround Profile Across the Day</div>\n          <div class=\"panel-subtitle\">Average turnaround time by hour – all bases, all routes.</div>\n        </div>\n        <div class=\"panel-actions\">\n          <span>Today</span>\n          <span>Rolling 7-day</span>\n        </div>\n      </div>\n      <div class=\"chart-container\">\n        <canvas id=\"tatByHourChart\"></canvas>\n      </div>\n    </section>\n\n    <aside class=\"panel\">\n      <div class=\"panel-header\">\n        <div>\n          <div class=\"panel-title\">Today at a Glance</div>\n          <div class=\"panel-subtitle\">Key highlights for OCC, ground and management.</div>\n        </div>\n      </div>\n\n      <ul class=\"summary-list\">\n        <li>\n          <span class=\"summary-dot green\"></span>\n          <span><strong>LGW, MXP, BSL</strong> all within target TAT (&lt; 40 min) on &gt; 80% of departures.</span>\n        </li>\n        <li>\n          <span class=\"summary-dot amber\"></span>\n          <span><strong>MAN</strong> showing mild pressure – avg TAT 44 min, OTP D+15 at 83% driven by late inbound.</span>\n        </li>\n        <li>\n          <span class=\"summary-dot red\"></span>\n          <span><strong>JTR</strong> has recurrent afternoon delays 14:00–17:00, ramp congestion + turnaround constraints.</span>\n        </li>\n      </ul>\n\n      <div class=\"mini-grid\">\n        <div class=\"mini-card\">\n          <div class=\"mini-label\">Best base (TAT)</div>\n          <div class=\"mini-value\">LGW · 35 min</div>\n          <div class=\"mini-trend good\">93% flights within TAT target</div>\n        </div>\n        <div class=\"mini-card\">\n          <div class=\"mini-label\">Most constrained base</div>\n          <div class=\"mini-value\">JTR · 47 min</div>\n          <div class=\"mini-trend bad\">Ground delays +8 min vs network avg</div>\n        </div>\n        <div class=\"mini-card\">\n          <div class=\"mini-label\">Best route group (OTP D+15)</div>\n          <div class=\"mini-value\">Domestic UK · 90%</div>\n          <div class=\"mini-trend good\">Holding stable vs last week</div>\n        </div>\n        <div class=\"mini-card\">\n          <div class=\"mini-label\">Watchlist route group</div>\n          <div class=\"mini-value\">Med leisure · 82%</div>\n          <div class=\"mini-trend bad\">Turn times +4 min vs last week</div>\n        </div>\n      </div>\n    </aside>\n  </div>\n\n  <!-- SECOND ROW: OTP by base + Delay reasons -->\n  <div class=\"grid-second\">\n    <section class=\"panel\">\n      <div class=\"panel-header\">\n        <div>\n          <div class=\"panel-title\">On-Time Departure by Base</div>\n          <div class=\"panel-subtitle\">Departure D+15 performance – higher is better.</div>\n        </div>\n      </div>\n      <div class=\"chart-container-sm\">\n        <canvas id=\"otpByAirlineChart\"></canvas>\n      </div>\n    </section>\n\n    <section class=\"panel\">\n      <div class=\"panel-header\">\n        <div>\n          <div class=\"panel-title\">Delay Drivers – Ground Ops</div>\n          <div class=\"panel-subtitle\">Share of total ground-related delay minutes.</div>\n        </div>\n      </div>\n      <div class=\"chart-container-sm\">\n        <canvas id=\"delayReasonsChart\"></canvas>\n      </div>\n    </section>\n  </div>\n\n  <footer>\n    Sample easyJet-themed homepage layout. Replace hard-coded data in the JavaScript with live feeds from AODB/RMS or your data warehouse.\n  </footer>\n</div>\n\n<!-- Chart.js CDN -->\n<script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>\n\n<script>\n  // -------- DETAILED SAMPLE DATA (replace with API / backend feed) --------\n  const tatByHourData = {\n    labels: [\n      \"06:00\",\"07:00\",\"08:00\",\"09:00\",\"10:00\",\"11:00\",\n      \"12:00\",\"13:00\",\"14:00\",\"15:00\",\"16:00\",\"17:00\",\n      \"18:00\",\"19:00\",\"20:00\",\"21:00\",\"22:00\",\"23:00\"\n    ],\n    // Peak around early afternoon, easing into evening\n    tatMinutes: [35, 36, 37, 38, 39, 40, 41, 42, 44, 45, 44, 43, 41, 40, 39, 38, 37, 36]\n  };\n\n  // Base-level OTP D+15 data\n  const otpByAirlineData = {\n    labels: [\"LGW\", \"LTN\", \"MAN\", \"MXP\", \"GVA\", \"BSL\", \"CDG\", \"BCN\"],\n    otp:     [90,    88,    83,    89,    91,    92,    84,    86]\n  };\n\n  // Delay reasons summing to 100%\n  const delayReasonsData = {\n    labels: [\n      \"Late inbound\",\n      \"Ramp congestion\",\n      \"Baggage\",\n      \"Catering\",\n      \"Crew\",\n      \"Tech / MEL\",\n      \"Slot / ATC (ground impact)\"\n    ],\n    shares: [30, 22, 14, 8, 10, 6, 10] // total = 100\n  };\n\n  // -------- CHART CREATION --------\n  function createTatByHourChart() {\n    const ctx = document.getElementById(\"tatByHourChart\");\n    if (!ctx) return;\n\n    new Chart(ctx, {\n      type: \"line\",\n      data: {\n        labels: tatByHourData.labels,\n        datasets: [\n          {\n            label: \"Avg TAT (min)\",\n            data: tatByHourData.tatMinutes,\n            tension: 0.35,\n            borderWidth: 2,\n            pointRadius: 3,\n            pointHoverRadius: 4,\n            borderColor: \"#ff5a00\",\n            backgroundColor: \"rgba(255, 90, 0, 0.18)\"\n          },\n          {\n            label: \"Target (40 min)\",\n            data: tatByHourData.labels.map(() => 40),\n            borderWidth: 1,\n            borderDash: [6, 4],\n            pointRadius: 0,\n            borderColor: \"#9ca3af\"\n          }\n        ]\n      },\n      options: {\n        responsive: true,\n        maintainAspectRatio: false,\n        plugins: {\n          legend: {\n            labels: { font: { size: 11 } }\n          },\n          tooltip: {\n            callbacks: {\n              label: function(context) {\n                return context.parsed.y + \" min\";\n              }\n            }\n          }\n        },\n        scales: {\n          y: {\n            beginAtZero: false,\n            suggestedMin: 30,\n            suggestedMax: 50,\n            title: {\n              display: true,\n              text: \"Minutes\"\n            },\n            ticks: {\n              stepSize: 5\n            },\n            grid: {\n              color: \"rgba(209, 213, 219, 0.6)\"\n            }\n          },\n          x: {\n            title: {\n              display: true,\n              text: \"Hour of day\"\n            },\n            grid: {\n              display: false\n            }\n          }\n        }\n      }\n    });\n  }\n\n  function createOtpByAirlineChart() {\n    const ctx = document.getElementById(\"otpByAirlineChart\");\n    if (!ctx) return;\n\n    new Chart(ctx, {\n      type: \"bar\",\n      data: {\n        labels: otpByAirlineData.labels,\n        datasets: [\n          {\n            label: \"OTP D+15 (%)\",\n            data: otpByAirlineData.otp,\n            backgroundColor: \"rgba(255, 90, 0, 0.8)\",\n            borderColor: \"#ff5a00\",\n            borderWidth: 1\n          }\n        ]\n      },\n      options: {\n        indexAxis: \"y\",\n        responsive: true,\n        maintainAspectRatio: false,\n        scales: {\n          x: {\n            suggestedMin: 70,\n            suggestedMax: 100,\n            title: {\n              display: true,\n              text: \"On-time departure (%)\"\n            },\n            grid: {\n              color: \"rgba(209, 213, 219, 0.6)\"\n            }\n          },\n          y: {\n            grid: {\n              display: false\n            }\n          }\n        },\n        plugins: {\n          legend: { display: false },\n          tooltip: {\n            callbacks: {\n              label: function(context) {\n                return context.parsed.x + \"%\";\n              }\n            }\n          }\n        }\n      }\n    });\n  }\n\n  function createDelayReasonsChart() {\n    const ctx = document.getElementById(\"delayReasonsChart\");\n    if (!ctx) return;\n\n    new Chart(ctx, {\n      type: \"doughnut\",\n      data: {\n        labels: delayReasonsData.labels,\n        datasets: [\n          {\n            data: delayReasonsData.shares,\n            backgroundColor: [\n              \"rgba(255, 90, 0, 0.9)\",\n              \"rgba(255, 138, 64, 0.9)\",\n              \"rgba(249, 115, 22, 0.85)\",\n              \"rgba(234, 179, 8, 0.9)\",\n              \"rgba(59, 130, 246, 0.85)\",\n              \"rgba(34, 197, 94, 0.85)\",\n              \"rgba(148, 163, 184, 0.9)\"\n            ],\n            borderColor: \"#ffffff\",\n            borderWidth: 1\n          }\n        ]\n      },\n      options: {\n        responsive: true,\n        maintainAspectRatio: false,\n        plugins: {\n          legend: {\n            position: \"right\",\n            labels: { font: { size: 11 } }\n          },\n          tooltip: {\n            callbacks: {\n              label: function (context) {\n                const label = context.label || \"\";\n                const val = context.parsed;\n                return label + \": \" + val + \"%\";\n              }\n            }\n          }\n        },\n        cutout: \"55%\"\n      }\n    });\n  }\n\n  document.addEventListener(\"DOMContentLoaded\", function () {\n    createTatByHourChart();\n    createOtpByAirlineChart();\n    createDelayReasonsChart();\n  });\n</script>\n</body>\n</html>\n<script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>\n\n<script>\n  // -------- SYNTHETIC DATA GENERATION (replace with API / backend feed later) --------\n\n  // Hours we want to show\n  const tatByHourLabels = [\n    \"06:00\",\"07:00\",\"08:00\",\"09:00\",\"10:00\",\"11:00\",\n    \"12:00\",\"13:00\",\"14:00\",\"15:00\",\"16:00\",\"17:00\",\n    \"18:00\",\"19:00\",\"20:00\",\"21:00\",\"22:00\",\"23:00\"\n  ];\n\n  // Base pattern: lighter early morning, peak early afternoon, easing into evening\n  const tatBasePattern = [\n    36, 37, 38, 39, 40, 41, // 06–11\n    42, 43, 45, 46, 45, 44, // 12–17 (midday peak)\n    42, 41, 40, 39, 38, 37  // 18–23\n  ];\n\n  // Add a small random +/- 2 min noise to keep it \"alive\"\n  const tatSyntheticMinutes = tatBasePattern.map(base => {\n    const noise = Math.floor(Math.random() * 5) - 2; // -2 to +2\n    return base + noise;\n  });\n\n  const tatByHourData = {\n    labels: tatByHourLabels,\n    tatMinutes: tatSyntheticMinutes\n  };\n\n  // OTP by base – still synthetic but fixed so it's easy to read over time\n  const otpByAirlineData = {\n    labels: [\"LGW\", \"LTN\", \"MAN\", \"MXP\", \"GVA\", \"BSL\", \"CDG\", \"BCN\"],\n    otp:     [90,    88,    83,    89,    91,    92,    84,    86]\n  };\n\n  // Delay reasons summing to 100% – synthetic distribution\n  const delayReasonsData = {\n    labels: [\n      \"Late inbound\",\n      \"Ramp congestion\",\n      \"Baggage\",\n      \"Catering\",\n      \"Crew\",\n      \"Tech / MEL\",\n      \"Slot / ATC (ground impact)\"\n    ],\n    shares: [30, 22, 14, 8, 10, 6, 10] // total = 100\n  };\n\n  // -------- CHART CREATION --------\n  function createTatByHourChart() {\n    const ctx = document.getElementById(\"tatByHourChart\");\n    if (!ctx) return;\n\n    new Chart(ctx, {\n      type: \"line\",\n      data: {\n        labels: tatByHourData.labels,\n        datasets: [\n          {\n            label: \"Avg TAT (min)\",\n            data: tatByHourData.tatMinutes,\n            tension: 0.35,\n            borderWidth: 2,\n            pointRadius: 3,\n            pointHoverRadius: 4,\n            borderColor: \"#ff5a00\",\n            backgroundColor: \"rgba(255, 90, 0, 0.18)\"\n          },\n          {\n            label: \"Target (40 min)\",\n            data: tatByHourData.labels.map(() => 40),\n            borderWidth: 1,\n            borderDash: [6, 4],\n            pointRadius: 0,\n            borderColor: \"#9ca3af\"\n          }\n        ]\n      },\n      options: {\n        responsive: true,\n        maintainAspectRatio: false,\n        plugins: {\n          legend: {\n            labels: { font: { size: 11 } }\n          },\n          tooltip: {\n            callbacks: {\n              label: function(context) {\n                return context.parsed.y + \" min\";\n              }\n            }\n          }\n        },\n        scales: {\n          y: {\n            beginAtZero: false,\n            suggestedMin: 30,\n            suggestedMax: 50,\n            title: {\n              display: true,\n              text: \"Minutes\"\n            },\n            ticks: {\n              stepSize: 5\n            },\n            grid: {\n              color: \"rgba(209, 213, 219, 0.6)\"\n            }\n          },\n          x: {\n            title: {\n              display: true,\n              text: \"Hour of day\"\n            },\n            grid: {\n              display: false\n            }\n          }\n        }\n      }\n    });\n  }\n\n  function createOtpByAirlineChart() {\n    const ctx = document.getElementById(\"otpByAirlineChart\");\n    if (!ctx) return;\n\n    new Chart(ctx, {\n      type: \"bar\",\n      data: {\n        labels: otpByAirlineData.labels,\n        datasets: [\n          {\n            label: \"OTP D+15 (%)\",\n            data: otpByAirlineData.otp,\n            backgroundColor: \"rgba(255, 90, 0, 0.8)\",\n            borderColor: \"#ff5a00\",\n            borderWidth: 1\n          }\n        ]\n      },\n      options: {\n        indexAxis: \"y\",\n        responsive: true,\n        maintainAspectRatio: false,\n        scales: {\n          x: {\n            suggestedMin: 70,\n            suggestedMax: 100,\n            title: {\n              display: true,\n              text: \"On-time departure (%)\"\n            },\n            grid: {\n              color: \"rgba(209, 213, 219, 0.6)\"\n            }\n          },\n          y: {\n            grid: {\n              display: false\n            }\n          }\n        },\n        plugins: {\n          legend: { display: false },\n          tooltip: {\n            callbacks: {\n              label: function(context) {\n                return context.parsed.x + \"%\";\n              }\n            }\n          }\n        }\n      }\n    });\n  }\n\n  function createDelayReasonsChart() {\n    const ctx = document.getElementById(\"delayReasonsChart\");\n    if (!ctx) return;\n\n    new Chart(ctx, {\n      type: \"doughnut\",\n      data: {\n        labels: delayReasonsData.labels,\n        datasets: [\n          {\n            data: delayReasonsData.shares,\n            backgroundColor: [\n              \"rgba(255, 90, 0, 0.9)\",\n              \"rgba(255, 138, 64, 0.9)\",\n              \"rgba(249, 115, 22, 0.85)\",\n              \"rgba(234, 179, 8, 0.9)\",\n              \"rgba(59, 130, 246, 0.85)\",\n              \"rgba(34, 197, 94, 0.85)\",\n              \"rgba(148, 163, 184, 0.9)\"\n            ],\n            borderColor: \"#ffffff\",\n            borderWidth: 1\n          }\n        ]\n      },\n      options: {\n        responsive: true,\n        maintainAspectRatio: false,\n        plugins: {\n          legend: {\n            position: \"right\",\n            labels: { font: { size: 11 } }\n          },\n          tooltip: {\n            callbacks: {\n              label: function (context) {\n                const label = context.label || \"\";\n                const val = context.parsed;\n                return label + \": \" + val + \"%\";\n              }\n            }\n          }\n        },\n        cutout: \"55%\"\n      }\n    });\n  }\n\n  document.addEventListener(\"DOMContentLoaded\", function () {\n    createTatByHourChart();\n    createOtpByAirlineChart();\n    createDelayReasonsChart();\n  });\n</script>\n"
     },
     {
-      id: "favorites",
-      name: "Favorites",
-      enabled: true,
-      icon: "favorites",
-      homePageType: "html",
-      homePageValue: "<h1>Favorites</h1>",
+      "id": "favorites",
+      "name": "Search",
+      "enabled": false,
+      "icon": "search",
+      "homePageType": "html",
+      "homePageValue": "<h1>Favorites</h1>",
+      "tagFilter": ""
     },
     {
-      id: "my-reports",
-      name: "My Reports",
-      enabled: true,
-      icon: "my-reports",
-      homePageType: "html",
-      homePageValue: "<h1>My Reports</h1>",
+      "id": "my-reports",
+      "name": "My Reports",
+      "enabled": false,
+      "icon": "my-reports",
+      "homePageType": "html",
+      "homePageValue": "<h1>My Reports</h1>"
     },
     {
-      id: "spotter",
-      name: "Spotter",
-      enabled: true,
-      icon: "spotter-custom.svg",
-      homePageType: "html",
-      homePageValue: "<h1>Spotter</h1>",
+      "id": "spotter",
+      "name": "Spotter",
+      "enabled": false,
+      "icon": "spotter-custom.svg",
+      "homePageType": "html",
+      "homePageValue": "<h1>Spotter</h1>",
+      "spotterModelId": "5ba8363c-4940-4407-92e1-453c85308356",
+      "spotterSearchQuery": ""
     },
     {
-      id: "search",
-      name: "Search",
-      enabled: true,
-      icon: "search",
-      homePageType: "html",
-      homePageValue: "<h1>Search</h1>",
+      "id": "search",
+      "name": "Search",
+      "enabled": true,
+      "icon": "search",
+      "homePageType": "html",
+      "homePageValue": "<h1>Search</h1>",
+      "searchDataSource": "5ba8363c-4940-4407-92e1-453c85308356"
     },
     {
-      id: "full-app",
-      name: "Full App",
-      enabled: true,
-      icon: "full-app",
-      homePageType: "html",
-      homePageValue: "<h1>Full App</h1>",
+      "id": "full-app",
+      "name": "Full App",
+      "enabled": false,
+      "icon": "full-app",
+      "homePageType": "html",
+      "homePageValue": "<h1>Full App</h1>"
     },
     {
-      id: "all-content",
-      name: "All Content",
-      enabled: true,
-      icon: "📚",
-      homePageType: "html",
-      homePageValue: "<h1>All Content</h1>",
-      excludeSystemContent: true,
-    },
+      "id": "all-content",
+      "name": "All Content",
+      "enabled": false,
+      "icon": "📚",
+      "homePageType": "html",
+      "homePageValue": "<h1>All Content</h1>",
+      "excludeSystemContent": true
+    }
   ],
-  customMenus: [],
-  menuOrder: [
+  "customMenus": [
+    {
+      "id": "custom-1760342080199",
+      "name": "Ontime Performance",
+      "description": "",
+      "icon": "analytics",
+      "enabled": true,
+      "contentSelection": {
+        "type": "specific",
+        "specificContent": {
+          "liveboards": [
+            "a670a3b9-e1dc-41eb-a815-c321d7001045"
+          ],
+          "answers": []
+        }
+      },
+      "openDirectly": true
+    }
+  ],
+  "menuOrder": [
     "home",
-    "favorites",
-    "my-reports",
-    "spotter",
     "search",
-    "full-app",
-    "all-content",
+    "custom-1760342080199"
   ],
-  homePageConfig: {
-    type: "html",
-    value: "<h1>Welcome to TSE Demo Builder</h1>",
+  "homePageConfig": {
+    "type": "html",
+    "value": "<h1>Welcome to TSE Demo Builder</h1>"
   },
-  appConfig: {
-    thoughtspotUrl: "https://7dxperts.thoughtspot.cloud/",
-    applicationName: "TSE Demo Builder",
-    logo: "/logo.png",
-    earlyAccessFlags: "enable-modular-home\nenable-custom-styling",
-    favicon: "/logo.png",
-    showFooter: true,
-    disableSettings: false,
-    chatbot: {
-      enabled: true,
-      defaultModelId: undefined,
-      welcomeMessage: "Hello! I'm your AI assistant. What would you like to know about your data?",
-      position: "bottom-right",
-      primaryColor: "#3b82f6",
-      hoverColor: "#2563eb",
+  "appConfig": {
+    "thoughtspotUrl": "https://techpartners.thoughtspot.cloud/",
+    "applicationName": "Turn Performance ",
+    "logo": "/ts.png",
+    "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
+    "favicon": "",
+    "showFooter": true,
+    "disableSettings": true,
+    "chatbot": {
+      "enabled": false,
+      "welcomeMessage": "Hello! I'm your AI assistant. What would you like to know about your data?",
+      "position": "bottom-right",
+      "primaryColor": "#3b82f6",
+      "hoverColor": "#2563eb",
+      "selectedModelIds": []
     },
-    authType: "None"
+    "authType": "None",
+    "faviconSyncEnabled": true
   },
-  fullAppConfig: {
-    showPrimaryNavbar: true,
-    hideHomepageLeftNav: false,
+  "fullAppConfig": {
+    "showPrimaryNavbar": false,
+    "hideHomepageLeftNav": false
   },
-  stylingConfig: {
-    application: {
-      topBar: {
-        backgroundColor: "#ffffff",
-        foregroundColor: "#333333",
-        logoUrl: "/logo.png",
+  "stylingConfig": {
+    "application": {
+      "topBar": {
+        "backgroundColor": "#009999",
+        "foregroundColor": "#f8f2f2",
+        "logoUrl": ""
       },
-      sidebar: {
-        backgroundColor: "#f5f5f5",
-        foregroundColor: "#333333",
+      "sidebar": {
+        "backgroundColor": "#c2c2c2",
+        "foregroundColor": "#333333"
       },
-      footer: {
-        backgroundColor: "#ffffff",
-        foregroundColor: "#333333",
+      "footer": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
       },
-      dialogs: {
-        backgroundColor: "#ffffff",
-        foregroundColor: "#333333",
+      "dialogs": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
       },
-      buttons: {
-        primary: {
-          backgroundColor: "#3182ce",
-          foregroundColor: "#ffffff",
-          borderColor: "#3182ce",
-          hoverBackgroundColor: "#2c5aa0",
-          hoverForegroundColor: "#ffffff",
+      "buttons": {
+        "primary": {
+          "backgroundColor": "#3182ce",
+          "foregroundColor": "#ffffff",
+          "borderColor": "#3182ce",
+          "hoverBackgroundColor": "#2c5aa0",
+          "hoverForegroundColor": "#ffffff"
         },
-        secondary: {
-          backgroundColor: "#ffffff",
-          foregroundColor: "#374151",
-          borderColor: "#d1d5db",
-          hoverBackgroundColor: "#f9fafb",
-          hoverForegroundColor: "#374151",
+        "secondary": {
+          "backgroundColor": "#ffffff",
+          "foregroundColor": "#374151",
+          "borderColor": "#d1d5db",
+          "hoverBackgroundColor": "#f9fafb",
+          "hoverForegroundColor": "#374151"
+        }
+      },
+      "backgrounds": {
+        "mainBackground": "#f7fafc",
+        "contentBackground": "#ffffff",
+        "cardBackground": "#ffffff",
+        "borderColor": "#e2e8f0"
+      },
+      "typography": {
+        "primaryColor": "#1f2937",
+        "secondaryColor": "#6b7280",
+        "linkColor": "#3182ce",
+        "linkHoverColor": "#2c5aa0"
+      },
+      "selectedTheme": "default"
+    },
+    "embeddedContent": {
+      "strings": {},
+      "stringIDs": {},
+      "cssUrl": "",
+      "customCSS": {
+        "variables": {},
+        "rules_UNSTABLE": {}
+      }
+    },
+    "embedFlags": {
+      "liveboardEmbed": {
+        "frameParams": {
+          "width": 0,
+          "height": 0
         },
-      },
-      backgrounds: {
-        mainBackground: "#f7fafc",
-        contentBackground: "#ffffff",
-        cardBackground: "#ffffff",
-        borderColor: "#e2e8f0",
-      },
-      typography: {
-        primaryColor: "#1f2937",
-        secondaryColor: "#6b7280",
-        linkColor: "#3182ce",
-        linkHoverColor: "#2c5aa0",
-      },
-      selectedTheme: "default",
+        "fullHeight": true
+      }
     },
-    embeddedContent: {
-      strings: {},
-      stringIDs: {},
-      cssUrl: "",
-      customCSS: {
-        variables: {},
-        rules_UNSTABLE: {},
-      },
+    "embedDisplay": {
+      "hideTitle": true,
+      "hideDescription": true
     },
-    embedFlags: {},
-    embedDisplay: {
-      hideTitle: false,
-      hideDescription: false,
-    },
+    "doubleClickHandling": {
+      "enabled": true,
+      "showDefaultModal": true,
+      "customJavaScript": "",
+      "modalTitle": "Double-Click Event Data"
+    }
   },
-  userConfig: {
-    users: [],
-    currentUserId: undefined,
-  },
+  "userConfig": {
+    "users": [
+      {
+        "id": "power-user",
+        "name": "Power User",
+        "description": "Full access - can access all features including Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": true,
+            "full-app": true,
+            "all-content": true
+          },
+          "customMenus": [
+            "custom-1759847126747",
+            "custom-1759850260956",
+            "custom-1759915645846",
+            "custom-1760341867406",
+            "custom-1760342080199",
+            "custom-1760344743048"
+          ],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      },
+      {
+        "id": "basic-user",
+        "name": "Basic User",
+        "description": "Limited access - cannot access Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": false,
+            "full-app": false,
+            "all-content": true
+          },
+          "customMenus": [],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      }
+    ],
+    "currentUserId": "power-user"
+  }
 };
 
 // Old storage keys for migration
