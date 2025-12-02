@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
     }  
      
     // Set disableSettings to true for deployments  
-    finalConfiguration.appConfig.disableSettings = true;  
+    finalConfiguration.appConfig.disableSettings = false;  
      
     const configString = JSON.stringify(finalConfiguration, null, 2);  
     content = content.replace(  
