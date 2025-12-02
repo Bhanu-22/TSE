@@ -561,7 +561,7 @@ function StandardMenusContent({
           "../services/thoughtspotApi"
         );
         const { liveboards, answers, models } =
-          await fetchAllThoughtSpotContent();
+          await fetchAllThoughtSpotContent(appConfig.orgIdentifier);
 
         const allContent = [
           ...liveboards.map((item: { id: string; name: string }) => ({
@@ -2545,6 +2545,7 @@ function CustomMenusContent({
   addCustomMenu,
   updateCustomMenu,
   deleteCustomMenu,
+  appConfig,
   onUnsavedChange,
   onEditingMenuChange,
   onSaveMenu,
@@ -2555,6 +2556,7 @@ function CustomMenusContent({
   addCustomMenu: (menu: CustomMenu) => void;
   updateCustomMenu: (id: string, menu: CustomMenu) => void;
   deleteCustomMenu: (id: string) => void;
+  appConfig: AppConfig;
   onUnsavedChange?: (hasChanges: boolean) => void;
   onEditingMenuChange?: (menu: CustomMenu | null) => void;
   onSaveMenu?: () => void;
@@ -2611,8 +2613,8 @@ function CustomMenusContent({
         );
 
         const [liveboards, answers, tags] = await Promise.all([
-          fetchLiveboards(),
-          fetchAnswers(),
+          fetchLiveboards(appConfig.orgIdentifier),
+          fetchAnswers(appConfig.orgIdentifier),
           fetchTags(),
         ]);
 
@@ -7183,6 +7185,7 @@ export default function SettingsModal({
           addCustomMenu={addCustomMenu}
           updateCustomMenu={updateCustomMenu}
           deleteCustomMenu={deleteCustomMenu}
+          appConfig={pendingAppConfig}
           onUnsavedChange={setHasUnsavedChanges}
           onEditingMenuChange={(menu) => {
             setPendingCustomMenuSave(menu);

@@ -94,7 +94,7 @@ export default function LoginPage({
       }  
   
       // Attempt login  
-      const success = await loginToThoughtSpot(username, password);  
+      const success = await loginToThoughtSpot(username, password, appConfig.orgIdentifier);  
         
       if (success) {  
         // Verify session was created  
