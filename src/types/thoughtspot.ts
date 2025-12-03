@@ -153,6 +153,10 @@ export interface AppConfig {
   faviconSyncEnabled?: boolean;
   showFooter: boolean;
   disableSettings?: boolean;
+  /**
+   * Optional numeric org identifier baked by Blitz (stringified for consistency).
+   */
+  orgId?: string;
   orgIdentifier?: string;
   chatbot?: {
     enabled: boolean;

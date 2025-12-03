@@ -93,8 +93,16 @@ export default function LoginPage({
         setThoughtSpotBaseUrl(thoughtspotUrlInput);  
       }  
   
+      const orgIdentifier =
+        appConfig.orgIdentifier ??
+        (appConfig.orgId ? String(appConfig.orgId) : undefined);
+
       // Attempt login  
-      const success = await loginToThoughtSpot(username, password, appConfig.orgIdentifier);  
+      const success = await loginToThoughtSpot(
+        username,
+        password,
+        orgIdentifier
+      );  
         
       if (success) {  
         // Verify session was created  
