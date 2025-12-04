@@ -186,17 +186,15 @@ export const DEFAULT_CONFIG: ConfigurationData = {
   },
 };
 
+const defaultAppConfig = DEFAULT_CONFIG.appConfig;
+const legacyOrdId = (defaultAppConfig as { ordId?: string } | undefined)?.ordId;
 console.log("⚙️ [ConfigService] Config loaded:", {
-  orgId: DEFAULT_CONFIG.appConfig?.orgId,
-  orgIdentifier: DEFAULT_CONFIG.appConfig?.orgIdentifier,
-  ordId: (DEFAULT_CONFIG.appConfig as Record<string, unknown> | undefined)?.[
-    "ordId"
-  ],
-  thoughtspotUrl: DEFAULT_CONFIG.appConfig?.thoughtspotUrl,
-  authType: DEFAULT_CONFIG.appConfig?.authType,
-  allKeys: DEFAULT_CONFIG.appConfig
-    ? Object.keys(DEFAULT_CONFIG.appConfig)
-    : [],
+  orgId: defaultAppConfig?.orgId,
+  orgIdentifier: defaultAppConfig?.orgIdentifier,
+  ordId: legacyOrdId,
+  thoughtspotUrl: defaultAppConfig?.thoughtspotUrl,
+  authType: defaultAppConfig?.authType,
+  allKeys: defaultAppConfig ? Object.keys(defaultAppConfig) : [],
 });
 
 // Old storage keys for migration
