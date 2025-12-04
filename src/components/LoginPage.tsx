@@ -110,10 +110,11 @@ export default function LoginPage({
         appConfig.orgIdentifier ??
         (appConfig.orgId ? String(appConfig.orgId) : undefined);
 
+      const legacyOrdId = (appConfig as { ordId?: string }).ordId;
       console.log("[LoginPage] Debug Info:", {
         "appConfig.orgIdentifier": appConfig.orgIdentifier,
         "appConfig.orgId": appConfig.orgId,
-        "appConfig.ordId": (appConfig as Record<string, unknown>)["ordId"],
+        "appConfig.ordId": legacyOrdId,
         "resolved orgIdentifier": orgIdentifier,
         "full appConfig": appConfig,
       });
