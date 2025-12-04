@@ -1,0 +1,265 @@
+{
+  "standardMenus": [
+    {
+      "id": "home",
+      "name": "Home",
+      "enabled": true,
+      "icon": "home",
+      "homePageType": "html",
+      "homePageValue": "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n  <meta charset=\"utf-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n  <title>SE Sustainability Dashboard</title>\n  <style>\n    @font-face {\n      font-family: \"Work Sans\";\n      src: local(\"Work Sans\"), local(\"WorkSans\");\n      font-weight: 400;\n      font-style: normal;\n      font-display: swap;\n    }\n\n    :root {\n      --bg: #fff9f6;\n      --surface: #ffffff;\n      --text: #51534a;\n      --muted: #6b7380;\n      --primary: #00a18e;\n      --accent: #00a18e;\n      --good: #00a18e;\n      --warn: #f59e0b;\n      --bad: #ef4444;\n      --border: #eceff3;\n      --shadow: 0 20px 40px rgba(22, 24, 35, 0.08);\n      --shadow-sm: 0 8px 24px rgba(22, 24, 35, 0.06);\n      --radius-lg: 22px;\n      --radius-xl: 28px;\n    }\n\n    * {\n      box-sizing: border-box;\n      margin: 0;\n      padding: 0;\n    }\n\n    body {\n      margin: 0;\n      font-family: \"work sans\", Avenir, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, \"Apple Color Emoji\", \"Segoe UI Emoji\", ui-sans-serif, system-ui;\n      color: var(--text);\n      background: #ffffff;\n      -webkit-font-smoothing: antialiased;\n      line-height: 1.45;\n    }\n\n    .container {\n      max-width: 1200px;\n      margin: 0 auto;\n      padding-left: 20px;\n      padding-right: 20px;\n    }\n\n    .title {\n      margin: 54px 0 0px;\n      font-size: clamp(20px, 3vw, 34px);\n      font-weight: 800;\n    }\n\n    .kpi-grid {\n      display: grid;\n      grid-template-columns: repeat(12, 1fr);\n      gap: 16px;\n      margin-top: 22px;\n    }\n\n    @media (max-width: 900px) {\n      .kpi-grid {\n        grid-template-columns: 1fr;\n      }\n    }\n\n    .card {\n      grid-column: span 4;\n      background: var(--surface);\n      border: 1px solid var(--border);\n      border-radius: var(--radius-lg);\n      box-shadow: var(--shadow-sm);\n      padding: 18px;\n      overflow: hidden;\n    }\n\n    .card h2 {\n      margin: 0 0 6px;\n      font-size: 20px;\n      font-weight: 800;\n      letter-spacing: 0.2px;\n    }\n\n    /* KPI cards */\n    .card.kpi {\n      grid-column: span 3;\n    }\n\n    .card.kpi h2 {\n      font-size: 16px;\n      font-weight: 800;\n      margin: 0 0 6px;\n      letter-spacing: 0.2px;\n    }\n\n    .card.kpi .date {\n      color: var(--muted);\n      font-size: 12px;\n    }\n\n    .card.kpi .big {\n      font-size: 44px;\n      font-weight: 900;\n      margin: 6px 0 2px;\n      line-height: 1;\n    }\n\n    .card.kpi .row {\n      display: flex;\n      align-items: baseline;\n      gap: 10px;\n      margin-bottom: 6px;\n    }\n\n    .card.kpi .delta {\n      font-size: 12px;\n      font-weight: 800;\n    }\n\n    .card.kpi .delta.up {\n      color: var(--good);\n    }\n\n    .card.kpi .delta.down {\n      color: var(--bad);\n    }\n\n    .card.kpi .prev {\n      color: var(--muted);\n      font-size: 12px;\n    }\n\n    .sparkline {\n      width: 100%;\n      height: 90px;\n      display: block;\n      border: 1px solid var(--border);\n      border-radius: 12px;\n      background: #f9fafb;\n      margin-top: 12px;\n    }\n\n    .card .cta-actions {\n      display: flex;\n      justify-content: flex-start;\n      margin-top: 16px;\n    }\n\n    .hero {\n      position: relative;\n      background: linear-gradient(135deg, #7fb5e8 0%, #1a66e0 100%);\n      border-radius: var(--radius-lg);\n      min-height: 360px;\n      display: grid;\n      align-items: center;\n      padding: 28px;\n      box-shadow: var(--shadow-sm);\n    }\n\n    .hero[style*=\"border-radius:0\"] {\n      border-radius: 0 !important;\n    }\n\n    .hero-inner {\n      display: grid;\n      grid-template-columns: 1.2fr 0.8fr;\n      align-items: center;\n      gap: 24px;\n    }\n\n    .hero .title {\n      color: #ffffff;\n      margin: 0 0 8px;\n      font-size: clamp(24px, 5vw, 44px);\n      line-height: 1.15;\n    }\n\n    .hero .sub {\n      color: color-mix(in lab, #ffffff 88%, transparent);\n      margin: 0;\n    }\n\n    .hero-illustration {\n      width: 100%;\n      height: auto;\n      display: block;\n      border-radius: 12px;\n      border: 1px solid var(--border);\n      box-shadow: var(--shadow-sm);\n    }\n\n    @media (max-width: 900px) {\n      .hero-inner {\n        grid-template-columns: 1fr;\n      }\n    }\n\n    .cta-actions {\n      display: flex;\n      gap: 12px;\n    }\n\n    .btn {\n      appearance: none;\n      border: none;\n      background: #0d66a2; second and third button colors\n      color: #fff;\n      font-weight: 700;\n      font-size: 12px;\n      padding: 8px 14px;\n      border-radius: 999px;\n      box-shadow: var(--shadow-sm);\n      cursor: pointer;\n    }\n\n    .btn:hover {\n      filter: brightness(0.95);\n    }\n\n    .kpi-card {\n      background-color: white;\n      border-radius: 20px;\n      padding: 12px 16px;\n      border: 1px solid #eee;\n      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);\n      position: relative;\n      min-width: 0;\n    }\n\n    .btn.secondary {\n      background: transparent;\n      color: #ffffff;\n      border: 1px solid rgba(255, 255, 255, 0.85);\n      box-shadow: none;\n    }\n\n    .btn.secondary:hover {\n      filter: none;\n      background: rgba(255, 255, 255, 0.08);\n    }\n\n    .badge-section {\n      width: 100%;\n      background: #ffffff;\n    }\n\n    .badge-wrap {\n      display: flex;\n      justify-content: space-between;\n      align-items: center;\n      padding: 16px 20px;\n      max-width: 1200px;\n      margin: 0 auto;\n    }\n\n    .badge-left img {\n      height: 60px;\n      width: auto;\n      display: block;\n    }\n\n    .badge-right {\n      font-size: 14px;\n      font-weight: 700;\n      text-transform: uppercase;\n      letter-spacing: 0.5px;\n      color: var(--text);\n    }\n\n    .flex {\n      display: flex;\n    }\n\n    .flex-row {\n      flex-direction: row;\n    }\n\n    .flex-initial {\n      flex: 0 1 auto;\n    }\n\n    .flex-1 {\n      flex: 1 1 0%;\n    }\n  </style>\n</head>\n\n<body>\n  <section aria-label=\"Hero\" class=\"hero\" style=\"margin: 0 0 32px 0; border-radius: 0\">\n    <div class=\"container\" style=\"padding: 32px 20px 42px 20px\">\n      <div class=\"hero-inner\">\n        <div>\n          <h1 class=\"title\" style=\"color: #FFFFFF\">Take a look into your company's data</h1>\n          <p class=\"sub\"></p>\n          <div class=\"cta-actions\" style=\"margin-top: 48px\">\n            <a class=\"btn\" href=\"/custom/custom-1764863876263\"\n              style=\"text-decoration: none; height: 48px; line-height: 48px; font-size: 16px; padding: 0 24px; background-color: #1a66e0; color: #FFFFFF\">View\n              Liveboard</a>\n            <a class=\"btn secondary\" href=\"/spotter\"\n              style=\"text-decoration: none; height: 48px; line-height: 48px; font-size: 16px; padding: 0 24px\">Ask\n              Spotter</a>\n          </div>\n        </div>\n        <img class=\"hero-illustration\" style=\"border: none\"\n          src=\"https://i.postimg.cc/2SsKJzGC/1756167990-smartapps-v5.avif\" alt=\"Hero illustration\" />\n      </div>\n    </div>\n  </section>\n  <section aria-label=\"Context badge\">\n    <div class=\"container\">\n      <div class=\"flex k-flex-row items-center\">\n        <div class=\"flex-1\">\n          <h2 class=\"title\"\n            style=\"margin-top: 0px; font-size: 32px; font-weight: 800; text-transform: uppercase; color: #1a66e0\">\n            ThoughtSpot Embedded Analytics\n          </h2>\n        </div>\n        <div class=\"flex-initial\">\n          <img src=\"https://media.brand.dev/266de454-8642-4807-be62-7e6eafaf7510.png\"\n            alt=\"Logo\" height=\"56\" />\n        </div>\n      </div>\n    </div>\n  </section>\n  <main class=\"container\" style=\"margin-top: 48px; margin-bottom: 64px;\">\n    <div class=\"kpi-card\" style=\"margin-bottom: 48px; padding: 24px; font-size: 16px; line-height: 28px;\">\n      TSE transforms how companies share data and insights with their customers, partners, and teams. By embedding\n      powerful, AI-driven analytics directly into your applications or customer portals, you can deliver\n      interactive,\n      self-service data experiences that go far beyond traditional dashboards. Users can easily explore\n      information, ask\n      questions in natural language, and uncover meaningful insights in real time without relying on technical\n      teams.\n      The result is a smarter, more engaging product experience that drives transparency, builds trust, and\n      empowers\n      every user to make confident, data-backed decisions.\n      <h3 class=\"title\" style=\"margin-top: 16px; font-size: 24px; font-weight: 800; margin-bottom: 24px;\">\n        How to use this Portal\n      </h3>\n      <iframe src=\"https://player.vimeo.com/video/1121179654?h=ded3bfeb38&badge=0&autopause=0&player_id=0&app_id=58479\"\n        width=\"100%\" height=\"650\" frameBorder=\"0\" allow=\"autoplay; fullscreen; picture-in-picture\" allowFullScreen\n        title=\"DataParQ Promo (new)\"></iframe>\n    </div>\n\n  </main>\n</body>\n\n</html>"
+    },
+    {
+      "id": "favorites",
+      "name": "Favorites",
+      "enabled": false,
+      "icon": "favorites",
+      "homePageType": "html",
+      "homePageValue": "<h1>Favorites</h1>"
+    },
+    {
+      "id": "my-reports",
+      "name": "My Reports",
+      "enabled": false,
+      "icon": "my-reports",
+      "homePageType": "html",
+      "homePageValue": "<h1>My Reports</h1>"
+    },
+    {
+      "id": "spotter",
+      "name": "Spotter",
+      "enabled": true,
+      "icon": "spotter-custom.svg",
+      "homePageType": "html",
+      "homePageValue": "<h1>Spotter</h1>",
+      "spotterModelId": "34321dee-92c4-44f5-82ab-975e0453b4f3",
+      "spotterSearchQuery": "Explain this dataset to me"
+    },
+    {
+      "id": "search",
+      "name": "Search",
+      "enabled": false,
+      "icon": "search",
+      "homePageType": "html",
+      "homePageValue": "<h1>Search</h1>"
+    },
+    {
+      "id": "full-app",
+      "name": "Full App",
+      "enabled": false,
+      "icon": "full-app",
+      "homePageType": "html",
+      "homePageValue": "<h1>Full App</h1>"
+    },
+    {
+      "id": "all-content",
+      "name": "All Content",
+      "enabled": false,
+      "icon": "📚",
+      "homePageType": "html",
+      "homePageValue": "<h1>All Content</h1>",
+      "excludeSystemContent": true
+    }
+  ],
+  "customMenus": [
+    {
+      "id": "custom-1764863876263",
+      "name": "My Reports",
+      "description": "",
+      "icon": "my-reports",
+      "enabled": true,
+      "contentSelection": {
+        "type": "specific",
+        "specificContent": {
+          "liveboards": [
+            "207048dd-a59c-43c1-b54b-39f520db7f89"
+          ],
+          "answers": []
+        }
+      },
+      "openDirectly": true
+    }
+  ],
+  "menuOrder": [
+    "home",
+    "spotter",
+    "custom-1764863876263"
+  ],
+  "homePageConfig": {
+    "type": "html",
+    "value": "<h1>Welcome to TSE Demo Builder</h1>"
+  },
+  "appConfig": {
+    "thoughtspotUrl": "https://7dxperts.thoughtspot.cloud",
+    "applicationName": "TriveniTech",
+    "logo": "https://media.brand.dev/266de454-8642-4807-be62-7e6eafaf7510.png",
+    "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
+    "favicon": "https://media.brand.dev/266de454-8642-4807-be62-7e6eafaf7510.png",
+    "showFooter": false,
+    "disableSettings": true,
+    "chatbot": {
+      "enabled": true,
+      "welcomeMessage": "Hello! I'm your AI assistant. What would you like to know about your data?",
+      "position": "bottom-right",
+      "primaryColor": "#3b82f6",
+      "hoverColor": "#2563eb"
+    },
+    "authType": "None",
+    "faviconSyncEnabled": true
+  },
+  "fullAppConfig": {
+    "showPrimaryNavbar": true,
+    "hideHomepageLeftNav": false
+  },
+  "stylingConfig": {
+    "application": {
+      "topBar": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333",
+        "logoUrl": "https://media.brand.dev/266de454-8642-4807-be62-7e6eafaf7510.png"
+      },
+      "sidebar": {
+        "backgroundColor": "#1a66e0",
+        "foregroundColor": "#FFFFFF"
+      },
+      "footer": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "dialogs": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "buttons": {
+        "primary": {
+          "backgroundColor": "#1a66e0",
+          "foregroundColor": "#FFFFFF",
+          "borderColor": "#1a66e0",
+          "hoverBackgroundColor": "#2c5aa0",
+          "hoverForegroundColor": "#ffffff"
+        },
+        "secondary": {
+          "backgroundColor": "#7fb5e8",
+          "foregroundColor": "#0F172A",
+          "borderColor": "#7fb5e8",
+          "hoverBackgroundColor": "#f9fafb",
+          "hoverForegroundColor": "#374151"
+        }
+      },
+      "backgrounds": {
+        "mainBackground": "#ffffff",
+        "contentBackground": "#ffffff",
+        "cardBackground": "#ffffff",
+        "borderColor": "#ffffff"
+      },
+      "typography": {
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#6b7280",
+        "linkColor": "#7fb5e8",
+        "linkHoverColor": "#1a66e0"
+      },
+      "selectedTheme": "default"
+    },
+    "embeddedContent": {
+      "strings": {},
+      "stringIDs": {},
+      "cssUrl": "",
+      "customCSS": {
+        "variables": {
+          "--ts-var-button--primary-background": "rgba(26, 102, 224, 1.0)",
+          "--ts-var-button--primary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--primary--hover-background": "rgba(26, 102, 224, 0.8)",
+          "--ts-var-button--primary--active-background": "rgba(26, 102, 224, 0.6)",
+          "--ts-var-button--secondary-background": "rgba(127, 181, 232, 1.0)",
+          "--ts-var-button--secondary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--secondary--hover-background": "rgba(127, 181, 232, 0.8)",
+          "--ts-var-button--secondary--active-background": "rgba(127, 181, 232, 0.6)",
+          "--ts-var-button--tertiary-background": "rgba(26, 102, 224, 1.0)",
+          "--ts-var-button--tertiary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--tertiary--hover-background": "rgba(26, 102, 224, 0.8)",
+          "--ts-var-button--tertiary--active-background": "rgba(26, 102, 224, 0.6)",
+          "--ts-var-menu--hover-background": "rgba(127, 181, 232, 0.8)",
+          "--ts-var-root-background": "#FFFFFF",
+          "--ts-var-menu-background": "#FFFFFF",
+          "--ts-var-liveboard-layout-background": "rgba(127, 181, 232, 1.0)"
+        },
+        "rules_UNSTABLE": {}
+      }
+    },
+    "embedFlags": {
+      "liveboardEmbed": {
+        "showLiveboardTitle": true,
+        "showLiveboardDescription": true,
+        "isLiveboardHeaderSticky": false,
+        "hideLiveboardHeader": false,
+        "disabledActions": [
+          "downloadAsPng"
+        ],
+        "disabledActionReason": "Disabled",
+        "visibleActions": [],
+        "hiddenActions": [
+          "downloadAsCSV",
+          "makeACopy",
+          "tml"
+        ]
+      }
+    },
+    "embedDisplay": {
+      "hideTitle": false,
+      "hideDescription": false
+    }
+  },
+  "userConfig": {
+    "users": [
+      {
+        "id": "power-user",
+        "name": "Power User",
+        "description": "Full access - can access all features including Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": true,
+            "full-app": true,
+            "all-content": true
+          },
+          "customMenus": [
+            "custom-1764863876263"
+          ],
+          "hiddenActions": {
+            "enabled": true,
+            "actions": []
+          }
+        }
+      },
+      {
+        "id": "basic-user",
+        "name": "Basic User",
+        "description": "Limited access - cannot access Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": false,
+            "full-app": false,
+            "all-content": true
+          },
+          "customMenus": [],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      }
+    ],
+    "currentUserId": "power-user"
+  },
+  "version": "1.0.0",
+  "timestamp": "2025-12-04T15:57:56.264216",
+  "description": "TSE Demo Builder Configuration Export"
+}
