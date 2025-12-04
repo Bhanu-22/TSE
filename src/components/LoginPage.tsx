@@ -1,6 +1,6 @@
 "use client";  
   
-import { useState } from "react";  
+import { useEffect, useState } from "react";  
 import { getCurrentUser, loginToThoughtSpot, setThoughtSpotBaseUrl } from "../services/thoughtspotApi";  
 import { AppConfig } from "../types/thoughtspot";
 import { DEFAULT_CONFIG } from "../services/configurationService";  
@@ -20,6 +20,15 @@ export default function LoginPage({
   updateAppConfig,  
   appConfig,  
 }: LoginPageProps) {  
+  useEffect(() => {
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    console.log("🔧 TSE DEBUG MODE - Org Authentication Flow");
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    console.log("Expected config keys: orgId or orgIdentifier");
+    console.log('Common issue: typo "ordId" instead of "orgId"');
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  }, []);
+
   const [thoughtspotUrlInput, setThoughtspotUrlInput] = useState(thoughtspotUrl || '');  
   const [username, setUsername] = useState('');  
   const [password, setPassword] = useState('');  
@@ -69,7 +78,11 @@ export default function LoginPage({
   }  
 };
   
-  const handleLogin = async () => {  
+  const handleLogin = async () => {
+    if (isChecking) {
+      return;
+    }
+
     if (!thoughtspotUrlInput) {  
       setError("Please enter ThoughtSpot URL");  
       return;  
@@ -97,12 +110,25 @@ export default function LoginPage({
         appConfig.orgIdentifier ??
         (appConfig.orgId ? String(appConfig.orgId) : undefined);
 
+      console.log("[LoginPage] Debug Info:", {
+        "appConfig.orgIdentifier": appConfig.orgIdentifier,
+        "appConfig.orgId": appConfig.orgId,
+        "appConfig.ordId": (appConfig as Record<string, unknown>)["ordId"],
+        "resolved orgIdentifier": orgIdentifier,
+        "full appConfig": appConfig,
+      });
+
       // Attempt login  
       const success = await loginToThoughtSpot(
         username,
         password,
         orgIdentifier
       );  
+
+      console.log("[LoginPage] Login attempt result:", {
+        success,
+        orgIdentifier,
+      });
         
       if (success) {  
         // Verify session was created  

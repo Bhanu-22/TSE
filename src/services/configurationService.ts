@@ -186,6 +186,19 @@ export const DEFAULT_CONFIG: ConfigurationData = {
   },
 };
 
+console.log("⚙️ [ConfigService] Config loaded:", {
+  orgId: DEFAULT_CONFIG.appConfig?.orgId,
+  orgIdentifier: DEFAULT_CONFIG.appConfig?.orgIdentifier,
+  ordId: (DEFAULT_CONFIG.appConfig as Record<string, unknown> | undefined)?.[
+    "ordId"
+  ],
+  thoughtspotUrl: DEFAULT_CONFIG.appConfig?.thoughtspotUrl,
+  authType: DEFAULT_CONFIG.appConfig?.authType,
+  allKeys: DEFAULT_CONFIG.appConfig
+    ? Object.keys(DEFAULT_CONFIG.appConfig)
+    : [],
+});
+
 // Old storage keys for migration
 const OLD_STORAGE_KEYS = {
   HOME_PAGE_CONFIG: "tse-demo-builder-home-page-config",

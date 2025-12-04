@@ -1106,8 +1106,17 @@ export async function loginToThoughtSpot(
     if (orgIdentifier) {  
       loginData.org_identifier = orgIdentifier;  
     }  
+
+    const loginEndpoint = `${THOUGHTSPOT_BASE_URL}/auth/session/login`;
+    console.log("📤 [loginToThoughtSpot] Request details:", {
+      endpoint: loginEndpoint,
+      payload: loginData,
+      orgIdentifierReceived: orgIdentifier,
+      hasOrgIdentifier: !!orgIdentifier,
+      timestamp: new Date().toISOString(),
+    });
   
-    const response = await fetch(`${THOUGHTSPOT_BASE_URL}/auth/session/login`, {  
+    const response = await fetch(loginEndpoint, {  
       method: "POST",  
       headers: {  
         "Accept": "application/json",  
@@ -1116,10 +1125,27 @@ export async function loginToThoughtSpot(
       body: JSON.stringify(loginData),  
       credentials: "include",  
     });  
+
+    console.log("📥 [loginToThoughtSpot] Response:", {
+      status: response.status,
+      ok: response.ok,
+      statusText: response.statusText,
+    });
   
     if (!response.ok) {  
       throw new Error(`Login failed: ${response.status} ${response.statusText}`);  
     }  
+  
+    try {
+      const sessionInfoResp = await fetch(
+        `${THOUGHTSPOT_BASE_URL}/session/info`,
+        { credentials: "include" }
+      );
+      const sessionInfo = await sessionInfoResp.json();
+      console.log("[SESSION DEBUG] session/info:", sessionInfo);
+    } catch (error) {
+      console.warn("[SESSION DEBUG] Failed to fetch session/info:", error);
+    }
   
     return true;  
   } catch (error) {  
