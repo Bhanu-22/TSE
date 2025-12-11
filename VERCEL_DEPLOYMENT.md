@@ -52,6 +52,7 @@ Create a `vercel.json` file in your project root:
 ```
 
 Then add the secret using Vercel CLI:
+
 ```bash
 vercel secrets add spotgpt-api-key your_actual_api_key_here
 ```
@@ -65,6 +66,7 @@ Visit `/api/spotgpt/test` in your deployed application to check if the API key i
 Example: `https://your-app.vercel.app/api/spotgpt/test`
 
 This endpoint will return:
+
 - Whether the API key exists
 - Environment information
 - Deployment instructions if the key is missing
@@ -72,6 +74,7 @@ This endpoint will return:
 ### 2. Expected Response
 
 **Success Response:**
+
 ```json
 {
   "apiKeyExists": true,
@@ -93,6 +96,7 @@ This endpoint will return:
 ```
 
 **Error Response:**
+
 ```json
 {
   "apiKeyExists": false,
@@ -119,11 +123,13 @@ This endpoint will return:
 ### Common Issues
 
 1. **API key not found in production**
+
    - Ensure the environment variable is set for the correct environment (Production, Preview, Development)
    - Redeploy after adding the environment variable
    - Check that the variable name is exactly `SPOTGPT_API_KEY`
 
 2. **API key works locally but not in Vercel**
+
    - Verify the environment variable is set in Vercel dashboard
    - Check that it's enabled for all environments
    - Ensure there are no extra spaces or characters in the variable value

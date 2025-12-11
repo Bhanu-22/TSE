@@ -186,6 +186,17 @@ export const DEFAULT_CONFIG: ConfigurationData = {
   },
 };
 
+const defaultAppConfig = DEFAULT_CONFIG.appConfig;
+const legacyOrdId = (defaultAppConfig as { ordId?: string } | undefined)?.ordId;
+console.log("⚙️ [ConfigService] Config loaded:", {
+  orgId: defaultAppConfig?.orgId,
+  orgIdentifier: defaultAppConfig?.orgIdentifier,
+  ordId: legacyOrdId,
+  thoughtspotUrl: defaultAppConfig?.thoughtspotUrl,
+  authType: defaultAppConfig?.authType,
+  allKeys: defaultAppConfig ? Object.keys(defaultAppConfig) : [],
+});
+
 // Old storage keys for migration
 const OLD_STORAGE_KEYS = {
   HOME_PAGE_CONFIG: "tse-demo-builder-home-page-config",

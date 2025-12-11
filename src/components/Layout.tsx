@@ -1265,6 +1265,14 @@ export default function Layout({ children }: LayoutProps) {
           initConfig.getAuthToken = () => Promise.resolve("'YXJhdmluZGFuLm1rQDdkeHBlcnRzLmNvbTpKSE5vYVhKdk1TUlRTRUV0TWpVMkpEVXdNREF3TUNSNlJFTlZja05yTlZoVFRFMTJkRVZUUjBneFRTdG5QVDBrVVVwNGFIaFZZU3RMVUVadFYwRndhRkJTUjNkdmQwMXllVlZJZURaek1VUm5TbTAxWkdWU1lYVlVWVDA='");
         }
 
+        console.log("🚀 [Layout] SDK init config:", {
+          thoughtSpotHost: initConfig.thoughtSpotHost,
+          authType: initConfig.authType,
+          orgIdFromConfig: appConfig.orgId,
+          orgIdentifierFromConfig: appConfig.orgIdentifier,
+          fullInitConfig: initConfig,
+        });
+
         console.log(
           "[Layout] Initializing ThoughtSpot with config:",
           initConfig
@@ -1308,6 +1316,7 @@ export default function Layout({ children }: LayoutProps) {
         };
 
         init(initConfig);
+        console.log("✅ [Layout] SDK initialized successfully");
         // ThoughtSpot init completed successfully
       } catch (error) {
         console.error("Failed to initialize ThoughtSpot:", error);
