@@ -484,7 +484,7 @@ export default function SideNav({
       <div
         style={{
           padding: isHovered ? "16px 24px" : "16px 8px",
-          borderTop: "1px solid #e2e8f0",
+          borderTop: "0px solid #e2e8f0",
         }}
       >
         {!hideSettings && onSettingsClick && (

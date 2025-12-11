@@ -95,6 +95,7 @@ export const DEFAULT_CONFIG: ConfigurationData = {
   },
   appConfig: {
     thoughtspotUrl: "https://7dxperts.thoughtspot.cloud/",
+    orgIdentifier: undefined,
     applicationName: "TSE Demo Builder",
     logo: "/logo.png",
     earlyAccessFlags: "enable-modular-home\nenable-custom-styling",
