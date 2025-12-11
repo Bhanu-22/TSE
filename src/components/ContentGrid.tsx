@@ -99,7 +99,8 @@ export default function ContentGrid({
             customContent.contentSelection.tagIdentifiers.length > 0
           ) {
             const tagContent = await fetchContentByTags(
-              customContent.contentSelection.tagIdentifiers
+              customContent.contentSelection.tagIdentifiers,
+              context.appConfig.orgIdentifier
             );
             liveboards = tagContent.liveboards;
             answers = tagContent.answers;
@@ -110,13 +111,16 @@ export default function ContentGrid({
             // For specific content, fetch only the selected content by IDs
             const specificContent = await fetchContentByIds(
               customContent.contentSelection.specificContent.liveboards,
-              customContent.contentSelection.specificContent.answers
+              customContent.contentSelection.specificContent.answers,
+                
             );
             liveboards = specificContent.liveboards;
             answers = specificContent.answers;
           }
         } else if (fetchAllContent) {
-          const allContent = await fetchAllThoughtSpotContentWithStats();
+          const allContent = await fetchAllThoughtSpotContentWithStats(
+            context.appConfig.orgIdentifier            // Pass orgIdentifier from appConfig 
+          );
           liveboards = allContent.liveboards;
           answers = allContent.answers;
         } else if (fetchUserContent) {
@@ -126,14 +130,15 @@ export default function ContentGrid({
             userContentConfig.tagFilter.trim()
           ) {
             const tagFilter = userContentConfig.tagFilter.trim();
-            const tagContent = await fetchContentByTags([tagFilter]);
+            const tagContent = await fetchContentByTags([tagFilter], context.appConfig.orgIdentifier);
             liveboards = tagContent.liveboards;
             answers = tagContent.answers;
           } else {
             const currentUser = await getCurrentUser();
             if (currentUser) {
               const userContent = await fetchUserContentWithStats(
-                currentUser.name
+                currentUser.name,
+                context.appConfig.orgIdentifier
               );
               liveboards = userContent.liveboards;
               answers = userContent.answers;
@@ -143,16 +148,18 @@ export default function ContentGrid({
           // Check if we need to filter by tags
           if (favoritesConfig?.tagFilter && favoritesConfig.tagFilter.trim()) {
             const tagFilter = favoritesConfig.tagFilter.trim();
-            const tagContent = await fetchContentByTags([tagFilter]);
+            const tagContent = await fetchContentByTags([tagFilter], context.appConfig.orgIdentifier);
             liveboards = tagContent.liveboards;
             answers = tagContent.answers;
           } else {
-            const favoritesContent = await fetchFavoritesWithStats();
+            const favoritesContent = await fetchFavoritesWithStats(context.appConfig.orgIdentifier);
             liveboards = favoritesContent.liveboards;
             answers = favoritesContent.answers;
           }
         } else {
-          const allContent = await fetchAllThoughtSpotContentWithStats();
+          const allContent = await fetchAllThoughtSpotContentWithStats(
+            context.appConfig.orgIdentifier            // Pass orgIdentifier from appConfig
+          );
           liveboards = allContent.liveboards;
           answers = allContent.answers;
         }
