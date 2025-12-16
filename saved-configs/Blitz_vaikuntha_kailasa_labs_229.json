@@ -1,0 +1,272 @@
+{
+  "standardMenus": [
+    {
+      "id": "home",
+      "name": "Home",
+      "enabled": true,
+      "icon": "home",
+      "homePageType": "html",
+      "homePageValue": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n    <title>Benifex Analytics Dashboard</title>\n\n    <script src=\"https://cdn.jsdelivr.net/npm/@thoughtspot/visual-embed-sdk/dist/tsembed.js\"></script>\n    <style>\n      @import url(\"https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap\");\n\n      :root {\n        --brand-green: #17c100;\n        --text-dark: #1c1c1c;\n        --text-muted: #6b7280;\n        --card-bg: #ffffff;\n        --card-border: #e5e7eb;\n        --filter-bg: #82f976;\n      }\n      body {\n        font-family: \"Work Sans\", sans-serif;\n        background: var(--brand-green);\n        margin: 0;\n        padding: 0;\n        color: var(--text-dark);\n        padding: 32px;\n      }\n      .flex {\n        display: flex;\n      }\n      .flex-row {\n        flex-direction: row;\n      }\n      .flex-initial {\n        flex: 0 1 auto;\n      }\n      .flex-1 {\n        flex: 1 1 0%;\n      }\n      .header {\n        background: white;\n        margin: 0 auto 16px;\n        padding: 26px 0;\n        border-radius: 16px;\n        text-align: center;\n      }\n      .container {\n        margin: 0 auto;\n        padding: 24px;\n        background: white;\n        border-radius: 16px;\n      }\n      .title {\n        font-size: 19px;\n        line-height: 28px;\n        margin: 0 auto 20px;\n        padding: 20px;\n        text-align: center;\n        color: #555;\n        max-width: 1000px;\n        font-family: \"Work Sans\", sans-serif;\n      }\n      .filter-title {\n        font-weight: 600;\n        font-size: 16px;\n        margin-right: 12px;\n        padding-top: 4px;\n      }\n      .filters .chip {\n        margin-right: 12px;\n        background: var(--filter-bg);\n        padding: 6px 12px;\n        border-radius: 20px;\n        font-weight: 600;\n        cursor: pointer;\n      }\n      .cards-grid {\n        display: grid;\n        grid-template-columns: repeat(4, 1fr);\n        gap: 16px;\n        padding-bottom: 16px;\n        margin-top: 24px;\n      }\n      .card {\n        background: var(--card-bg);\n        border: 1px solid var(--card-border);\n        border-radius: 16px;\n        padding: 14px;\n        box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.06);\n      }\n      .footer {\n        position: fixed;\n        bottom: 0;\n        left: 0;\n        right: 0;\n        padding: 16px;\n        background: white;\n        text-align: center;\n        font-size: 14px;\n      }\n      .btn {\n        background: var(--brand-green);\n        color: #fff;\n        font-weight: 700;\n        font-size: 16px;\n        padding: 12px 24px;\n        text-decoration: none;\n        border-radius: 999px;\n        cursor: pointer;\n        border: none;\n        margin: 0 4px;\n      }\n      .btn.inverse {\n        background: transparent;\n        border: 1px solid var(--brand-green);\n        color: var(--brand-green);\n      }\n    </style>\n  </head>\n\n  <body>\n    <div class=\"header\">\n      <img\n        src=\"https://benifex.com/wp-content/themes/hello-elementor-child/img/logo-benifex.jpg\"\n        alt=\"Benifex Logo\"\n        style=\"max-width: 200px; max-height: 72px\"\n      />\n    </div>\n    <div class=\"container\">\n      <div class=\"title\">\n        Lorem ipsum dolor sit amet consectetur. Pulvinar pharellus nunc neque\n        dui amet at nec. Sed pellentesque ut quis nec odio feugiat. Venenatis\n        nullam sed dui nisl magna.\n      </div>\n      <div class=\"flex flex-row\">\n        <div class=\"flex-initial filter-title\">Filters:</div>\n        <div class=\"flex flex-row flex-1 filters\">\n          <div class=\"chip\" data-col=\"Location\">Location (Select)</div>\n          <div class=\"chip\" data-col=\"Year\">Year (Select)</div>\n          <div class=\"chip\" data-col=\"Organisation\">Organisation (Select)</div>\n          <div class=\"chip\" data-col=\"Power\">Power (Select)</div>\n        </div>\n      </div>\n\n      <div class=\"cards-grid\">\n           \n      </div>\n    </div>\n    <div class=\"footer\">\n      <button class=\"btn\">View Liveboard</button>\n      <button class=\"btn inverse\">Benifex AI</button>\n    </div>\n\n    <script>\n      document.addEventListener(\"DOMContentLoaded\", () => {\n        // Safety check\n        if (!window.tsembed) {\n          console.warn(\n            \"ThoughtSpot embed SDK not available (tsembed). Runtime filters will not work.\"\n          );\n          return;\n        }\n\n        const { init, LiveboardEmbed } = window.tsembed;\n\n        // helper: parse query params from URL\n        function parseQuery(url) {\n          try {\n            const u = new URL(url);\n            const params = {};\n            for (const [k, v] of u.searchParams.entries()) params[k] = v;\n            return { host: u.protocol + \"//\" + u.host, params };\n          } catch (e) {\n            return null;\n          }\n        }\n\n        const iframeNodes = Array.from(\n          document.querySelectorAll(\".cards-grid iframe\")\n        );\n        const liveboardInstances = [];\n        const initializedHosts = new Set();\n\n        iframeNodes.forEach((iframe, idx) => {\n          const src = iframe.getAttribute(\"src\") || \"\";\n          const parsed = parseQuery(src);\n          if (!parsed) return;\n\n          // Check if it's a ThoughtSpot iframe\n          if (!parsed.host.includes(\"thoughtspot\")) return;\n\n          // Capture IDs\n          const pinboardId = parsed.params.pinboardId || parsed.params.pinboard;\n          const vizId = parsed.params.vizId || parsed.params.viz; // <--- CRITICAL: CAPTURE VIZ ID\n\n          if (!pinboardId && !vizId) return;\n\n          const host = parsed.host;\n          if (!initializedHosts.has(host)) {\n            try {\n              init({ thoughtSpotHost: host });\n              initializedHosts.add(host);\n            } catch (e) {\n              console.warn(\"Failed to init tsembed for\", host, e);\n            }\n          }\n\n          // Create replacement container\n          const containerId =\n            \"ts-embed-\" +\n            idx +\n            \"-\" +\n            Math.random().toString(36).substring(2, 7);\n          const wrapper = document.createElement(\"div\");\n          wrapper.style.width =\n            iframe.style.width || iframe.getAttribute(\"width\") || \"100%\";\n          wrapper.style.height =\n            iframe.style.height || iframe.getAttribute(\"height\") || \"280px\";\n          wrapper.style.borderRadius = iframe.style.borderRadius || \"\";\n          wrapper.style.overflow = \"hidden\";\n          wrapper.id = containerId;\n\n          iframe.parentNode.replaceChild(wrapper, iframe);\n\n          // Configure Embed Options\n          const embedOptions = {\n            liveboardId: pinboardId || undefined,\n            vizId: vizId || undefined, // <--- CRITICAL: PASS VIZ ID TO SDK\n            orgId: parsed.params.orgId || undefined,\n            hideActions: true,\n            runtimeFilters: [],\n          };\n\n          if (!embedOptions.liveboardId) {\n            // Fallback if ID missing\n            return;\n          }\n\n          try {\n            const liveboard = new LiveboardEmbed(\n              `#${containerId}`,\n              embedOptions\n            );\n            liveboard\n              .render()\n              .then(() => {\n                liveboardInstances.push(liveboard);\n              })\n              .catch((err) => {\n                console.warn(\"Liveboard render error\", err);\n              });\n          } catch (e) {\n            console.warn(\"Error creating LiveboardEmbed\", e);\n          }\n        });\n\n        // --- Runtime Filter Logic ---\n        const activeFilters = {};\n\n        function buildRuntimeFilters() {\n          return Object.keys(activeFilters).map((col) => ({\n            columnName: col,\n            operator: \"EQ\",\n            values: activeFilters[col],\n          }));\n        }\n\n        function applyRuntimeFiltersToAll() {\n          const runtimeFilters = buildRuntimeFilters();\n          liveboardInstances.forEach((lb) => {\n            try {\n              lb.updateRuntimeFilters(runtimeFilters);\n            } catch (e) {\n              console.warn(\"Failed to update runtime filters\", e);\n            }\n          });\n        }\n\n        const chips = Array.from(document.querySelectorAll(\".filters .chip\"));\n        chips.forEach((chip) => {\n          const column =\n            chip.dataset.col || chip.textContent.split(\"(\")[0].trim();\n          chip.addEventListener(\"click\", () => {\n            const current = (activeFilters[column] || []).join(\",\");\n            const userInput = prompt(\n              `Enter value(s) for \"${column}\" (comma-separated). Leave empty to clear.`,\n              current\n            );\n            if (userInput === null) return;\n\n            const values =\n              userInput.trim() === \"\"\n                ? []\n                : userInput\n                    .split(\",\")\n                    .map((v) => v.trim())\n                    .filter(Boolean);\n            if (values.length === 0) {\n              delete activeFilters[column];\n            } else {\n              activeFilters[column] = values;\n            }\n            applyRuntimeFiltersToAll();\n          });\n        });\n      });\n    </script>\n  </body>\n</html>\n"
+    },
+    {
+      "id": "favorites",
+      "name": "Favorites",
+      "enabled": false,
+      "icon": "favorites",
+      "homePageType": "html",
+      "homePageValue": "<h1>Favorites</h1>"
+    },
+    {
+      "id": "my-reports",
+      "name": "My Reports",
+      "enabled": false,
+      "icon": "my-reports",
+      "homePageType": "html",
+      "homePageValue": "<h1>My Reports</h1>"
+    },
+    {
+      "id": "spotter",
+      "name": "Spotter",
+      "enabled": true,
+      "icon": "spotter-custom.svg",
+      "homePageType": "html",
+      "homePageValue": "<h1>Spotter</h1>",
+      "spotterModelId": "8fd0b305-9a33-4b1d-aaaf-e70a6a841139",
+      "spotterSearchQuery": "Explain this dataset to me"
+    },
+    {
+      "id": "search",
+      "name": "Search",
+      "enabled": false,
+      "icon": "search",
+      "homePageType": "html",
+      "homePageValue": "<h1>Search</h1>"
+    },
+    {
+      "id": "full-app",
+      "name": "Full App",
+      "enabled": false,
+      "icon": "full-app",
+      "homePageType": "html",
+      "homePageValue": "<h1>Full App</h1>"
+    },
+    {
+      "id": "all-content",
+      "name": "All Content",
+      "enabled": false,
+      "icon": "📚",
+      "homePageType": "html",
+      "homePageValue": "<h1>All Content</h1>",
+      "excludeSystemContent": true
+    }
+  ],
+  "customMenus": [
+    {
+      "id": "custom-1765882791528",
+      "name": "My Reports",
+      "description": "",
+      "icon": "my-reports",
+      "enabled": true,
+      "contentSelection": {
+        "type": "specific",
+        "specificContent": {
+          "liveboards": [
+            "714113bc-d568-41e7-99df-16cabb4a80bf"
+          ],
+          "answers": []
+        }
+      },
+      "openDirectly": true
+    }
+  ],
+  "menuOrder": [
+    "home",
+    "spotter",
+    "custom-1765882791528"
+  ],
+  "homePageConfig": {
+    "type": "html",
+    "value": "<h1>Welcome to TSE Demo Builder</h1>"
+  },
+  "appConfig": {
+    "thoughtspotUrl": "https://7dxperts.thoughtspot.cloud",
+    "applicationName": "vaikuntha_kailasa_labs",
+    "logo": "https://media.brand.dev/a50b45a3-c5de-4a3a-a351-e7e186d9b3e7.png",
+    "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
+    "favicon": "https://media.brand.dev/a50b45a3-c5de-4a3a-a351-e7e186d9b3e7.png",
+    "showFooter": false,
+    "disableSettings": true,
+    "chatbot": {
+      "enabled": true,
+      "welcomeMessage": "Hello! I'm your AI assistant. What would you like to know about your data?",
+      "position": "bottom-right",
+      "primaryColor": "#3b82f6",
+      "hoverColor": "#2563eb"
+    },
+    "authType": "None",
+    "faviconSyncEnabled": true,
+    "orgIdentifier": "Primary",
+    "kpiVisualizations": [
+      "Viz_1",
+      "Viz_2",
+      "Viz_3",
+      "Viz_4"
+    ]
+  },
+  "fullAppConfig": {
+    "showPrimaryNavbar": true,
+    "hideHomepageLeftNav": false
+  },
+  "stylingConfig": {
+    "application": {
+      "topBar": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333",
+        "logoUrl": "https://media.brand.dev/a50b45a3-c5de-4a3a-a351-e7e186d9b3e7.png"
+      },
+      "sidebar": {
+        "backgroundColor": "#adacac",
+        "foregroundColor": "#FFFFFF"
+      },
+      "footer": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "dialogs": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "buttons": {
+        "primary": {
+          "backgroundColor": "#adacac",
+          "foregroundColor": "#FFFFFF",
+          "borderColor": "#adacac",
+          "hoverBackgroundColor": "#2c5aa0",
+          "hoverForegroundColor": "#ffffff"
+        },
+        "secondary": {
+          "backgroundColor": "#413d3f",
+          "foregroundColor": "#0F172A",
+          "borderColor": "#413d3f",
+          "hoverBackgroundColor": "#f9fafb",
+          "hoverForegroundColor": "#374151"
+        }
+      },
+      "backgrounds": {
+        "mainBackground": "#ffffff",
+        "contentBackground": "#ffffff",
+        "cardBackground": "#ffffff",
+        "borderColor": "#ffffff"
+      },
+      "typography": {
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#6b7280",
+        "linkColor": "#413d3f",
+        "linkHoverColor": "#dbdada"
+      },
+      "selectedTheme": "default"
+    },
+    "embeddedContent": {
+      "strings": {},
+      "stringIDs": {},
+      "cssUrl": "",
+      "customCSS": {
+        "variables": {
+          "--ts-var-button--primary-background": "rgba(173, 172, 172, 1.0)",
+          "--ts-var-button--primary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--primary--hover-background": "rgba(173, 172, 172, 0.8)",
+          "--ts-var-button--primary--active-background": "rgba(173, 172, 172, 0.6)",
+          "--ts-var-button--secondary-background": "rgba(65, 61, 63, 1.0)",
+          "--ts-var-button--secondary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--secondary--hover-background": "rgba(65, 61, 63, 0.8)",
+          "--ts-var-button--secondary--active-background": "rgba(65, 61, 63, 0.6)",
+          "--ts-var-button--tertiary-background": "rgba(219, 218, 218, 1.0)",
+          "--ts-var-button--tertiary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--tertiary--hover-background": "rgba(219, 218, 218, 0.8)",
+          "--ts-var-button--tertiary--active-background": "rgba(219, 218, 218, 0.6)",
+          "--ts-var-menu--hover-background": "rgba(65, 61, 63, 0.8)",
+          "--ts-var-root-background": "#FFFFFF",
+          "--ts-var-menu-background": "#FFFFFF",
+          "--ts-var-liveboard-layout-background": "rgba(65, 61, 63, 1.0)"
+        },
+        "rules_UNSTABLE": {}
+      }
+    },
+    "embedFlags": {
+      "liveboardEmbed": {
+        "showLiveboardTitle": true,
+        "showLiveboardDescription": true,
+        "isLiveboardHeaderSticky": false,
+        "hideLiveboardHeader": false,
+        "disabledActions": [
+          "downloadAsPng"
+        ],
+        "disabledActionReason": "Disabled",
+        "visibleActions": [],
+        "hiddenActions": [
+          "downloadAsCSV",
+          "makeACopy",
+          "tml"
+        ]
+      }
+    },
+    "embedDisplay": {
+      "hideTitle": false,
+      "hideDescription": false
+    }
+  },
+  "userConfig": {
+    "users": [
+      {
+        "id": "power-user",
+        "name": "Power User",
+        "description": "Full access - can access all features including Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": true,
+            "full-app": true,
+            "all-content": true
+          },
+          "customMenus": [
+            "custom-1765882791528"
+          ],
+          "hiddenActions": {
+            "enabled": true,
+            "actions": []
+          }
+        }
+      },
+      {
+        "id": "basic-user",
+        "name": "Basic User",
+        "description": "Limited access - cannot access Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": false,
+            "full-app": false,
+            "all-content": true
+          },
+          "customMenus": [],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      }
+    ],
+    "currentUserId": "power-user"
+  },
+  "version": "1.0.0",
+  "timestamp": "2025-12-16T10:59:51.530132",
+  "description": "TSE Demo Builder Configuration Export"
+}
