@@ -31,7 +31,7 @@
       "icon": "spotter-custom.svg",
       "homePageType": "html",
       "homePageValue": "<h1>Spotter</h1>",
-      "spotterModelId": "afbb9f75-fe4b-470e-b79a-cb3d791e0263",
+      "spotterModelId": "289be119-6a0c-4c7b-8193-27e7393ad009",
       "spotterSearchQuery": "Explain this dataset to me"
     },
     {
@@ -62,7 +62,7 @@
   ],
   "customMenus": [
     {
-      "id": "custom-1765892230935",
+      "id": "custom-1765894226212",
       "name": "My Reports",
       "description": "",
       "icon": "my-reports",
@@ -71,7 +71,7 @@
         "type": "specific",
         "specificContent": {
           "liveboards": [
-            "df8b16c5-4071-47f7-b7c9-7ec2b5fc78f6"
+            "3838bfb4-7bd5-43d3-a110-ad5c86a6d7c1"
           ],
           "answers": []
         }
@@ -82,7 +82,7 @@
   "menuOrder": [
     "home",
     "spotter",
-    "custom-1765892230935"
+    "custom-1765894226212"
   ],
   "homePageConfig": {
     "type": "html",
@@ -227,7 +227,7 @@
             "all-content": true
           },
           "customMenus": [
-            "custom-1765892230935"
+            "custom-1765894226212"
           ],
           "hiddenActions": {
             "enabled": true,
@@ -261,6 +261,6 @@
     "currentUserId": "power-user"
   },
   "version": "1.0.0",
-  "timestamp": "2025-12-16T13:37:10.938504",
+  "timestamp": "2025-12-16T14:10:26.213786",
   "description": "TSE Demo Builder Configuration Export"
 }
