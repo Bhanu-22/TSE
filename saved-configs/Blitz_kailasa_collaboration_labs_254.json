@@ -1,0 +1,266 @@
+{
+  "standardMenus": [
+    {
+      "id": "home",
+      "name": "Home",
+      "enabled": true,
+      "icon": "home",
+      "homePageType": "html",
+      "homePageValue": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n    <title>Benifex Analytics Dashboard</title>\n\n    <!-- ThoughtSpot Visual Embed SDK -->\n    <script src=\"https://cdn.jsdelivr.net/npm/@thoughtspot/visual-embed-sdk/dist/tsembed.js\"></script>\n\n    <style>\n      @import url(\"https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap\");\n\n      :root {\n        --brand-green: #17c100;\n        --text-dark: #1c1c1c;\n        --text-muted: #6b7280;\n        --card-bg: #ffffff;\n        --card-border: #e5e7eb;\n        --filter-bg: #82f976;\n      }\n      body {\n        font-family: \"Work Sans\", sans-serif;\n        background: var(--brand-green);\n        margin: 0;\n        padding: 0;\n        color: var(--text-dark);\n        padding: 32px;\n      }\n      .flex {\n        display: flex;\n      }\n      .flex-row {\n        flex-direction: row;\n      }\n      .flex-initial {\n        flex: 0 1 auto;\n      }\n      .flex-1 {\n        flex: 1 1 0%;\n      }\n      .header {\n        background: white;\n        margin: 0 auto 16px;\n        padding: 26px 0;\n        border-radius: 16px;\n        text-align: center;\n      }\n      .container {\n        margin: 0 auto;\n        padding: 24px;\n        background: white;\n        border-radius: 16px;\n      }\n      .title {\n        font-size: 19px;\n        line-height: 28px;\n        margin: 0 auto 20px;\n        padding: 20px;\n        text-align: center;\n        color: #555;\n        max-width: 1000px;\n        font-family: \"Work Sans\", sans-serif;\n      }\n      .filter-title {\n        font-weight: 600;\n        font-size: 16px;\n        margin-right: 12px;\n        padding-top: 4px;\n      }\n      .filters .chip {\n        margin-right: 12px;\n        background: var(--filter-bg);\n        padding: 6px 12px;\n        border-radius: 20px;\n        font-weight: 600;\n        cursor: pointer;\n      }\n      .filters .chip-count {\n        background: black;\n        color: #fff;\n        font-size: 14px;\n        width: 31px;\n        height: 31px;\n        line-height: 31px;\n        text-align: center;\n        border-radius: 20px;\n      }\n      .cards-grid {\n        display: grid;\n        grid-template-columns: repeat(4, 1fr);\n        gap: 16px;\n        padding-bottom: 16px;\n        margin-top: 24px;\n      }\n      .card {\n        background: var(--card-bg);\n        border: 1px solid var(--card-border);\n        border-radius: 16px;\n        padding: 14px;\n        box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.06);\n      }\n      .footer {\n        position: fixed;\n        bottom: 0;\n        left: 0;\n        right: 0;\n        padding: 16px;\n        background: white;\n        text-align: center;\n        font-size: 14px;\n      }\n      .btn {\n        background: var(--brand-green);\n        color: #fff;\n        font-weight: 700;\n        font-size: 16px;\n        padding: 12px 24px;\n        text-decoration: none;\n        border-radius: 999px;\n        cursor: pointer;\n        border: none;\n        margin: 0 4px;\n      }\n      .btn.inverse {\n        background: transparent;\n        border: 1px solid var(--brand-green);\n        color: var(--brand-green);\n      }\n    </style>\n  </head>\n\n  <body>\n    <div class=\"header\">\n      <img\n        src=\"https://media.brand.dev/691f7f71-bb91-48f8-bd30-840777d00fd6.svg\"\n        alt=\"Benifex Logo\"\n        style=\"max-width: 200px; max-height: 72px\"\n      />\n    </div>\n    <div class=\"container\">\n      <div class=\"title\"></div>\n      <div class=\"flex flex-row\">\n        <div class=\"flex-initial filter-title\">Filters:</div>\n        <div class=\"flex flex-row flex-1 filters\">\n          <div class=\"chip\" data-col=\"Country\">Country (Select)</div>\n          <div class=\"chip\" data-col=\"Customer Segment\">\n            Customer Segment (Select)\n          </div>\n          <div class=\"chip\" data-col=\"Product Suite\">Product (Select)</div>\n          <div class=\"chip\" data-col=\"Calendar Date\">Date (Select)</div>\n        </div>\n      </div>\n      <div class=\"cards-grid\">\n        \n        <div class=\"card\">\n          <iframe\n            src=\"https://https://7dxperts.thoughtspot.cloud/viz/?orgId=1106312785&pinboardId=5f618e26-2988-481f-b6f8-7c8b5c3bc97a&vizId=066b705b-c640-425a-925b-10f6d791dd48&isEmbed=true&hideActions=true\"\n            width=\"100%\"\n            height=\"280\"\n            style=\"border: none; border-radius: 12px; background: #fff\"\n          >\n          </iframe>\n        </div>\n         \n        <div class=\"card\">\n          <iframe\n            src=\"https://https://7dxperts.thoughtspot.cloud/viz/?orgId=1106312785&pinboardId=5f618e26-2988-481f-b6f8-7c8b5c3bc97a&vizId=e203377e-f6bd-4db1-8923-c325a17415b2&isEmbed=true&hideActions=true\"\n            width=\"100%\"\n            height=\"280\"\n            style=\"border: none; border-radius: 12px; background: #fff\"\n          >\n          </iframe>\n        </div>\n         \n        <div class=\"card\">\n          <iframe\n            src=\"https://https://7dxperts.thoughtspot.cloud/viz/?orgId=1106312785&pinboardId=5f618e26-2988-481f-b6f8-7c8b5c3bc97a&vizId=6dcc9e11-3a1a-40b1-a1a6-3b75b336d449&isEmbed=true&hideActions=true\"\n            width=\"100%\"\n            height=\"280\"\n            style=\"border: none; border-radius: 12px; background: #fff\"\n          >\n          </iframe>\n        </div>\n         \n        <div class=\"card\">\n          <iframe\n            src=\"https://https://7dxperts.thoughtspot.cloud/viz/?orgId=1106312785&pinboardId=5f618e26-2988-481f-b6f8-7c8b5c3bc97a&vizId=e50d0b84-bf3e-4db3-b154-e5c56cbd4f12&isEmbed=true&hideActions=true\"\n            width=\"100%\"\n            height=\"280\"\n            style=\"border: none; border-radius: 12px; background: #fff\"\n          >\n          </iframe>\n        </div>\n        \n      </div>\n    </div>\n    <div class=\"footer\">\n      <a class=\"btn\" href=\"/custom/custom-1765960882447\">View Liveboard</a>\n      <a class=\"btn inverse\" href=\"/spotter\">Benifex AI</a>\n    </div>\n\n    <!-- Runtime Filter Implementation -->\n    <script>\n      document.addEventListener(\"DOMContentLoaded\", () => {\n        if (!window.tsembed) {\n          console.warn(\"ThoughtSpot Embed SDK not available\");\n          return;\n        }\n\n        const { init, LiveboardEmbed } = window.tsembed;\n        const liveboardInstances = [];\n\n        function getQueryParam(url, param) {\n          try {\n            const u = new URL(url);\n            return u.searchParams.get(param);\n          } catch (e) {\n            return null;\n          }\n        }\n\n        const iframes = document.querySelectorAll(\".cards-grid iframe\");\n        let initialized = false;\n\n        iframes.forEach((iframe, idx) => {\n          const src = iframe.getAttribute(\"src\") || \"\";\n          if (!src.includes(\"thoughtspot\")) return;\n\n          const host = new URL(src).origin;\n          const vizId = getQueryParam(src, \"vizId\");\n          const pinboardId = getQueryParam(src, \"pinboardId\");\n\n          if (!initialized) {\n            init({ thoughtSpotHost: host });\n            initialized = true;\n          }\n\n          const containerId = `ts-embed-${idx}-${Math.random()\n            .toString(36)\n            .substr(2, 5)}`;\n          const wrapper = document.createElement(\"div\");\n          wrapper.id = containerId;\n          wrapper.style.width = \"100%\";\n          wrapper.style.height = \"280px\";\n          wrapper.style.borderRadius = \"16px\";\n          wrapper.style.overflow = \"hidden\";\n\n          iframe.parentNode.replaceChild(wrapper, iframe);\n\n          const embed = new LiveboardEmbed(`#${containerId}`, {\n            liveboardId: pinboardId,\n            vizId: vizId,\n            hideActions: true,\n            fullHeight: false,\n            runtimeFilters: [],\n          });\n\n          embed.render().then(() => liveboardInstances.push(embed));\n        });\n\n        const activeFilters = {};\n\n        document.querySelectorAll(\".filters .chip\").forEach((chip) => {\n          chip.addEventListener(\"click\", () => {\n            const col = chip.dataset.col || chip.innerText.split(\"(\")[0].trim();\n            const val = prompt(`Filter ${col} by:`);\n\n            if (val) {\n              activeFilters[col] = [val];\n            } else {\n              delete activeFilters[col];\n            }\n\n            const runtimeFilters = Object.keys(activeFilters).map((k) => ({\n              columnName: k,\n              operator: \"EQ\",\n              values: activeFilters[k],\n            }));\n\n            liveboardInstances.forEach((lb) => {\n              lb.trigger(\"UpdateRuntimeFilters\", runtimeFilters);\n            });\n          });\n        });\n      });\n    </script>\n  </body>\n</html>\n"
+    },
+    {
+      "id": "favorites",
+      "name": "Favorites",
+      "enabled": false,
+      "icon": "favorites",
+      "homePageType": "html",
+      "homePageValue": "<h1>Favorites</h1>"
+    },
+    {
+      "id": "my-reports",
+      "name": "My Reports",
+      "enabled": false,
+      "icon": "my-reports",
+      "homePageType": "html",
+      "homePageValue": "<h1>My Reports</h1>"
+    },
+    {
+      "id": "spotter",
+      "name": "Spotter",
+      "enabled": true,
+      "icon": "spotter-custom.svg",
+      "homePageType": "html",
+      "homePageValue": "<h1>Spotter</h1>",
+      "spotterModelId": "8a7cb6fe-4574-47ef-9737-f5145d62ddc8",
+      "spotterSearchQuery": "Explain this dataset to me"
+    },
+    {
+      "id": "search",
+      "name": "Search",
+      "enabled": false,
+      "icon": "search",
+      "homePageType": "html",
+      "homePageValue": "<h1>Search</h1>"
+    },
+    {
+      "id": "full-app",
+      "name": "Full App",
+      "enabled": false,
+      "icon": "full-app",
+      "homePageType": "html",
+      "homePageValue": "<h1>Full App</h1>"
+    },
+    {
+      "id": "all-content",
+      "name": "All Content",
+      "enabled": false,
+      "icon": "📚",
+      "homePageType": "html",
+      "homePageValue": "<h1>All Content</h1>",
+      "excludeSystemContent": true
+    }
+  ],
+  "customMenus": [
+    {
+      "id": "custom-1765960882447",
+      "name": "My Reports",
+      "description": "",
+      "icon": "my-reports",
+      "enabled": true,
+      "contentSelection": {
+        "type": "specific",
+        "specificContent": {
+          "liveboards": [
+            "5f618e26-2988-481f-b6f8-7c8b5c3bc97a"
+          ],
+          "answers": []
+        }
+      },
+      "openDirectly": true
+    }
+  ],
+  "menuOrder": [
+    "home",
+    "spotter",
+    "custom-1765960882447"
+  ],
+  "homePageConfig": {
+    "type": "html",
+    "value": "<h1>Welcome to TSE Demo Builder</h1>"
+  },
+  "appConfig": {
+    "thoughtspotUrl": "https://7dxperts.thoughtspot.cloud",
+    "orgIdentifier": "1106312785",
+    "applicationName": "kailasa_collaboration_labs",
+    "logo": "https://media.brand.dev/691f7f71-bb91-48f8-bd30-840777d00fd6.svg",
+    "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
+    "favicon": "https://media.brand.dev/691f7f71-bb91-48f8-bd30-840777d00fd6.svg",
+    "showFooter": false,
+    "disableSettings": true,
+    "chatbot": {
+      "enabled": true,
+      "welcomeMessage": "Hello! I'm your AI assistant. What would you like to know about your data?",
+      "position": "bottom-right",
+      "primaryColor": "#3b82f6",
+      "hoverColor": "#2563eb"
+    },
+    "authType": "None",
+    "faviconSyncEnabled": true
+  },
+  "fullAppConfig": {
+    "showPrimaryNavbar": true,
+    "hideHomepageLeftNav": false
+  },
+  "stylingConfig": {
+    "application": {
+      "topBar": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333",
+        "logoUrl": "https://media.brand.dev/691f7f71-bb91-48f8-bd30-840777d00fd6.svg"
+      },
+      "sidebar": {
+        "backgroundColor": "#1c6cdb",
+        "foregroundColor": "#FFFFFF"
+      },
+      "footer": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "dialogs": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "buttons": {
+        "primary": {
+          "backgroundColor": "#1c6cdb",
+          "foregroundColor": "#FFFFFF",
+          "borderColor": "#1c6cdb",
+          "hoverBackgroundColor": "#2c5aa0",
+          "hoverForegroundColor": "#ffffff"
+        },
+        "secondary": {
+          "backgroundColor": "#8cbcdc",
+          "foregroundColor": "#0F172A",
+          "borderColor": "#8cbcdc",
+          "hoverBackgroundColor": "#f9fafb",
+          "hoverForegroundColor": "#374151"
+        }
+      },
+      "backgrounds": {
+        "mainBackground": "#ffffff",
+        "contentBackground": "#ffffff",
+        "cardBackground": "#ffffff",
+        "borderColor": "#ffffff"
+      },
+      "typography": {
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#6b7280",
+        "linkColor": "#8cbcdc",
+        "linkHoverColor": "#0c1414"
+      },
+      "selectedTheme": "default"
+    },
+    "embeddedContent": {
+      "strings": {},
+      "stringIDs": {},
+      "cssUrl": "",
+      "customCSS": {
+        "variables": {
+          "--ts-var-button--primary-background": "rgba(28, 108, 219, 1.0)",
+          "--ts-var-button--primary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--primary--hover-background": "rgba(28, 108, 219, 0.8)",
+          "--ts-var-button--primary--active-background": "rgba(28, 108, 219, 0.6)",
+          "--ts-var-button--secondary-background": "rgba(140, 188, 220, 1.0)",
+          "--ts-var-button--secondary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--secondary--hover-background": "rgba(140, 188, 220, 0.8)",
+          "--ts-var-button--secondary--active-background": "rgba(140, 188, 220, 0.6)",
+          "--ts-var-button--tertiary-background": "rgba(12, 20, 20, 1.0)",
+          "--ts-var-button--tertiary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--tertiary--hover-background": "rgba(12, 20, 20, 0.8)",
+          "--ts-var-button--tertiary--active-background": "rgba(12, 20, 20, 0.6)",
+          "--ts-var-menu--hover-background": "rgba(140, 188, 220, 0.8)",
+          "--ts-var-root-background": "#FFFFFF",
+          "--ts-var-menu-background": "#FFFFFF",
+          "--ts-var-liveboard-layout-background": "rgba(140, 188, 220, 1.0)"
+        },
+        "rules_UNSTABLE": {}
+      }
+    },
+    "embedFlags": {
+      "liveboardEmbed": {
+        "showLiveboardTitle": true,
+        "showLiveboardDescription": true,
+        "isLiveboardHeaderSticky": false,
+        "hideLiveboardHeader": false,
+        "disabledActions": [
+          "downloadAsPng"
+        ],
+        "disabledActionReason": "Disabled",
+        "visibleActions": [],
+        "hiddenActions": [
+          "downloadAsCSV",
+          "makeACopy",
+          "tml"
+        ]
+      }
+    },
+    "embedDisplay": {
+      "hideTitle": false,
+      "hideDescription": false
+    }
+  },
+  "userConfig": {
+    "users": [
+      {
+        "id": "power-user",
+        "name": "Power User",
+        "description": "Full access - can access all features including Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": true,
+            "full-app": true,
+            "all-content": true
+          },
+          "customMenus": [
+            "custom-1765960882447"
+          ],
+          "hiddenActions": {
+            "enabled": true,
+            "actions": []
+          }
+        }
+      },
+      {
+        "id": "basic-user",
+        "name": "Basic User",
+        "description": "Limited access - cannot access Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": false,
+            "full-app": false,
+            "all-content": true
+          },
+          "customMenus": [],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      }
+    ],
+    "currentUserId": "power-user"
+  },
+  "version": "1.0.0",
+  "timestamp": "2025-12-17T08:41:22.449257",
+  "description": "TSE Demo Builder Configuration Export"
+}
