@@ -202,7 +202,7 @@ export default function TopBar({
             />
           ) : (
             // For regular URLs, use Next.js Image component
-            <Image
+            <img
               src={processedLogoUrl}
               alt="Logo"
               height={32}

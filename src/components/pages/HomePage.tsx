@@ -189,6 +189,7 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
           return (
             <div
               dangerouslySetInnerHTML={{ __html: mappedValue }}
+              className="Box-container"
               style={{
                 backgroundColor: "white",
                 padding: "20px",
