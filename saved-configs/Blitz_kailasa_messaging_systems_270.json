@@ -1,0 +1,266 @@
+{
+  "standardMenus": [
+    {
+      "id": "home",
+      "name": "Home",
+      "enabled": true,
+      "icon": "home",
+      "homePageType": "html",
+      "homePageValue": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n    <title>kailasa_messaging_systems Analytics Dashboard</title>\n\n    <style>\n      @import url(\"https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap\");\n\n      :root {\n        --brand-color: #0c9cdb;\n        --brand-color-10-percent-opacity: #0c9cdb19;\n        --text-dark: #1c1c1c;\n        --text-muted: #6b7280;\n        --card-bg: #ffffff;\n        --card-border: #e5e7eb;\n      }\n\n      body {\n        font-family: \"Work Sans\", sans-serif;\n        background: var(--brand-color);\n        margin: 0;\n        padding: 0;\n        color: var(--text-dark);\n      }\n\n      .Box-container{\n        border: none !important;\n        padding: 0 !important;\n      }\n\n      .header {\n        background: white;\n        margin: 0 auto 16px;\n        padding: 26px 0;\n        border-radius: 16px;\n        text-align: center;\n      }\n\n      .company-name {\n        font-size: 24px;\n        font-weight: 700;\n        color: #555;\n      }\n\n      .container {\n        margin: 0 auto;\n        padding: 24px;\n        background: white;\n        border-radius: 16px;\n      }\n\n      .cards-grid {\n        display: grid;\n        grid-template-columns: repeat(4, 1fr);\n        gap: 16px;\n        padding-bottom: 16px;\n      }\n\n      @media (max-width: 1200px) {\n        .cards-grid {\n          grid-template-columns: repeat(2, 1fr);\n        }\n      }\n\n      @media (max-width: 768px) {\n        body {\n          padding: 16px;\n        }\n\n        .cards-grid {\n          grid-template-columns: 1fr;\n        }\n      }\n\n      .card {\n        background: var(--card-bg);\n        border: 1px solid var(--card-border);\n        border-radius: 16px;\n        padding: 14px;\n        box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.06);\n      }\n\n      .footer {\n        position: fixed;\n        bottom: 0;\n        left: 0;\n        right: 0;\n        padding: 16px;\n        background: white;\n        text-align: center;\n        font-size: 14px;\n        box-shadow: 0px -2px 8px rgba(0, 0, 0, 0.08);\n        z-index: 1000;\n      }\n\n      .btn {\n        background: var(--brand-color);\n        color: #fff;\n        font-weight: 700;\n        font-size: 16px;\n        padding: 12px 24px;\n        text-decoration: none;\n        border-radius: 999px;\n        cursor: pointer;\n        border: none;\n        margin: 0 4px;\n        display: inline-block;\n        transition: all 0.2s;\n      }\n\n      .btn:hover {\n        transform: translateY(-2px);\n        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);\n      }\n\n      .parent{\n        background: var(--brand-color-10-percent-opacity)\n      }\n\n      .btn.inverse {\n        background: transparent;\n        border: 2px solid var(--brand-color);\n        color: var(--brand-color);\n      }\n\n      .btn.inverse:hover {\n        background: var(--brand-color);\n        color: white;\n      }\n    </style>\n  </head>\n\n  <body>\n    <div class=\"parent\">\n      <div>\n        <div class=\"header\">\n          \n          <img\n            src=\"https://media.brand.dev/c9adfc51-4b98-4c86-8586-875fc4a0a842.jpg\"\n            alt=\"kailasa_messaging_systems Logo\"\n            style=\"max-width: 200px; max-height: 72px; object-fit: contain\"\n          />\n          \n        </div>\n\n        <div class=\"container\">\n          <div class=\"cards-grid\">\n            \n            <div class=\"card\">\n              <iframe\n                src=\"https://7dxperts.thoughtspot.cloud/?embedApp=true&orgId=822155245&hideActions=true#/embed/viz/e7a0d9a1-a59e-49dd-8a17-349ca1c77604/0dcfd40d-9370-4abe-8d3f-e42bbce5392e\"\n                width=\"100%\"\n                height=\"400px\"\n                style=\"border: none; border-radius: 12px; background: #fff\"\n              ></iframe>\n            </div>\n             \n            <div class=\"card\">\n              <iframe\n                src=\"https://7dxperts.thoughtspot.cloud/?embedApp=true&orgId=822155245&hideActions=true#/embed/viz/e7a0d9a1-a59e-49dd-8a17-349ca1c77604/04f07a6c-dcd6-4642-b84a-5258bc539433\"\n                width=\"100%\"\n                height=\"400px\"\n                style=\"border: none; border-radius: 12px; background: #fff\"\n              ></iframe>\n            </div>\n             \n            <div class=\"card\">\n              <iframe\n                src=\"https://7dxperts.thoughtspot.cloud/?embedApp=true&orgId=822155245&hideActions=true#/embed/viz/e7a0d9a1-a59e-49dd-8a17-349ca1c77604/68a682fa-43ef-4ec3-827a-a06764892cb3\"\n                width=\"100%\"\n                height=\"400px\"\n                style=\"border: none; border-radius: 12px; background: #fff\"\n              ></iframe>\n            </div>\n             \n            <div class=\"card\">\n              <iframe\n                src=\"https://7dxperts.thoughtspot.cloud/?embedApp=true&orgId=822155245&hideActions=true#/embed/viz/e7a0d9a1-a59e-49dd-8a17-349ca1c77604/6b97ac56-1ffd-4184-91db-b8ad95499b9e\"\n                width=\"100%\"\n                height=\"400px\"\n                style=\"border: none; border-radius: 12px; background: #fff\"\n              ></iframe>\n            </div>\n            \n          </div>\n        </div>\n      </div>\n\n      <div class=\"footer\">\n        <a class=\"btn\" href=\"/custom/custom-1766049559585\">View Full Liveboard</a>\n        <a class=\"btn inverse\" href=\"/spotter\">kailasa_messaging_systems AI</a>\n      </div>\n    </div>\n  </body>\n</html>\n"
+    },
+    {
+      "id": "favorites",
+      "name": "Favorites",
+      "enabled": false,
+      "icon": "favorites",
+      "homePageType": "html",
+      "homePageValue": "<h1>Favorites</h1>"
+    },
+    {
+      "id": "my-reports",
+      "name": "My Reports",
+      "enabled": false,
+      "icon": "my-reports",
+      "homePageType": "html",
+      "homePageValue": "<h1>My Reports</h1>"
+    },
+    {
+      "id": "spotter",
+      "name": "Spotter",
+      "enabled": true,
+      "icon": "spotter-custom.svg",
+      "homePageType": "html",
+      "homePageValue": "<h1>Spotter</h1>",
+      "spotterModelId": "530a883e-a8ec-485c-a121-39b5a59381cb",
+      "spotterSearchQuery": "Explain this dataset to me"
+    },
+    {
+      "id": "search",
+      "name": "Search",
+      "enabled": false,
+      "icon": "search",
+      "homePageType": "html",
+      "homePageValue": "<h1>Search</h1>"
+    },
+    {
+      "id": "full-app",
+      "name": "Full App",
+      "enabled": false,
+      "icon": "full-app",
+      "homePageType": "html",
+      "homePageValue": "<h1>Full App</h1>"
+    },
+    {
+      "id": "all-content",
+      "name": "All Content",
+      "enabled": false,
+      "icon": "📚",
+      "homePageType": "html",
+      "homePageValue": "<h1>All Content</h1>",
+      "excludeSystemContent": true
+    }
+  ],
+  "customMenus": [
+    {
+      "id": "custom-1766049559585",
+      "name": "My Reports",
+      "description": "",
+      "icon": "my-reports",
+      "enabled": true,
+      "contentSelection": {
+        "type": "specific",
+        "specificContent": {
+          "liveboards": [
+            "e7a0d9a1-a59e-49dd-8a17-349ca1c77604"
+          ],
+          "answers": []
+        }
+      },
+      "openDirectly": true
+    }
+  ],
+  "menuOrder": [
+    "home",
+    "spotter",
+    "custom-1766049559585"
+  ],
+  "homePageConfig": {
+    "type": "html",
+    "value": "<h1>Welcome to TSE Demo Builder</h1>"
+  },
+  "appConfig": {
+    "thoughtspotUrl": "https://7dxperts.thoughtspot.cloud",
+    "orgIdentifier": "822155245",
+    "applicationName": "kailasa_messaging_systems",
+    "logo": "https://media.brand.dev/c9adfc51-4b98-4c86-8586-875fc4a0a842.jpg",
+    "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
+    "favicon": "https://media.brand.dev/c9adfc51-4b98-4c86-8586-875fc4a0a842.jpg",
+    "showFooter": false,
+    "disableSettings": true,
+    "chatbot": {
+      "enabled": true,
+      "welcomeMessage": "Hello! I'm your AI assistant. What would you like to know about your data?",
+      "position": "bottom-right",
+      "primaryColor": "#3b82f6",
+      "hoverColor": "#2563eb"
+    },
+    "authType": "None",
+    "faviconSyncEnabled": true
+  },
+  "fullAppConfig": {
+    "showPrimaryNavbar": true,
+    "hideHomepageLeftNav": false
+  },
+  "stylingConfig": {
+    "application": {
+      "topBar": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333",
+        "logoUrl": "https://media.brand.dev/c9adfc51-4b98-4c86-8586-875fc4a0a842.jpg"
+      },
+      "sidebar": {
+        "backgroundColor": "#0c9cdb",
+        "foregroundColor": "#FFFFFF"
+      },
+      "footer": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "dialogs": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "buttons": {
+        "primary": {
+          "backgroundColor": "#0c9cdb",
+          "foregroundColor": "#FFFFFF",
+          "borderColor": "#0c9cdb",
+          "hoverBackgroundColor": "#2c5aa0",
+          "hoverForegroundColor": "#ffffff"
+        },
+        "secondary": {
+          "backgroundColor": "#34c4f3",
+          "foregroundColor": "#0F172A",
+          "borderColor": "#34c4f3",
+          "hoverBackgroundColor": "#f9fafb",
+          "hoverForegroundColor": "#374151"
+        }
+      },
+      "backgrounds": {
+        "mainBackground": "#ffffff",
+        "contentBackground": "#ffffff",
+        "cardBackground": "#ffffff",
+        "borderColor": "#ffffff"
+      },
+      "typography": {
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#6b7280",
+        "linkColor": "#34c4f3",
+        "linkHoverColor": "#2cb47c"
+      },
+      "selectedTheme": "default"
+    },
+    "embeddedContent": {
+      "strings": {},
+      "stringIDs": {},
+      "cssUrl": "",
+      "customCSS": {
+        "variables": {
+          "--ts-var-button--primary-background": "rgba(12, 156, 219, 1.0)",
+          "--ts-var-button--primary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--primary--hover-background": "rgba(12, 156, 219, 0.8)",
+          "--ts-var-button--primary--active-background": "rgba(12, 156, 219, 0.6)",
+          "--ts-var-button--secondary-background": "rgba(52, 196, 243, 1.0)",
+          "--ts-var-button--secondary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--secondary--hover-background": "rgba(52, 196, 243, 0.8)",
+          "--ts-var-button--secondary--active-background": "rgba(52, 196, 243, 0.6)",
+          "--ts-var-button--tertiary-background": "rgba(44, 180, 124, 1.0)",
+          "--ts-var-button--tertiary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--tertiary--hover-background": "rgba(44, 180, 124, 0.8)",
+          "--ts-var-button--tertiary--active-background": "rgba(44, 180, 124, 0.6)",
+          "--ts-var-menu--hover-background": "rgba(52, 196, 243, 0.8)",
+          "--ts-var-root-background": "#FFFFFF",
+          "--ts-var-menu-background": "#FFFFFF",
+          "--ts-var-liveboard-layout-background": "rgba(52, 196, 243, 1.0)"
+        },
+        "rules_UNSTABLE": {}
+      }
+    },
+    "embedFlags": {
+      "liveboardEmbed": {
+        "showLiveboardTitle": true,
+        "showLiveboardDescription": true,
+        "isLiveboardHeaderSticky": false,
+        "hideLiveboardHeader": false,
+        "disabledActions": [
+          "downloadAsPng"
+        ],
+        "disabledActionReason": "Disabled",
+        "visibleActions": [],
+        "hiddenActions": [
+          "downloadAsCSV",
+          "makeACopy",
+          "tml"
+        ]
+      }
+    },
+    "embedDisplay": {
+      "hideTitle": false,
+      "hideDescription": false
+    }
+  },
+  "userConfig": {
+    "users": [
+      {
+        "id": "power-user",
+        "name": "Power User",
+        "description": "Full access - can access all features including Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": true,
+            "full-app": true,
+            "all-content": true
+          },
+          "customMenus": [
+            "custom-1766049559585"
+          ],
+          "hiddenActions": {
+            "enabled": true,
+            "actions": []
+          }
+        }
+      },
+      {
+        "id": "basic-user",
+        "name": "Basic User",
+        "description": "Limited access - cannot access Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": false,
+            "full-app": false,
+            "all-content": true
+          },
+          "customMenus": [],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      }
+    ],
+    "currentUserId": "power-user"
+  },
+  "version": "1.0.0",
+  "timestamp": "2025-12-18T09:19:19.586813",
+  "description": "TSE Demo Builder Configuration Export"
+}
