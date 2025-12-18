@@ -20,170 +20,267 @@ const LARGE_OBJECT_THRESHOLD = 1024 * 1024; // 1MB threshold for using IndexedDB
 
 // Default configuration
 export const DEFAULT_CONFIG: ConfigurationData = {
-  standardMenus: [
+  "standardMenus": [
     {
-      id: "home",
-      name: "Home",
-      enabled: true,
-      icon: "home",
-      homePageType: "html",
-      homePageValue: "<h1>Welcome to TSE Demo Builder</h1>",
+      "id": "home",
+      "name": "Home",
+      "enabled": true,
+      "icon": "home",
+      "homePageType": "html",
+      "homePageValue": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n    <title>ananta_learning_platforms Analytics Dashboard</title>\n\n    <style>\n      @import url(\"https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap\");\n\n      :root {\n        --brand-color: #0454d3;\n        --brand-color-10-percent-opacity: #0454d319;\n        --text-dark: #1c1c1c;\n        --text-muted: #6b7280;\n        --card-bg: #ffffff;\n        --card-border: #e5e7eb;\n      }\n\n      body {\n        font-family: \"Work Sans\", sans-serif;\n        background: var(--brand-color);\n        margin: 0;\n        padding: 0;\n        color: var(--text-dark);\n      }\n\n      .Box-container{\n        border: none !important;\n        padding: 0 !important;\n      }\n\n      .header {\n        background: white;\n        margin: 0 auto 16px;\n        padding: 26px 0;\n        border-radius: 16px;\n        text-align: center;\n      }\n\n      .company-name {\n        font-size: 24px;\n        font-weight: 700;\n        color: #555;\n      }\n\n      .container {\n        margin: 0 auto;\n        padding: 24px;\n        background: white;\n        border-radius: 16px;\n      }\n\n      .cards-grid {\n        display: grid;\n        grid-template-columns: repeat(4, 1fr);\n        gap: 16px;\n        padding-bottom: 16px;\n      }\n\n      @media (max-width: 1200px) {\n        .cards-grid {\n          grid-template-columns: repeat(2, 1fr);\n        }\n      }\n\n      @media (max-width: 768px) {\n        body {\n          padding: 16px;\n        }\n\n        .cards-grid {\n          grid-template-columns: 1fr;\n        }\n      }\n\n      .card {\n        background: var(--card-bg);\n        border: 1px solid var(--card-border);\n        border-radius: 16px;\n        padding: 14px;\n        box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.06);\n      }\n\n      .footer {\n        position: absolute;\n        bottom: 0;\n        left: 0;\n        right: 0;\n        padding: 16px 16px 0;\n        background: white;\n        text-align: center;\n        font-size: 14px;\n        box-shadow: 0px -2px 8px rgba(0, 0, 0, 0.08);\n        z-index: 1000;\n      }\n\n      .btn {\n        background: var(--brand-color);\n        color: #fff;\n        font-weight: 700;\n        font-size: 16px;\n        padding: 12px 24px;\n        text-decoration: none;\n        border-radius: 999px;\n        cursor: pointer;\n        border: none;\n        margin: 0 4px;\n        display: inline-block;\n        transition: all 0.2s;\n      }\n\n      .btn:hover {\n        transform: translateY(-2px);\n        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);\n      }\n\n      .parent{\n        position: relative;\n        height: calc(100vh - 114px);\n\n      }\n\n      .header-container{\n        background: var(--brand-color-10-percent-opacity);\n        padding: 24px;\n        border-radius: 8px;\n        border: 1px solid rgb(226, 232, 240);\n      }\n\n      .btn.inverse {\n        background: transparent;\n        border: 2px solid var(--brand-color);\n        color: var(--brand-color);\n      }\n\n      .btn.inverse:hover {\n        background: var(--brand-color);\n        color: white;\n      }\n    </style>\n  </head>\n\n  <body>\n    <div class=\"parent\">\n      <div class=\"header-container\">\n        <div class=\"header\">\n          \n          <img\n            src=\"https://media.brand.dev/e4aae619-c94d-45d6-8658-43e75925120d.png\"\n            alt=\"ananta_learning_platforms Logo\"\n            style=\"max-width: 200px; max-height: 72px; object-fit: contain\"\n          />\n          \n        </div>\n\n        <div class=\"container\">\n          <div class=\"cards-grid\">\n            \n            <div class=\"card\">\n              <iframe\n                src=\"https://7dxperts.thoughtspot.cloud/?embedApp=true&orgId=1716395520&hideActions=true#/embed/viz/fd0038cc-c58a-4749-b371-9a839c8c6501/709d5325-7650-4121-9529-02110a64f73e\"\n                width=\"100%\"\n                height=\"400px\"\n                style=\"border: none; border-radius: 12px; background: #fff\"\n              ></iframe>\n            </div>\n             \n            <div class=\"card\">\n              <iframe\n                src=\"https://7dxperts.thoughtspot.cloud/?embedApp=true&orgId=1716395520&hideActions=true#/embed/viz/fd0038cc-c58a-4749-b371-9a839c8c6501/c9d0061f-1f2b-45c5-9607-eb2e6a2cf313\"\n                width=\"100%\"\n                height=\"400px\"\n                style=\"border: none; border-radius: 12px; background: #fff\"\n              ></iframe>\n            </div>\n             \n            <div class=\"card\">\n              <iframe\n                src=\"https://7dxperts.thoughtspot.cloud/?embedApp=true&orgId=1716395520&hideActions=true#/embed/viz/fd0038cc-c58a-4749-b371-9a839c8c6501/d80c27bc-eda2-4818-b7cd-b16a8145da5d\"\n                width=\"100%\"\n                height=\"400px\"\n                style=\"border: none; border-radius: 12px; background: #fff\"\n              ></iframe>\n            </div>\n             \n            <div class=\"card\">\n              <iframe\n                src=\"https://7dxperts.thoughtspot.cloud/?embedApp=true&orgId=1716395520&hideActions=true#/embed/viz/fd0038cc-c58a-4749-b371-9a839c8c6501/b2f41523-3e50-4af7-aba4-bc538a360fbd\"\n                width=\"100%\"\n                height=\"400px\"\n                style=\"border: none; border-radius: 12px; background: #fff\"\n              ></iframe>\n            </div>\n            \n          </div>\n        </div>\n      </div>\n\n      <div class=\"footer\">\n        <a class=\"btn\" href=\"/custom/custom-1766052037297\">View Full Liveboard</a>\n        <a class=\"btn inverse\" href=\"/spotter\">ananta_learning_platforms AI</a>\n      </div>\n    </div>\n  </body>\n</html>\n"
     },
     {
-      id: "favorites",
-      name: "Favorites",
-      enabled: true,
-      icon: "favorites",
-      homePageType: "html",
-      homePageValue: "<h1>Favorites</h1>",
+      "id": "favorites",
+      "name": "Favorites",
+      "enabled": false,
+      "icon": "favorites",
+      "homePageType": "html",
+      "homePageValue": "<h1>Favorites</h1>"
     },
     {
-      id: "my-reports",
-      name: "My Reports",
-      enabled: true,
-      icon: "my-reports",
-      homePageType: "html",
-      homePageValue: "<h1>My Reports</h1>",
+      "id": "my-reports",
+      "name": "My Reports",
+      "enabled": false,
+      "icon": "my-reports",
+      "homePageType": "html",
+      "homePageValue": "<h1>My Reports</h1>"
     },
     {
-      id: "spotter",
-      name: "Spotter",
-      enabled: true,
-      icon: "spotter-custom.svg",
-      homePageType: "html",
-      homePageValue: "<h1>Spotter</h1>",
+      "id": "spotter",
+      "name": "Spotter",
+      "enabled": true,
+      "icon": "spotter-custom.svg",
+      "homePageType": "html",
+      "homePageValue": "<h1>Spotter</h1>",
+      "spotterModelId": "2a3e5621-d2ed-4bc9-b77d-0677ee8be772",
+      "spotterSearchQuery": "Explain this dataset to me"
     },
     {
-      id: "search",
-      name: "Search",
-      enabled: true,
-      icon: "search",
-      homePageType: "html",
-      homePageValue: "<h1>Search</h1>",
+      "id": "search",
+      "name": "Search",
+      "enabled": false,
+      "icon": "search",
+      "homePageType": "html",
+      "homePageValue": "<h1>Search</h1>"
     },
     {
-      id: "full-app",
-      name: "Full App",
-      enabled: true,
-      icon: "full-app",
-      homePageType: "html",
-      homePageValue: "<h1>Full App</h1>",
+      "id": "full-app",
+      "name": "Full App",
+      "enabled": false,
+      "icon": "full-app",
+      "homePageType": "html",
+      "homePageValue": "<h1>Full App</h1>"
     },
     {
-      id: "all-content",
-      name: "All Content",
-      enabled: true,
-      icon: "📚",
-      homePageType: "html",
-      homePageValue: "<h1>All Content</h1>",
-      excludeSystemContent: true,
-    },
+      "id": "all-content",
+      "name": "All Content",
+      "enabled": false,
+      "icon": "📚",
+      "homePageType": "html",
+      "homePageValue": "<h1>All Content</h1>",
+      "excludeSystemContent": true
+    }
   ],
-  customMenus: [],
-  menuOrder: [
+  "customMenus": [
+    {
+      "id": "custom-1766052037297",
+      "name": "My Reports",
+      "description": "",
+      "icon": "my-reports",
+      "enabled": true,
+      "contentSelection": {
+        "type": "specific",
+        "specificContent": {
+          "liveboards": [
+            "fd0038cc-c58a-4749-b371-9a839c8c6501"
+          ],
+          "answers": []
+        }
+      },
+      "openDirectly": true
+    }
+  ],
+  "menuOrder": [
     "home",
-    "favorites",
-    "my-reports",
     "spotter",
-    "search",
-    "full-app",
-    "all-content",
+    "custom-1766052037297"
   ],
-  homePageConfig: {
-    type: "html",
-    value: "<h1>Welcome to TSE Demo Builder</h1>",
+  "homePageConfig": {
+    "type": "html",
+    "value": "<h1>Welcome to TSE Demo Builder</h1>"
   },
-  appConfig: {
-    thoughtspotUrl: "https://7dxperts.thoughtspot.cloud/",
-    orgIdentifier: undefined,
-    applicationName: "TSE Demo Builder",
-    logo: "/logo.png",
-    earlyAccessFlags: "enable-modular-home\nenable-custom-styling",
-    favicon: "/logo.png",
-    showFooter: true,
-    disableSettings: false,
-    chatbot: {
-      enabled: true,
-      defaultModelId: undefined,
-      welcomeMessage: "Hello! I'm your AI assistant. What would you like to know about your data?",
-      position: "bottom-right",
-      primaryColor: "#3b82f6",
-      hoverColor: "#2563eb",
+  "appConfig": {
+    "thoughtspotUrl": "https://7dxperts.thoughtspot.cloud",
+    "orgIdentifier": "1716395520",
+    "applicationName": "ananta_learning_platforms",
+    "logo": "https://media.brand.dev/e4aae619-c94d-45d6-8658-43e75925120d.png",
+    "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
+    "favicon": "https://media.brand.dev/e4aae619-c94d-45d6-8658-43e75925120d.png",
+    "showFooter": false,
+    "disableSettings": false,
+    "chatbot": {
+      "enabled": true,
+      "welcomeMessage": "Hello! I'm your AI assistant. What would you like to know about your data?",
+      "position": "bottom-right",
+      "primaryColor": "#3b82f6",
+      "hoverColor": "#2563eb"
     },
-    authType: "None"
+    "authType": "None",
+    "faviconSyncEnabled": true
   },
-  fullAppConfig: {
-    showPrimaryNavbar: true,
-    hideHomepageLeftNav: false,
+  "fullAppConfig": {
+    "showPrimaryNavbar": true,
+    "hideHomepageLeftNav": false
   },
-  stylingConfig: {
-    application: {
-      topBar: {
-        backgroundColor: "#ffffff",
-        foregroundColor: "#333333",
-        logoUrl: "/logo.png",
+  "stylingConfig": {
+    "application": {
+      "topBar": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333",
+        "logoUrl": "https://media.brand.dev/e4aae619-c94d-45d6-8658-43e75925120d.png"
       },
-      sidebar: {
-        backgroundColor: "#f5f5f5",
-        foregroundColor: "#333333",
+      "sidebar": {
+        "backgroundColor": "#0454d3",
+        "foregroundColor": "#FFFFFF"
       },
-      footer: {
-        backgroundColor: "#ffffff",
-        foregroundColor: "#333333",
+      "footer": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
       },
-      dialogs: {
-        backgroundColor: "#ffffff",
-        foregroundColor: "#333333",
+      "dialogs": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
       },
-      buttons: {
-        primary: {
-          backgroundColor: "#3182ce",
-          foregroundColor: "#ffffff",
-          borderColor: "#3182ce",
-          hoverBackgroundColor: "#2c5aa0",
-          hoverForegroundColor: "#ffffff",
+      "buttons": {
+        "primary": {
+          "backgroundColor": "#0454d3",
+          "foregroundColor": "#FFFFFF",
+          "borderColor": "#0454d3",
+          "hoverBackgroundColor": "#2c5aa0",
+          "hoverForegroundColor": "#ffffff"
         },
-        secondary: {
-          backgroundColor: "#ffffff",
-          foregroundColor: "#374151",
-          borderColor: "#d1d5db",
-          hoverBackgroundColor: "#f9fafb",
-          hoverForegroundColor: "#374151",
+        "secondary": {
+          "backgroundColor": "#7cacec",
+          "foregroundColor": "#0F172A",
+          "borderColor": "#7cacec",
+          "hoverBackgroundColor": "#f9fafb",
+          "hoverForegroundColor": "#374151"
+        }
+      },
+      "backgrounds": {
+        "mainBackground": "#ffffff",
+        "contentBackground": "#ffffff",
+        "cardBackground": "#ffffff",
+        "borderColor": "#ffffff"
+      },
+      "typography": {
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#6b7280",
+        "linkColor": "#7cacec",
+        "linkHoverColor": "#0555d4"
+      },
+      "selectedTheme": "default"
+    },
+    "embeddedContent": {
+      "strings": {},
+      "stringIDs": {},
+      "cssUrl": "",
+      "customCSS": {
+        "variables": {
+          "--ts-var-button--primary-background": "rgba(4, 84, 211, 1.0)",
+          "--ts-var-button--primary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--primary--hover-background": "rgba(4, 84, 211, 0.8)",
+          "--ts-var-button--primary--active-background": "rgba(4, 84, 211, 0.6)",
+          "--ts-var-button--secondary-background": "rgba(124, 172, 236, 1.0)",
+          "--ts-var-button--secondary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--secondary--hover-background": "rgba(124, 172, 236, 0.8)",
+          "--ts-var-button--secondary--active-background": "rgba(124, 172, 236, 0.6)",
+          "--ts-var-button--tertiary-background": "rgba(5, 85, 212, 1.0)",
+          "--ts-var-button--tertiary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--tertiary--hover-background": "rgba(5, 85, 212, 0.8)",
+          "--ts-var-button--tertiary--active-background": "rgba(5, 85, 212, 0.6)",
+          "--ts-var-menu--hover-background": "rgba(124, 172, 236, 0.8)",
+          "--ts-var-root-background": "#FFFFFF",
+          "--ts-var-menu-background": "#FFFFFF",
+          "--ts-var-liveboard-layout-background": "rgba(124, 172, 236, 1.0)"
         },
-      },
-      backgrounds: {
-        mainBackground: "#f7fafc",
-        contentBackground: "#ffffff",
-        cardBackground: "#ffffff",
-        borderColor: "#e2e8f0",
-      },
-      typography: {
-        primaryColor: "#1f2937",
-        secondaryColor: "#6b7280",
-        linkColor: "#3182ce",
-        linkHoverColor: "#2c5aa0",
-      },
-      selectedTheme: "default",
+        "rules_UNSTABLE": {}
+      }
     },
-    embeddedContent: {
-      strings: {},
-      stringIDs: {},
-      cssUrl: "",
-      customCSS: {
-        variables: {},
-        rules_UNSTABLE: {},
-      },
+    "embedFlags": {
+      "liveboardEmbed": {
+        "showLiveboardTitle": true,
+        "showLiveboardDescription": true,
+        "isLiveboardHeaderSticky": false,
+        "hideLiveboardHeader": false,
+        "disabledActions": [
+          "downloadAsPng"
+        ],
+        "disabledActionReason": "Disabled",
+        "visibleActions": [],
+        "hiddenActions": [
+          "downloadAsCSV",
+          "makeACopy",
+          "tml"
+        ]
+      }
     },
-    embedFlags: {},
-    embedDisplay: {
-      hideTitle: false,
-      hideDescription: false,
-    },
+    "embedDisplay": {
+      "hideTitle": false,
+      "hideDescription": false
+    }
   },
-  userConfig: {
-    users: [],
-    currentUserId: undefined,
-  },
+  "userConfig": {
+    "users": [
+      {
+        "id": "power-user",
+        "name": "Power User",
+        "description": "Full access - can access all features including Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": true,
+            "full-app": true,
+            "all-content": true
+          },
+          "customMenus": [
+            "custom-1766052037297"
+          ],
+          "hiddenActions": {
+            "enabled": true,
+            "actions": []
+          }
+        }
+      },
+      {
+        "id": "basic-user",
+        "name": "Basic User",
+        "description": "Limited access - cannot access Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": false,
+            "full-app": false,
+            "all-content": true
+          },
+          "customMenus": [],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      }
+    ],
+    "currentUserId": "power-user"
+  }
 };
 
 const defaultAppConfig = DEFAULT_CONFIG.appConfig;
