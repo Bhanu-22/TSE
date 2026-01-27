@@ -20,170 +20,232 @@ const LARGE_OBJECT_THRESHOLD = 1024 * 1024; // 1MB threshold for using IndexedDB
 
 // Default configuration
 export const DEFAULT_CONFIG: ConfigurationData = {
-  standardMenus: [
+  "standardMenus": [
     {
-      id: "home",
-      name: "Home",
-      enabled: true,
-      icon: "home",
-      homePageType: "html",
-      homePageValue: "<h1>Welcome to TSE Demo Builder</h1>",
+      "id": "home",
+      "name": "Home",
+      "enabled": false,
+      "icon": "home",
+      "homePageType": "html",
+      "homePageValue": "<h1>Welcome to TSE Demo Builder</h1>"
     },
     {
-      id: "favorites",
-      name: "Favorites",
-      enabled: true,
-      icon: "favorites",
-      homePageType: "html",
-      homePageValue: "<h1>Favorites</h1>",
+      "id": "favorites",
+      "name": "Favorites",
+      "enabled": false,
+      "icon": "favorites",
+      "homePageType": "html",
+      "homePageValue": "<h1>Favorites</h1>"
     },
     {
-      id: "my-reports",
-      name: "My Reports",
-      enabled: true,
-      icon: "my-reports",
-      homePageType: "html",
-      homePageValue: "<h1>My Reports</h1>",
+      "id": "my-reports",
+      "name": "My Reports",
+      "enabled": false,
+      "icon": "my-reports",
+      "homePageType": "html",
+      "homePageValue": "<h1>My Reports</h1>"
     },
     {
-      id: "spotter",
-      name: "Spotter",
-      enabled: true,
-      icon: "spotter-custom.svg",
-      homePageType: "html",
-      homePageValue: "<h1>Spotter</h1>",
+      "id": "spotter",
+      "name": "Spotter",
+      "enabled": true,
+      "icon": "spotter-custom.svg",
+      "homePageType": "html",
+      "homePageValue": "<h1>Spotter</h1>"
     },
     {
-      id: "search",
-      name: "Search",
-      enabled: true,
-      icon: "search",
-      homePageType: "html",
-      homePageValue: "<h1>Search</h1>",
+      "id": "search",
+      "name": "Search",
+      "enabled": false,
+      "icon": "search",
+      "homePageType": "html",
+      "homePageValue": "<h1>Search</h1>"
     },
     {
-      id: "full-app",
-      name: "Full App",
-      enabled: true,
-      icon: "full-app",
-      homePageType: "html",
-      homePageValue: "<h1>Full App</h1>",
+      "id": "full-app",
+      "name": "Full App",
+      "enabled": true,
+      "icon": "full-app",
+      "homePageType": "html",
+      "homePageValue": "<h1>Full App</h1>"
     },
     {
-      id: "all-content",
-      name: "All Content",
-      enabled: true,
-      icon: "📚",
-      homePageType: "html",
-      homePageValue: "<h1>All Content</h1>",
-      excludeSystemContent: true,
-    },
+      "id": "all-content",
+      "name": "All Content",
+      "enabled": false,
+      "icon": "📚",
+      "homePageType": "html",
+      "homePageValue": "<h1>All Content</h1>",
+      "excludeSystemContent": true
+    }
   ],
-  customMenus: [],
-  menuOrder: [
-    "home",
-    "favorites",
-    "my-reports",
+  "customMenus": [
+    {
+      "id": "custom-1769509547341",
+      "name": "UAE Survey",
+      "description": "",
+      "icon": "my-reports",
+      "enabled": true,
+      "contentSelection": {
+        "type": "specific",
+        "specificContent": {
+          "liveboards": [
+            "ad06e240-3788-41eb-a503-9dd44c8389fa"
+          ],
+          "answers": []
+        }
+      }
+    }
+  ],
+  "menuOrder": [
     "spotter",
-    "search",
     "full-app",
-    "all-content",
+    "custom-1769509547341"
   ],
-  homePageConfig: {
-    type: "html",
-    value: "<h1>Welcome to TSE Demo Builder</h1>",
+  "homePageConfig": {
+    "type": "html",
+    "value": "<h1>Welcome to TSE Demo Builder</h1>"
   },
-  appConfig: {
-    thoughtspotUrl: "https://7dxperts.thoughtspot.cloud/",
-    orgIdentifier: undefined,
-    applicationName: "TSE Demo Builder",
-    logo: "/logo.png",
-    earlyAccessFlags: "enable-modular-home\nenable-custom-styling",
-    favicon: "/logo.png",
-    showFooter: true,
-    disableSettings: false,
-    chatbot: {
-      enabled: true,
-      defaultModelId: undefined,
-      welcomeMessage: "Hello! I'm your AI assistant. What would you like to know about your data?",
-      position: "bottom-right",
-      primaryColor: "#3b82f6",
-      hoverColor: "#2563eb",
+  "appConfig": {
+    "thoughtspotUrl": "https://techpartners.thoughtspot.cloud/",
+    "applicationName": "TSE Demo Builder",
+    "logo": "",
+    "earlyAccessFlags": "",
+    "favicon": "/logo.png",
+    "showFooter": true,
+    "disableSettings": false,
+    "chatbot": {
+      "enabled": true,
+      "welcomeMessage": "Hello! I'm your AI assistant. What would you like to know about your data?",
+      "position": "bottom-right",
+      "primaryColor": "#3b82f6",
+      "hoverColor": "#2563eb"
     },
-    authType: "None"
+    "authType": "None"
   },
-  fullAppConfig: {
-    showPrimaryNavbar: true,
-    hideHomepageLeftNav: false,
+  "fullAppConfig": {
+    "showPrimaryNavbar": true,
+    "hideHomepageLeftNav": false
   },
-  stylingConfig: {
-    application: {
-      topBar: {
-        backgroundColor: "#ffffff",
-        foregroundColor: "#333333",
-        logoUrl: "/logo.png",
+  "stylingConfig": {
+    "application": {
+      "topBar": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333",
+        "logoUrl": "/logo.png"
       },
-      sidebar: {
-        backgroundColor: "#f5f5f5",
-        foregroundColor: "#333333",
+      "sidebar": {
+        "backgroundColor": "#f5f5f5",
+        "foregroundColor": "#333333"
       },
-      footer: {
-        backgroundColor: "#ffffff",
-        foregroundColor: "#333333",
+      "footer": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
       },
-      dialogs: {
-        backgroundColor: "#ffffff",
-        foregroundColor: "#333333",
+      "dialogs": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
       },
-      buttons: {
-        primary: {
-          backgroundColor: "#3182ce",
-          foregroundColor: "#ffffff",
-          borderColor: "#3182ce",
-          hoverBackgroundColor: "#2c5aa0",
-          hoverForegroundColor: "#ffffff",
+      "buttons": {
+        "primary": {
+          "backgroundColor": "#3182ce",
+          "foregroundColor": "#ffffff",
+          "borderColor": "#3182ce",
+          "hoverBackgroundColor": "#2c5aa0",
+          "hoverForegroundColor": "#ffffff"
         },
-        secondary: {
-          backgroundColor: "#ffffff",
-          foregroundColor: "#374151",
-          borderColor: "#d1d5db",
-          hoverBackgroundColor: "#f9fafb",
-          hoverForegroundColor: "#374151",
-        },
+        "secondary": {
+          "backgroundColor": "#ffffff",
+          "foregroundColor": "#374151",
+          "borderColor": "#d1d5db",
+          "hoverBackgroundColor": "#f9fafb",
+          "hoverForegroundColor": "#374151"
+        }
       },
-      backgrounds: {
-        mainBackground: "#f7fafc",
-        contentBackground: "#ffffff",
-        cardBackground: "#ffffff",
-        borderColor: "#e2e8f0",
+      "backgrounds": {
+        "mainBackground": "#f7fafc",
+        "contentBackground": "#ffffff",
+        "cardBackground": "#ffffff",
+        "borderColor": "#e2e8f0"
       },
-      typography: {
-        primaryColor: "#1f2937",
-        secondaryColor: "#6b7280",
-        linkColor: "#3182ce",
-        linkHoverColor: "#2c5aa0",
+      "typography": {
+        "primaryColor": "#1f2937",
+        "secondaryColor": "#6b7280",
+        "linkColor": "#3182ce",
+        "linkHoverColor": "#2c5aa0"
       },
-      selectedTheme: "default",
+      "selectedTheme": "default"
     },
-    embeddedContent: {
-      strings: {},
-      stringIDs: {},
-      cssUrl: "",
-      customCSS: {
-        variables: {},
-        rules_UNSTABLE: {},
-      },
+    "embeddedContent": {
+      "strings": {},
+      "stringIDs": {},
+      "cssUrl": "",
+      "customCSS": {
+        "variables": {},
+        "rules_UNSTABLE": {}
+      }
     },
-    embedFlags: {},
-    embedDisplay: {
-      hideTitle: false,
-      hideDescription: false,
-    },
+    "embedFlags": {},
+    "embedDisplay": {
+      "hideTitle": false,
+      "hideDescription": false
+    }
   },
-  userConfig: {
-    users: [],
-    currentUserId: undefined,
-  },
+  "userConfig": {
+    "users": [
+      {
+        "id": "power-user",
+        "name": "Power User",
+        "description": "Full access - can access all features including Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": true,
+            "full-app": true,
+            "all-content": true
+          },
+          "customMenus": [
+            "custom-1769509547341"
+          ],
+          "hiddenActions": {
+            "enabled": true,
+            "actions": [
+              "edit",
+              "explore",
+              "AskAi"
+            ]
+          }
+        }
+      },
+      {
+        "id": "basic-user",
+        "name": "Basic User",
+        "description": "Limited access - cannot access Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home": true,
+            "favorites": true,
+            "my-reports": true,
+            "spotter": true,
+            "search": false,
+            "full-app": false,
+            "all-content": true
+          },
+          "customMenus": [],
+          "hiddenActions": {
+            "enabled": false,
+            "actions": []
+          }
+        }
+      }
+    ],
+    "currentUserId": "power-user"
+  }
 };
 
 const defaultAppConfig = DEFAULT_CONFIG.appConfig;
