@@ -173,7 +173,7 @@
       }
     },
     "embedDisplay": {
-      "hideTitle": false,
+      "hideTitle": true,
       "hideDescription": false
     }
   },
@@ -233,6 +233,6 @@
     "currentUserId": "power-user"
   },
   "version": "1.0.0",
-  "timestamp": "2026-01-28T10:25:31.772Z",
+  "timestamp": "2026-01-28T13:30:11.407Z",
   "description": "TSE Demo Builder Configuration Export"
 }
