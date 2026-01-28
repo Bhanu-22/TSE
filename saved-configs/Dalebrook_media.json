@@ -31,7 +31,6 @@
       "icon": "spotter-custom.svg",
       "homePageType": "html",
       "homePageValue": "<h1>Spotter</h1>",
-      "spotterSearchQuery": "",
       "spotterModelId": "4b395390-949b-4ae1-92e6-8b02359969ca"
     },
     {
@@ -80,13 +79,8 @@
     }
   ],
   "menuOrder": [
-    "home",
-    "favorites",
-    "my-reports",
     "spotter",
-    "search",
     "full-app",
-    "all-content",
     "custom-1769509547341"
   ],
   "homePageConfig": {
@@ -173,7 +167,11 @@
         "rules_UNSTABLE": {}
       }
     },
-    "embedFlags": {},
+    "embedFlags": {
+      "liveboardEmbed": {
+        "isLiveboardStylingAndGroupingEnabled": true
+      }
+    },
     "embedDisplay": {
       "hideTitle": false,
       "hideDescription": false
@@ -235,6 +233,6 @@
     "currentUserId": "power-user"
   },
   "version": "1.0.0",
-  "timestamp": "2026-01-28T09:27:58.495Z",
+  "timestamp": "2026-01-28T10:25:31.772Z",
   "description": "TSE Demo Builder Configuration Export"
 }
