@@ -40,7 +40,7 @@ async function loadConfigFromGitHubServer(filename: string) {
   
 export async function POST(request: NextRequest) {    
   try {    
-    const { configuration, branchName, githubFilename } = await request.json();    
+    const { configuration, branchName, githubFilename, sourceBranch } = await request.json();    
         
     let finalConfiguration;    
     
@@ -85,21 +85,28 @@ export async function POST(request: NextRequest) {
         
     const repoId = repoInfo.id;    
     const defaultBranch = repoInfo.default_branch;    
+    const baseBranch =
+      typeof sourceBranch === 'string' && sourceBranch.trim()
+        ? sourceBranch.trim()
+        : process.env.PUBLISH_BASE_BRANCH ||
+          process.env.VERCEL_GIT_COMMIT_REF ||
+          defaultBranch;
+    console.log('Publish deployment base branch:', baseBranch);
         
-    // 2. Get the default branch reference    
-    const { data: mainBranch } = await octokit.git.getRef({    
+    // 2. Get the base branch reference    
+    const { data: baseBranchRef } = await octokit.git.getRef({    
       owner,    
       repo,    
-      ref: `heads/${defaultBranch}`    
+      ref: `heads/${baseBranch}`    
     });    
     
-    // 3. Get the current configurationService.ts content from default branch    
+    // 3. Get the current configurationService.ts content from base branch    
     const configPath = 'src/services/configurationService.ts';    
     const { data: fileData } = await octokit.repos.getContent({    
       owner,    
       repo,    
       path: configPath,    
-      ref: defaultBranch    
+      ref: baseBranch    
     });    
     
     if (!('content' in fileData)) {    
@@ -122,11 +129,11 @@ export async function POST(request: NextRequest) {
       `export const DEFAULT_CONFIG: ConfigurationData = ${configString};`  
     );  
     
-    // 5. Get the tree of the default branch    
+    // 5. Get the tree of the base branch    
     const { data: baseTree } = await octokit.git.getTree({    
       owner,    
       repo,    
-      tree_sha: mainBranch.object.sha,    
+      tree_sha: baseBranchRef.object.sha,    
       recursive: 'true'    
     });    
     
@@ -159,7 +166,7 @@ export async function POST(request: NextRequest) {
       repo,    
       message: `Bake configuration for deployment: ${branchName}`,    
       tree: newTree.sha,    
-      parents: [mainBranch.object.sha]    
+      parents: [baseBranchRef.object.sha]    
     });    
     
     // 9. Create the new branch pointing to the new commit    
@@ -255,6 +262,7 @@ export async function POST(request: NextRequest) {
         
     return NextResponse.json({    
       success: true,    
+      baseBranchUsed: baseBranch,
       branchUrl: `https://github.com/${owner}/${repo}/tree/${branchName}`,    
       deploymentUrl,    
       deploymentId: deployment.id    
