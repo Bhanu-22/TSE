@@ -1256,14 +1256,30 @@ export default function Layout({ children }: LayoutProps) {
             isLiveboardStylingEnabled: true,
             ...earlyAccessFlags,
           },
-          getAuthToken: function (): Promise<string> {
-            throw new Error("Function not implemented.");
-          }
-        };
+          getAuthToken: async (): Promise<string> => {
+            const response = await fetch("/api/thoughtspot-token", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              cache: "no-store",
+            });
 
-        if (appConfig.authType === "TrustedAuthToken") {
-          initConfig.getAuthToken = () => Promise.resolve("'YXJhdmluZGFuLm1rQDdkeHBlcnRzLmNvbTpKSE5vYVhKdk1TUlRTRUV0TWpVMkpEVXdNREF3TUNSNlJFTlZja05yTlZoVFRFMTJkRVZUUjBneFRTdG5QVDBrVVVwNGFIaFZZU3RMVUVadFYwRndhRkJTUjNkdmQwMXllVlZJZURaek1VUm5TbTAxWkdWU1lYVlVWVDA='");
-        }
+            if (!response.ok) {
+              const errorText = await response.text().catch(() => "");
+              throw new Error(
+                `Failed to fetch ThoughtSpot token: ${response.status} ${errorText}`
+              );
+            }
+
+            const data = (await response.json()) as { token?: string };
+            if (!data?.token) {
+              throw new Error("ThoughtSpot token response missing token");
+            }
+
+            return data.token;
+          },
+        };
 
         console.log(
           "[Layout] Initializing ThoughtSpot with config:",
