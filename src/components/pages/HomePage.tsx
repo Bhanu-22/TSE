@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useAppContext } from "../Layout";
-import { HomePageConfig, StandardMenu } from "../../types/thoughtspot";
+import { HomePageConfig, StandardMenu, User } from "../../types/thoughtspot";
 import ThoughtSpotEmbed from "../ThoughtSpotEmbed";
 import { ThoughtSpotContent } from "../../types/thoughtspot";
 
@@ -14,6 +14,17 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
   const [iframeError, setIframeError] = useState<string | null>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const htmlContainerRef = useRef<HTMLDivElement>(null);
+  const [processedHtml, setProcessedHtml] = useState<string | null>(null);
+  const [kpiEmbeds, setKpiEmbeds] = useState<
+    Array<{
+      id: string;
+      liveboardId: string;
+      vizId: string;
+      width: string;
+      height: string;
+    }>
+  >([]);
 
   // Always call the hook to follow React rules
   const context = useAppContext();
@@ -112,6 +123,247 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     }
   }, [mappedValue]);
 
+  // Convert ThoughtSpot KPI iframes to SDK placeholders
+  useEffect(() => {
+    if (mappedType !== "html") {
+      setProcessedHtml(null);
+      setKpiEmbeds([]);
+      return;
+    }
+
+    if (!mappedValue || !mappedValue.trim()) {
+      setProcessedHtml(null);
+      setKpiEmbeds([]);
+      return;
+    }
+
+    // Only run in the browser
+    if (typeof window === "undefined") {
+      setProcessedHtml(mappedValue);
+      setKpiEmbeds([]);
+      return;
+    }
+
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(mappedValue, "text/html");
+      const embeds: Array<{
+        id: string;
+        liveboardId: string;
+        vizId: string;
+        width: string;
+        height: string;
+      }> = [];
+
+      const iframes = Array.from(doc.querySelectorAll("iframe"));
+      let embedIndex = 0;
+
+      const readStyleValue = (style: string, property: string): string => {
+        const regex = new RegExp(`${property}\\s*:\\s*([^;]+)`, "i");
+        const match = style.match(regex);
+        return match?.[1]?.trim() || "";
+      };
+
+      const extractIdsFromSrc = (src: string) => {
+        try {
+          const url = new URL(src);
+          const hash = url.hash || "";
+          const match = hash.match(/\/embed\/viz\/([^/]+)\/([^/?#]+)/);
+          if (!match) return null;
+          return { liveboardId: match[1], vizId: match[2] };
+        } catch {
+          const match = src.match(/#\/embed\/viz\/([^/]+)\/([^/?#]+)/);
+          if (!match) return null;
+          return { liveboardId: match[1], vizId: match[2] };
+        }
+      };
+
+      iframes.forEach((iframe) => {
+        const src = iframe.getAttribute("src") || "";
+        if (!src.includes("/embed/viz/")) return;
+
+        const ids = extractIdsFromSrc(src);
+        if (!ids) return;
+
+        const style = iframe.getAttribute("style") || "";
+        const widthFromStyle = readStyleValue(style, "width");
+        const heightFromStyle = readStyleValue(style, "height");
+        const width = iframe.getAttribute("width") || widthFromStyle || "100%";
+        const height =
+          iframe.getAttribute("height") || heightFromStyle || "400px";
+
+        const embedId = `ts-kpi-${embedIndex++}`;
+        embeds.push({
+          id: embedId,
+          liveboardId: ids.liveboardId,
+          vizId: ids.vizId,
+          width,
+          height,
+        });
+
+        const placeholder = doc.createElement("div");
+        placeholder.setAttribute("data-ts-embed-id", embedId);
+        placeholder.setAttribute("data-ts-liveboard-id", ids.liveboardId);
+        placeholder.setAttribute("data-ts-viz-id", ids.vizId);
+
+        const hasWidthInStyle = /\bwidth\s*:/i.test(style);
+        const hasHeightInStyle = /\bheight\s*:/i.test(style);
+        const hasOverflowInStyle = /\boverflow\s*:/i.test(style);
+        const hasRadiusInStyle = /\bborder-radius\s*:/i.test(style);
+
+        let combinedStyle = style.trim();
+        if (combinedStyle && !combinedStyle.endsWith(";")) {
+          combinedStyle += ";";
+        }
+        if (!hasWidthInStyle) {
+          combinedStyle += `width:${width};`;
+        }
+        if (!hasHeightInStyle) {
+          combinedStyle += `height:${height};`;
+        }
+        // Preserve rounded corner look by clipping SDK content inside the card.
+        if (hasRadiusInStyle && !hasOverflowInStyle) {
+          combinedStyle += "overflow:hidden;";
+        }
+
+        placeholder.setAttribute("style", combinedStyle);
+        placeholder.className = "ts-kpi-embed";
+
+        iframe.replaceWith(placeholder);
+      });
+
+      // Preserve template-level styling from <head> so grid/cards/footer buttons keep original look.
+      const preservedHeadMarkup = Array.from(
+        doc.head.querySelectorAll(
+          'style, link[rel="stylesheet"], link[rel="preconnect"], link[rel="dns-prefetch"]'
+        )
+      )
+        .map((node) => node.outerHTML)
+        .join("");
+
+      setProcessedHtml(`${preservedHeadMarkup}${doc.body.innerHTML}`);
+      setKpiEmbeds(embeds);
+    } catch (error) {
+      console.error("Failed to process KPI embeds:", error);
+      setProcessedHtml(mappedValue);
+      setKpiEmbeds([]);
+    }
+  }, [mappedType, mappedValue]);
+
+  // Render KPI embeds via ThoughtSpot SDK after HTML is injected
+  useEffect(() => {
+    if (!kpiEmbeds.length) return;
+    if (!htmlContainerRef.current) return;
+
+    let isMounted = true;
+    const instances: Array<{ destroy?: () => void }> = [];
+
+    const initEmbeds = async () => {
+      try {
+        const { LiveboardEmbed, Action } = await import(
+          "@thoughtspot/visual-embed-sdk"
+        );
+
+        // Get current user
+        const currentUser = context.userConfig.users.find(
+          (u: User) => u.id === context.userConfig.currentUserId
+        );
+
+        // Get hidden actions for current user
+        const hiddenActionsStrings: string[] =
+          currentUser?.access.hiddenActions?.enabled
+            ? currentUser.access.hiddenActions.actions
+            : [];
+
+        const hiddenActions: Array<
+          (typeof Action)[keyof typeof Action]
+        > = [];
+        hiddenActionsStrings.forEach((actionString: string) => {
+          const actionKey = Object.keys(Action).find(
+            (key) => Action[key as keyof typeof Action] === actionString
+          );
+          if (actionKey) {
+            hiddenActions.push(Action[actionKey as keyof typeof Action]);
+          }
+        });
+
+        const userLocale = currentUser?.locale || "en";
+        const runtimeFilters = currentUser?.access.runtimeFilters || [];
+
+        const embedFlags =
+          context.stylingConfig.embedFlags?.liveboardEmbed || {};
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { visibleActions, ...filteredEmbedFlags } = embedFlags;
+
+        const customCSS = context.stylingConfig.embeddedContent.customCSS;
+        const cssUrl = context.stylingConfig.embeddedContent.cssUrl;
+        const strings = context.stylingConfig.embeddedContent.strings;
+        const stringIDs = context.stylingConfig.embeddedContent.stringIDs;
+
+        for (const embed of kpiEmbeds) {
+          if (!isMounted || !htmlContainerRef.current) return;
+
+          const target = htmlContainerRef.current.querySelector(
+            `[data-ts-embed-id="${embed.id}"]`
+          ) as HTMLDivElement | null;
+          if (!target) continue;
+
+          const instance = new LiveboardEmbed(target, {
+            liveboardId: embed.liveboardId,
+            vizId: embed.vizId,
+            frameParams: {
+              width: embed.width,
+              height: embed.height,
+            },
+            locale: userLocale,
+            ...filteredEmbedFlags,
+            ...(hiddenActions.length > 0 && { hiddenActions }),
+            ...(runtimeFilters.length > 0 && { runtimeFilters }),
+            customizations: {
+              content: {
+                strings: strings || {},
+                stringIDs: stringIDs || {},
+              },
+              style: {
+                customCSSUrl: cssUrl || undefined,
+                customCSS: {
+                  variables: customCSS.variables || {},
+                  rules_UNSTABLE: customCSS.rules_UNSTABLE || {},
+                },
+              },
+            },
+          });
+
+          instances.push(instance);
+          await instance.render();
+        }
+      } catch (error) {
+        console.error("Failed to render KPI embeds:", error);
+      }
+    };
+
+    initEmbeds();
+
+    return () => {
+      isMounted = false;
+      instances.forEach((instance) => {
+        if (typeof instance.destroy === "function") {
+          instance.destroy();
+        }
+      });
+    };
+  }, [
+    kpiEmbeds,
+    context.userConfig.currentUserId,
+    context.userConfig.users,
+    context.stylingConfig.embedFlags?.liveboardEmbed,
+    context.stylingConfig.embeddedContent.customCSS,
+    context.stylingConfig.embeddedContent.cssUrl,
+    context.stylingConfig.embeddedContent.strings,
+    context.stylingConfig.embeddedContent.stringIDs,
+  ]);
+
   // Effect to handle iframe errors
   useEffect(() => {
     const iframe = iframeRef.current;
@@ -186,9 +438,10 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     switch (mappedType) {
       case "html":
         if (mappedValue && mappedValue.trim()) {
+          const htmlToRender = processedHtml ?? mappedValue;
           return (
             <div
-              dangerouslySetInnerHTML={{ __html: mappedValue }}
+              dangerouslySetInnerHTML={{ __html: htmlToRender }}
               className="Box-container"
               style={{
                 backgroundColor: "white",
@@ -198,6 +451,7 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
                 height: "100%",
                 overflow: "auto",
               }}
+              ref={htmlContainerRef}
             />
           );
         }
