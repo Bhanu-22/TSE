@@ -7,35 +7,55 @@ async function loadConfigFromGitHubServer(filename: string) {
   const repoOwner = "blitzdemos";  
   const repoName = "tsebuilder_blitzdemos";  
   const configsPath = "saved-configs";  
-  
-  const response = await fetch(  
-    `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${configsPath}/${filename}`,  
-    {  
-      method: "GET",  
-      headers: {  
-        Accept: "application/vnd.github.v3+json",  
-        "User-Agent": "TSE-Demo-Builder",  
-        "Content-Type": "application/json",  
-        Authorization: `token ${process.env.privateRepotk}`,  
-      },  
-    }  
-  );  
-  
-  if (!response.ok) {  
-    throw new Error(`Failed to fetch configuration: ${response.statusText}`);  
-  }  
-  
-  const fileData = await response.json();  
-    
-  if (!fileData.content) {  
-    throw new Error("No content found in GitHub response");  
-  }  
-  
-  // Decode base64 content using Node.js Buffer (server-side)  
-  const base64Content = fileData.content.replace(/\n/g, '');  
-  const decodedContent = Buffer.from(base64Content, 'base64').toString('utf-8');  
-    
-  return JSON.parse(decodedContent);  
+
+  const maxRetries = 2;
+  const retryDelayMs = 3000;
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(
+        `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${configsPath}/${filename}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/vnd.github.v3+json",
+            "User-Agent": "TSE-Demo-Builder",
+            "Content-Type": "application/json",
+            Authorization: `token ${process.env.privateRepotk}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch configuration: ${response.status} ${response.statusText}`);
+      }
+
+      const fileData = await response.json();
+
+      if (!fileData.content) {
+        throw new Error("No content found in GitHub response");
+      }
+
+      // Decode base64 content using Node.js Buffer (server-side)
+      const base64Content = fileData.content.replace(/\n/g, '');
+      const decodedContent = Buffer.from(base64Content, 'base64').toString('utf-8');
+
+      return JSON.parse(decodedContent);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+      if (attempt === maxRetries) {
+        throw new Error(`Failed to fetch configuration after ${maxRetries + 1} attempts: ${errorMessage}`);
+      }
+
+      console.warn(
+        `Configuration fetch attempt ${attempt + 1} failed for ${filename}. Retrying in ${retryDelayMs / 1000} seconds...`
+      );
+      await new Promise(resolve => setTimeout(resolve, retryDelayMs));
+    }
+  }
+
+  throw new Error('Unexpected retry flow while fetching configuration');
 }  
   
 export async function POST(request: NextRequest) {    
