@@ -26,6 +26,7 @@ import {
   StylingConfig,
   HomePageConfig,
   AppConfig,
+  DatabricksConfig,
   FullAppConfig,
   StandardMenu,
 } from "../types/thoughtspot";
@@ -275,6 +276,7 @@ function ConnectionContent({
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [localUrl, setLocalUrl] = useState(appConfig.thoughtspotUrl || "");
   const [loginSuccess, setLoginSuccess] = useState(false);
+  const selectedProvider = appConfig.provider ?? "thoughtspot";
 
   useEffect(() => {
     setLocalUrl(appConfig.thoughtspotUrl || "");
@@ -321,116 +323,308 @@ function ConnectionContent({
     }
   };
 
+  const handleProviderChange = (newProvider: "thoughtspot" | "databricks") => {
+    setLoginError(null);
+    setLoginSuccess(false);
+
+    if (newProvider === "databricks") {
+      const nextDatabricks: DatabricksConfig = appConfig.databricks
+        ? {
+            ...appConfig.databricks,
+            embedMode: appConfig.databricks.embedMode || "iframe",
+          }
+        : { workspaceUrl: "", embedMode: "iframe" };
+
+      updateAppConfig({
+        ...appConfig,
+        provider: "databricks",
+        databricks: nextDatabricks,
+      });
+      return;
+    }
+
+    updateAppConfig({
+      ...appConfig,
+      provider: "thoughtspot",
+    });
+  };
+
+  const updateDatabricksConfig = (updates: Partial<DatabricksConfig>) => {
+    const nextDatabricks: DatabricksConfig = {
+      workspaceUrl: appConfig.databricks?.workspaceUrl || "",
+      dashboardId: appConfig.databricks?.dashboardId,
+      genieSpaceId: appConfig.databricks?.genieSpaceId,
+      embedMode: appConfig.databricks?.embedMode || "iframe",
+      useGenieApi: appConfig.databricks?.useGenieApi,
+      ...updates,
+    };
+
+    updateAppConfig({
+      ...appConfig,
+      provider: "databricks",
+      databricks: nextDatabricks,
+    });
+  };
+
   return (
     <div style={{ padding: "16px" }}>
-      <h3 style={{ marginBottom: "16px" }}>ThoughtSpot Connection</h3>
-
-      {/* Success banner */}
-      {loginSuccess && (
-        <div
-          style={{
-            padding: "10px 12px",
-            borderRadius: "6px",
-            backgroundColor: "#ecfdf5",
-            border: "1px solid #bbf7d0",
-            color: "#166534",
-            marginBottom: "12px",
-            fontWeight: 600,
-          }}
-        >
-          Successfully logged in. Click <strong>Apply Changes</strong> to save the
-          cluster change.
-        </div>
-      )}
+      <h3 style={{ marginBottom: "16px" }}>
+        {selectedProvider === "databricks"
+          ? "Databricks Connection"
+          : "ThoughtSpot Connection"}
+      </h3>
 
       <div style={{ marginBottom: "24px" }}>
         <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
-          ThoughtSpot URL
+          Provider
         </label>
-        <div style={{ display: "flex", gap: "8px" }}>
-          <input
-            type="text"
-            value={localUrl}
-            onChange={(e) => setLocalUrl(e.target.value)}
-            style={{
-              flex: 1,
-              padding: "8px 12px",
-              border: "1px solid #d1d5db",
-              borderRadius: "4px",
-            }}
-          />
-          {/* <button
-            onClick={handleSaveUrl}
-            disabled={localUrl === appConfig.thoughtspotUrl}
-            style={{
-              padding: "8px 16px",
-              backgroundColor: "#3182ce",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: localUrl === appConfig.thoughtspotUrl ? "not-allowed" : "pointer",
-              opacity: localUrl === appConfig.thoughtspotUrl ? 0.6 : 1,
-            }}
-          >
-            Save URL
-          </button> */}
-        </div>
-        {/* <p style={{ fontSize: "12px", color: "#6b7280", marginTop: "4px" }}>
-          Example: https://your.thoughtspot.cloud (Apply changes after saving)
-        </p> */}
-      </div>
-
-      <div>
-        <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
-          Username
-        </label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+        <select
+          value={selectedProvider}
+          onChange={(e) =>
+            handleProviderChange(e.target.value as "thoughtspot" | "databricks")
+          }
           style={{
             width: "100%",
             padding: "8px 12px",
             border: "1px solid #d1d5db",
             borderRadius: "4px",
-            marginBottom: "16px",
-          }}
-        />
-        <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
-          Password
-        </label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "8px 12px",
-            border: "1px solid #d1d5db",
-            borderRadius: "4px",
-            marginBottom: "16px",
-          }}
-        />
-        <button
-          onClick={handleLogin}
-          disabled={isLoggingIn || !appConfig.thoughtspotUrl}
-          style={{
-            padding: "8px 16px",
-            backgroundColor: "#3182ce",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: isLoggingIn || !appConfig.thoughtspotUrl ? "not-allowed" : "pointer",
-            opacity: isLoggingIn || !appConfig.thoughtspotUrl ? 0.6 : 1,
+            backgroundColor: "white",
           }}
         >
-          {isLoggingIn ? "Logging in..." : "Login"}
-        </button>
-
-        {loginError && (
-          <p style={{ color: "#dc2626", marginTop: "8px" }}>{loginError}</p>
-        )}
+          <option value="thoughtspot">ThoughtSpot</option>
+          <option value="databricks">Databricks</option>
+        </select>
       </div>
+
+      {selectedProvider === "databricks" ? (
+        <>
+          <div style={{ marginBottom: "24px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 500,
+              }}
+            >
+              Workspace URL
+            </label>
+            <input
+              type="url"
+              value={appConfig.databricks?.workspaceUrl || ""}
+              onChange={(e) =>
+                updateDatabricksConfig({ workspaceUrl: e.target.value })
+              }
+              placeholder="https://dbc-xxxxxxxx-xxxx.cloud.databricks.com"
+              style={{
+                width: "100%",
+                padding: "8px 12px",
+                border: "1px solid #d1d5db",
+                borderRadius: "4px",
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: "24px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 500,
+              }}
+            >
+              Dashboard ID (optional)
+            </label>
+            <input
+              type="text"
+              value={appConfig.databricks?.dashboardId || ""}
+              onChange={(e) =>
+                updateDatabricksConfig({
+                  dashboardId: e.target.value || undefined,
+                })
+              }
+              placeholder="Dashboard ID"
+              style={{
+                width: "100%",
+                padding: "8px 12px",
+                border: "1px solid #d1d5db",
+                borderRadius: "4px",
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: "24px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 500,
+              }}
+            >
+              Genie Space ID (optional)
+            </label>
+            <input
+              type="text"
+              value={appConfig.databricks?.genieSpaceId || ""}
+              onChange={(e) =>
+                updateDatabricksConfig({
+                  genieSpaceId: e.target.value || undefined,
+                })
+              }
+              placeholder="Genie Space ID"
+              style={{
+                width: "100%",
+                padding: "8px 12px",
+                border: "1px solid #d1d5db",
+                borderRadius: "4px",
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: "24px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 500,
+              }}
+            >
+              Embed Mode
+            </label>
+            <select
+              value={appConfig.databricks?.embedMode || "iframe"}
+              onChange={(e) =>
+                updateDatabricksConfig({
+                  embedMode: e.target.value as DatabricksConfig["embedMode"],
+                })
+              }
+              style={{
+                width: "100%",
+                padding: "8px 12px",
+                border: "1px solid #d1d5db",
+                borderRadius: "4px",
+                backgroundColor: "white",
+              }}
+            >
+              <option value="iframe">iframe</option>
+              <option value="external">external</option>
+            </select>
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Success banner */}
+          {loginSuccess && (
+            <div
+              style={{
+                padding: "10px 12px",
+                borderRadius: "6px",
+                backgroundColor: "#ecfdf5",
+                border: "1px solid #bbf7d0",
+                color: "#166534",
+                marginBottom: "12px",
+                fontWeight: 600,
+              }}
+            >
+              Successfully logged in. Click <strong>Apply Changes</strong> to save
+              the cluster change.
+            </div>
+          )}
+
+          <div style={{ marginBottom: "24px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 500,
+              }}
+            >
+              ThoughtSpot URL
+            </label>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <input
+                type="text"
+                value={localUrl}
+                onChange={(e) => setLocalUrl(e.target.value)}
+                style={{
+                  flex: 1,
+                  padding: "8px 12px",
+                  border: "1px solid #d1d5db",
+                  borderRadius: "4px",
+                }}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 500,
+              }}
+            >
+              Username
+            </label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "8px 12px",
+                border: "1px solid #d1d5db",
+                borderRadius: "4px",
+                marginBottom: "16px",
+              }}
+            />
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 500,
+              }}
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "8px 12px",
+                border: "1px solid #d1d5db",
+                borderRadius: "4px",
+                marginBottom: "16px",
+              }}
+            />
+            <button
+              onClick={handleLogin}
+              disabled={isLoggingIn || !appConfig.thoughtspotUrl}
+              style={{
+                padding: "8px 16px",
+                backgroundColor: "#3182ce",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor:
+                  isLoggingIn || !appConfig.thoughtspotUrl
+                    ? "not-allowed"
+                    : "pointer",
+                opacity: isLoggingIn || !appConfig.thoughtspotUrl ? 0.6 : 1,
+              }}
+            >
+              {isLoggingIn ? "Logging in..." : "Login"}
+            </button>
+
+            {loginError && (
+              <p style={{ color: "#dc2626", marginTop: "8px" }}>
+                {loginError}
+              </p>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }

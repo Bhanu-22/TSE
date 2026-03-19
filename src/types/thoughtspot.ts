@@ -143,7 +143,19 @@ export interface HomePageConfig {
   value: string;
 }
 
+export interface DatabricksConfig {
+  workspaceUrl: string;
+  dashboardId?: string;
+  genieSpaceId?: string;
+  orgId?: string;
+  dashboardVersion?: "v1" | "v3";
+  embedMode?: "iframe" | "external";
+  useGenieApi?: boolean;
+}
+
 export interface AppConfig {
+  provider?: "thoughtspot" | "databricks";
+  databricks?: DatabricksConfig;
   thoughtspotUrl: string;
   authType: "None" | "SSO" | "TrustedAuthToken";
   applicationName: string;

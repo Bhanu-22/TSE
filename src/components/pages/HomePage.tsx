@@ -16,9 +16,23 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const htmlContainerRef = useRef<HTMLDivElement>(null);
   const [processedHtml, setProcessedHtml] = useState<string | null>(null);
+  const [htmlWarning, setHtmlWarning] = useState<string | null>(null);
+  const liveboardInstancesRef = useRef<
+    Array<{
+      destroy?: () => void;
+      updateRuntimeFilters?: (
+        filters: Array<{
+          columnName: string;
+          operator: string;
+          values: string[];
+        }>
+      ) => void;
+    }>
+  >([]);
   const [kpiEmbeds, setKpiEmbeds] = useState<
     Array<{
       id: string;
+      host: string;
       liveboardId: string;
       vizId: string;
       width: string;
@@ -128,12 +142,14 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     if (mappedType !== "html") {
       setProcessedHtml(null);
       setKpiEmbeds([]);
+      setHtmlWarning(null);
       return;
     }
 
     if (!mappedValue || !mappedValue.trim()) {
       setProcessedHtml(null);
       setKpiEmbeds([]);
+      setHtmlWarning(null);
       return;
     }
 
@@ -149,6 +165,7 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
       const doc = parser.parseFromString(mappedValue, "text/html");
       const embeds: Array<{
         id: string;
+        host: string;
         liveboardId: string;
         vizId: string;
         width: string;
@@ -164,26 +181,72 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
         return match?.[1]?.trim() || "";
       };
 
-      const extractIdsFromSrc = (src: string) => {
+      const normalizeThoughtSpotUrl = (src: string): string => {
+        return src.replace(/^https?:\/\/https?:\/\//i, "https://").trim();
+      };
+
+      const extractEmbedInfoFromSrc = (src: string) => {
+        const normalizedSrc = normalizeThoughtSpotUrl(src);
         try {
-          const url = new URL(src);
+          const url = new URL(normalizedSrc);
           const hash = url.hash || "";
           const match = hash.match(/\/embed\/viz\/([^/]+)\/([^/?#]+)/);
-          if (!match) return null;
-          return { liveboardId: match[1], vizId: match[2] };
+          if (match) {
+            return {
+              host: url.origin,
+              liveboardId: match[1],
+              vizId: match[2],
+            };
+          }
+
+          const liveboardId =
+            url.searchParams.get("pinboardId") ||
+            url.searchParams.get("liveboardId");
+          const vizId = url.searchParams.get("vizId");
+
+          if (liveboardId && vizId) {
+            return {
+              host: url.origin,
+              liveboardId,
+              vizId,
+            };
+          }
         } catch {
-          const match = src.match(/#\/embed\/viz\/([^/]+)\/([^/?#]+)/);
-          if (!match) return null;
-          return { liveboardId: match[1], vizId: match[2] };
+          const match = normalizedSrc.match(
+            /#\/embed\/viz\/([^/]+)\/([^/?#]+)/
+          );
+          if (match) {
+            return { host: "", liveboardId: match[1], vizId: match[2] };
+          }
+
+          const liveboardMatch = normalizedSrc.match(
+            /(?:pinboardId|liveboardId)=([^&#]+)/i
+          );
+          const vizMatch = normalizedSrc.match(/vizId=([^&#]+)/i);
+
+          if (liveboardMatch && vizMatch) {
+            const hostMatch = normalizedSrc.match(
+              /^(https?:\/\/[^/?#]+)(?:\/|$)/i
+            );
+            return {
+              host: hostMatch?.[1] || "",
+              liveboardId: liveboardMatch[1],
+              vizId: vizMatch[1],
+            };
+          }
+
+          return null;
         }
       };
 
       iframes.forEach((iframe) => {
         const src = iframe.getAttribute("src") || "";
-        if (!src.includes("/embed/viz/")) return;
+        if (!src.includes("thoughtspot") && !src.includes("pinboardId=")) {
+          return;
+        }
 
-        const ids = extractIdsFromSrc(src);
-        if (!ids) return;
+        const embedInfo = extractEmbedInfoFromSrc(src);
+        if (!embedInfo) return;
 
         const style = iframe.getAttribute("style") || "";
         const widthFromStyle = readStyleValue(style, "width");
@@ -195,16 +258,20 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
         const embedId = `ts-kpi-${embedIndex++}`;
         embeds.push({
           id: embedId,
-          liveboardId: ids.liveboardId,
-          vizId: ids.vizId,
+          host: embedInfo.host,
+          liveboardId: embedInfo.liveboardId,
+          vizId: embedInfo.vizId,
           width,
           height,
         });
 
         const placeholder = doc.createElement("div");
         placeholder.setAttribute("data-ts-embed-id", embedId);
-        placeholder.setAttribute("data-ts-liveboard-id", ids.liveboardId);
-        placeholder.setAttribute("data-ts-viz-id", ids.vizId);
+        placeholder.setAttribute(
+          "data-ts-liveboard-id",
+          embedInfo.liveboardId
+        );
+        placeholder.setAttribute("data-ts-viz-id", embedInfo.vizId);
 
         const hasWidthInStyle = /\bwidth\s*:/i.test(style);
         const hasHeightInStyle = /\bheight\s*:/i.test(style);
@@ -241,12 +308,35 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
         .map((node) => node.outerHTML)
         .join("");
 
+      const cardsGrid = doc.querySelector(".cards-grid");
+      const hasRuntimeEmbedScript = Array.from(doc.querySelectorAll("script"))
+        .map((node) => node.textContent || "")
+        .some(
+          (text) =>
+            text.includes('document.querySelectorAll(".cards-grid iframe")') ||
+            text.includes("window.tsembed")
+        );
+
+      if (
+        cardsGrid &&
+        hasRuntimeEmbedScript &&
+        cardsGrid.querySelectorAll("iframe").length === 0 &&
+        embeds.length === 0
+      ) {
+        setHtmlWarning(
+          "The imported homepage template references ThoughtSpot visual embeds, but the JSON does not contain any embed iframes to render."
+        );
+      } else {
+        setHtmlWarning(null);
+      }
+
       setProcessedHtml(`${preservedHeadMarkup}${doc.body.innerHTML}`);
       setKpiEmbeds(embeds);
     } catch (error) {
       console.error("Failed to process KPI embeds:", error);
       setProcessedHtml(mappedValue);
       setKpiEmbeds([]);
+      setHtmlWarning(null);
     }
   }, [mappedType, mappedValue]);
 
@@ -256,7 +346,7 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     if (!htmlContainerRef.current) return;
 
     let isMounted = true;
-    const instances: Array<{ destroy?: () => void }> = [];
+    liveboardInstancesRef.current = [];
 
     const initEmbeds = async () => {
       try {
@@ -335,7 +425,7 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
             },
           });
 
-          instances.push(instance);
+          liveboardInstancesRef.current.push(instance);
           await instance.render();
         }
       } catch (error) {
@@ -347,11 +437,12 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
 
     return () => {
       isMounted = false;
-      instances.forEach((instance) => {
+      liveboardInstancesRef.current.forEach((instance) => {
         if (typeof instance.destroy === "function") {
           instance.destroy();
         }
       });
+      liveboardInstancesRef.current = [];
     };
   }, [
     kpiEmbeds,
@@ -363,6 +454,51 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     context.stylingConfig.embeddedContent.strings,
     context.stylingConfig.embeddedContent.stringIDs,
   ]);
+
+  useEffect(() => {
+    if (!htmlContainerRef.current) return;
+    if (mappedType !== "html") return;
+
+    const chips = Array.from(
+      htmlContainerRef.current.querySelectorAll(".filters .chip")
+    );
+
+    if (chips.length === 0) return;
+
+    const activeFilters: Record<string, string[]> = {};
+
+    const cleanupFns = chips.map((chip) => {
+      const element = chip as HTMLElement;
+      const handleClick = () => {
+        const columnName =
+          element.dataset.col || element.innerText.split("(")[0].trim();
+        const value = window.prompt(`Filter ${columnName} by:`);
+
+        if (value) {
+          activeFilters[columnName] = [value];
+        } else {
+          delete activeFilters[columnName];
+        }
+
+        const runtimeFilters = Object.keys(activeFilters).map((key) => ({
+          columnName: key,
+          operator: "EQ",
+          values: activeFilters[key],
+        }));
+
+        liveboardInstancesRef.current.forEach((instance) => {
+          instance.updateRuntimeFilters?.(runtimeFilters);
+        });
+      };
+
+      element.addEventListener("click", handleClick);
+      return () => element.removeEventListener("click", handleClick);
+    });
+
+    return () => {
+      cleanupFns.forEach((cleanup) => cleanup());
+    };
+  }, [mappedType, processedHtml, kpiEmbeds.length]);
 
   // Effect to handle iframe errors
   useEffect(() => {
@@ -440,19 +576,36 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
         if (mappedValue && mappedValue.trim()) {
           const htmlToRender = processedHtml ?? mappedValue;
           return (
-            <div
-              dangerouslySetInnerHTML={{ __html: htmlToRender }}
-              className="Box-container"
-              style={{
-                backgroundColor: "white",
-                padding: "20px",
-                borderRadius: "8px",
-                border: "1px solid #e2e8f0",
-                height: "100%",
-                overflow: "auto",
-              }}
-              ref={htmlContainerRef}
-            />
+            <>
+              {htmlWarning ? (
+                <div
+                  style={{
+                    marginBottom: "16px",
+                    padding: "12px 16px",
+                    backgroundColor: "#fff7ed",
+                    border: "1px solid #fdba74",
+                    borderRadius: "8px",
+                    color: "#9a3412",
+                    fontSize: "14px",
+                  }}
+                >
+                  {htmlWarning}
+                </div>
+              ) : null}
+              <div
+                dangerouslySetInnerHTML={{ __html: htmlToRender }}
+                className="Box-container"
+                style={{
+                  backgroundColor: "white",
+                  padding: "20px",
+                  borderRadius: "8px",
+                  border: "1px solid #e2e8f0",
+                  height: "100%",
+                  overflow: "auto",
+                }}
+                ref={htmlContainerRef}
+              />
+            </>
           );
         }
         return (
