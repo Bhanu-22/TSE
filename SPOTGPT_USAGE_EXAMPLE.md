@@ -1,6 +1,6 @@
 # SpotGPT TypeScript Client Usage Examples
 
-The SpotGPT TypeScript client provides a comprehensive interface for interacting with the SpotGPT API, equivalent to the Python client.
+The SpotGPT TypeScript client provides a comprehensive interface for interacting with the SpotGPT API, equivalent to the Python clie
 
 ## Basic Usage
 
