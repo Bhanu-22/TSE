@@ -188,6 +188,7 @@ export default function SideNav({
           const standardMenu = menu as StandardMenu;
           const routeMap: { [key: string]: string } = {
             home: "/",
+            dashboard: "/dashboard",
             favorites: "/favorites",
             "my-reports": "/my-reports",
             spotter: "/spotter",
@@ -214,6 +215,7 @@ export default function SideNav({
         .map((menu) => {
           const routeMap: { [key: string]: string } = {
             home: "/",
+            dashboard: "/dashboard",
             favorites: "/favorites",
             "my-reports": "/my-reports",
             spotter: "/spotter",

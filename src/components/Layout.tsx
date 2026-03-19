@@ -9,12 +9,15 @@ import React, {
   useCallback,
   startTransition,
 } from "react";
+import { usePathname } from "next/navigation";
 import TopBar from "./TopBar";
 import SideNav from "./SideNav";
 import SettingsModal from "./SettingsModal";
 import Footer from "./Footer";
 import SessionChecker from "./SessionChecker";
 import ChatBubble from "./ChatBubble";
+import DatabricksDashboardPage from "./pages/DatabricksDashboardPage";
+import DatabricksGeniePage from "./pages/DatabricksGeniePage";
 import {
   CustomMenu,
   StylingConfig,
@@ -288,6 +291,8 @@ interface LayoutProps {
 }
 
 export default function Layout({ children }: LayoutProps) {
+  const pathname = usePathname();
+
   // Fix hydration issues and suppress third-party console errors (like Mixpanel)
   useEffect(() => {
     // Fix hydration mismatches caused by browser extensions
@@ -1138,6 +1143,10 @@ export default function Layout({ children }: LayoutProps) {
 
   // ThoughtSpot initialization
   useEffect(() => {
+    if (appConfig.provider === "databricks") {
+      return;
+    }
+
     // Prevent initialization if no URL is configured
     if (!appConfig.thoughtspotUrl) {
       return;
@@ -1149,6 +1158,10 @@ export default function Layout({ children }: LayoutProps) {
     }
 
     const initializeThoughtSpot = async () => {
+      if (appConfig.provider === "databricks") {
+        return;
+      }
+
       if (!appConfig.thoughtspotUrl) {
         return;
       }
@@ -1337,6 +1350,7 @@ export default function Layout({ children }: LayoutProps) {
 
     initializeThoughtSpot();
   }, [
+    appConfig.provider,
     appConfig.thoughtspotUrl,
     appConfig.earlyAccessFlags,
     configVersion,
@@ -2347,6 +2361,59 @@ export default function Layout({ children }: LayoutProps) {
     return currentUser?.access?.customMenus?.includes(menu.id);
   });
 
+  const provider = appConfig.provider ?? "thoughtspot";
+  const isDatabricksProvider = provider === "databricks";
+
+  let routedContent: React.ReactNode = children;
+
+  if (isDatabricksProvider) {
+    const pathSegments = (pathname || "/").split("/").filter(Boolean);
+    const activeMenuId = pathSegments[0] || "home";
+
+    let providerContentType: string | undefined;
+
+    if (activeMenuId === "custom" && pathSegments[1]) {
+      providerContentType = (
+        customMenus.find((menu) => menu.id === pathSegments[1]) as any
+      )?.providerContentType;
+    } else {
+      providerContentType = (
+        standardMenus.find((menu) => menu.id === activeMenuId) as any
+      )?.providerContentType;
+    }
+
+    const homeMenu = standardMenus.find((menu) => menu.id === "home");
+    const hasCustomDatabricksHomePage =
+      !!homeMenu?.homePageValue?.trim() || !!homePageConfig.value?.trim();
+
+    if (activeMenuId === "home") {
+      routedContent = hasCustomDatabricksHomePage ? (
+        children
+      ) : (
+        <DatabricksDashboardPage />
+      );
+    } else if (providerContentType === "dashboard") {
+      routedContent = <DatabricksDashboardPage />;
+    } else if (activeMenuId === "spotter" || providerContentType === "genie") {
+      routedContent = <DatabricksGeniePage />;
+    } else {
+      routedContent = (
+        <div
+          style={{
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#718096",
+            fontSize: "14px",
+          }}
+        >
+          This page is not available in Databricks mode.
+        </div>
+      );
+    }
+  }
+
   const contextValue: AppContextType = {
     homePageConfig,
     updateHomePageConfig,
@@ -2371,18 +2438,34 @@ export default function Layout({ children }: LayoutProps) {
     configVersion,
   };
 
+  function MaybeSessionChecker({
+    children: wrappedChildren,
+  }: {
+    children: React.ReactNode;
+  }) {
+    if (isDatabricksProvider) {
+      return <>{wrappedChildren}</>;
+    }
+
+    return (
+      <SessionChecker
+        thoughtspotUrl={appConfig.thoughtspotUrl}
+        onSessionStatusChange={handleSessionStatusChange}
+        onConfigureSettings={() => setIsSettingsOpen(true)}
+        appConfig={appConfig}
+        updateAppConfig={updateAppConfig}
+      >
+        {wrappedChildren}
+      </SessionChecker>
+    );
+  }
+
   return (
     <AppContext.Provider value={contextValue}>
       {/* Dynamic favicon */}
       <link rel="icon" href="/logo.png" id="favicon" />
       <StylingProvider stylingConfig={stylingConfig}>
-        <SessionChecker
-          thoughtspotUrl={appConfig.thoughtspotUrl}  
-          onSessionStatusChange={handleSessionStatusChange}  
-          onConfigureSettings={() => setIsSettingsOpen(true)}  
-          appConfig={appConfig}  
-          updateAppConfig={updateAppConfig}
-        >
+        <MaybeSessionChecker>
           <div
             style={{
               height: "100vh",
@@ -2448,7 +2531,7 @@ export default function Layout({ children }: LayoutProps) {
                   flexDirection: "column",
                 }}
               >
-                <div style={{ flex: 1 }}>{children}</div>
+                <div style={{ flex: 1 }}>{routedContent}</div>
                 {(appConfig.showFooter ?? true) && (
                   <Footer
                     backgroundColor={
@@ -2656,10 +2739,10 @@ export default function Layout({ children }: LayoutProps) {
                 </div>
               </div>
             )}
-
+ 
             {/* Chat Bubble */}
-            <ChatBubble />
-
+            {provider === "thoughtspot" && <ChatBubble />}
+ 
             {/* Loading Dialog */}
             <LoadingDialog
               isOpen={isLoadingConfiguration}
@@ -2677,7 +2760,7 @@ export default function Layout({ children }: LayoutProps) {
               }}
             />
           </div>
-        </SessionChecker>
+        </MaybeSessionChecker>
       </StylingProvider>
     </AppContext.Provider>
   );

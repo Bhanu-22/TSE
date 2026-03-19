@@ -94,6 +94,8 @@ export const DEFAULT_CONFIG: ConfigurationData = {
     value: "<h1>Welcome to TSE Demo Builder</h1>",
   },
   appConfig: {
+    provider: "thoughtspot",
+    databricks: undefined,
     thoughtspotUrl: "https://7dxperts.thoughtspot.cloud/",
     orgIdentifier: undefined,
     applicationName: "TSE Demo Builder",
@@ -998,33 +1000,52 @@ export const loadConfigurationFromSource = async (
       }
     }
 
+    const importedAppConfig =
+      configData.appConfig && typeof configData.appConfig === "object"
+        ? (configData.appConfig as Partial<AppConfig>)
+        : undefined;
+
+    const mergedAppConfig: AppConfig = importedAppConfig
+      ? { ...DEFAULT_CONFIG.appConfig, ...(importedAppConfig as AppConfig) }
+      : DEFAULT_CONFIG.appConfig;
+
+    const provider = mergedAppConfig.provider ?? "thoughtspot";
+    const isDatabricksProvider = provider === "databricks";
+
     // Merge with defaults to handle missing fields gracefully
     // Ensure all DEFAULT_CONFIG menus are present in the loaded configuration
     const storedStandardMenus =
       (configData.standardMenus as StandardMenu[]) || [];
-    const mergedStandardMenus = [...DEFAULT_CONFIG.standardMenus];
+
+    const mergedStandardMenus = isDatabricksProvider
+      ? [...storedStandardMenus]
+      : [...DEFAULT_CONFIG.standardMenus];
 
     // Add any stored menus that aren't in DEFAULT_CONFIG
-    storedStandardMenus.forEach((storedMenu) => {
-      if (
-        !mergedStandardMenus.find(
-          (defaultMenu) => defaultMenu.id === storedMenu.id
-        )
-      ) {
-        mergedStandardMenus.push(storedMenu);
-      }
-    });
+    if (!isDatabricksProvider) {
+      storedStandardMenus.forEach((storedMenu) => {
+        if (
+          !mergedStandardMenus.find(
+            (defaultMenu) => defaultMenu.id === storedMenu.id
+          )
+        ) {
+          mergedStandardMenus.push(storedMenu);
+        }
+      });
+    }
 
     // Update stored menus with any new properties from DEFAULT_CONFIG
-    mergedStandardMenus.forEach((mergedMenu) => {
-      const defaultMenu = DEFAULT_CONFIG.standardMenus.find(
-        (m) => m.id === mergedMenu.id
-      );
-      if (defaultMenu) {
-        // Merge properties, keeping stored values but adding new default properties
-        Object.assign(mergedMenu, defaultMenu, mergedMenu);
-      }
-    });
+    if (!isDatabricksProvider) {
+      mergedStandardMenus.forEach((mergedMenu) => {
+        const defaultMenu = DEFAULT_CONFIG.standardMenus.find(
+          (m) => m.id === mergedMenu.id
+        );
+        if (defaultMenu) {
+          // Merge properties, keeping stored values but adding new default properties
+          Object.assign(mergedMenu, defaultMenu, mergedMenu);
+        }
+      });
+    }
 
     const mergedConfig: ConfigurationData = {
       standardMenus: mergedStandardMenus,
@@ -1046,8 +1067,7 @@ export const loadConfigurationFromSource = async (
       homePageConfig:
         (configData.homePageConfig as HomePageConfig) ||
         DEFAULT_CONFIG.homePageConfig,
-      appConfig:
-        (configData.appConfig as AppConfig) || DEFAULT_CONFIG.appConfig,
+      appConfig: mergedAppConfig,
       fullAppConfig:
         (configData.fullAppConfig as FullAppConfig) ||
         DEFAULT_CONFIG.fullAppConfig,
@@ -1972,6 +1992,18 @@ export const loadConfigurationSimplified = async (
     onProgress?.("Validating configuration...", 60);
 
     // Step 3: Validate and merge configuration
+    const importedAppConfig =
+      configData.appConfig && typeof configData.appConfig === "object"
+        ? (configData.appConfig as Partial<AppConfig>)
+        : undefined;
+
+    const mergedAppConfig: AppConfig = importedAppConfig
+      ? { ...DEFAULT_CONFIG.appConfig, ...(importedAppConfig as AppConfig) }
+      : DEFAULT_CONFIG.appConfig;
+
+    const provider = mergedAppConfig.provider ?? "thoughtspot";
+    const isDatabricksProvider = provider === "databricks";
+
     const mergedConfig: ConfigurationData = {
       standardMenus:
         (configData.standardMenus as StandardMenu[]) ||
@@ -1980,6 +2012,15 @@ export const loadConfigurationSimplified = async (
         (configData.customMenus as CustomMenu[]) || DEFAULT_CONFIG.customMenus,
       menuOrder: (() => {
         const storedOrder = (configData.menuOrder as string[]) || [];
+
+        if (isDatabricksProvider) {
+          return storedOrder.length > 0
+            ? storedOrder
+            : (configData.standardMenus as StandardMenu[] | undefined)?.map(
+                (menu) => menu.id
+              ) || [];
+        }
+
         const mergedOrder = [...DEFAULT_CONFIG.menuOrder];
 
         // Add any stored menu IDs that aren't in DEFAULT_CONFIG
@@ -1994,8 +2035,7 @@ export const loadConfigurationSimplified = async (
       homePageConfig:
         (configData.homePageConfig as HomePageConfig) ||
         DEFAULT_CONFIG.homePageConfig,
-      appConfig:
-        (configData.appConfig as AppConfig) || DEFAULT_CONFIG.appConfig,
+      appConfig: mergedAppConfig,
       fullAppConfig:
         (configData.fullAppConfig as FullAppConfig) ||
         DEFAULT_CONFIG.fullAppConfig,
@@ -2055,6 +2095,7 @@ export const redirectFromCustomMenu = (standardMenus: StandardMenu[]): void => {
     if (firstStandardMenu) {
       const routeMap: { [key: string]: string } = {
         home: "/",
+        dashboard: "/dashboard",
         favorites: "/favorites",
         "my-reports": "/my-reports",
         spotter: "/spotter",
