@@ -181,6 +181,20 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
         return match?.[1]?.trim() || "";
       };
 
+      const setStyleProperty = (
+        style: string,
+        property: string,
+        value: string
+      ): string => {
+        const regex = new RegExp(`${property}\\s*:\\s*[^;]+;?`, "i");
+        const trimmedStyle = style.trim();
+        const nextEntry = `${property}: ${value};`;
+        if (regex.test(trimmedStyle)) {
+          return trimmedStyle.replace(regex, nextEntry).trim();
+        }
+        return `${trimmedStyle}${trimmedStyle ? " " : ""}${nextEntry}`.trim();
+      };
+
       const normalizeThoughtSpotUrl = (src: string): string => {
         return src.replace(/^https?:\/\/https?:\/\//i, "https://").trim();
       };
@@ -241,6 +255,40 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
 
       iframes.forEach((iframe) => {
         const src = iframe.getAttribute("src") || "";
+        if (
+          src.includes("/embed/dashboards") &&
+          src.includes("fullscreenWidget=")
+        ) {
+          const originalStyle = iframe.getAttribute("style") || "";
+          let iframeStyle = originalStyle;
+          iframeStyle = setStyleProperty(iframeStyle, "width", "100%");
+          iframeStyle = setStyleProperty(iframeStyle, "height", "480px");
+          iframeStyle = setStyleProperty(iframeStyle, "margin-top", "-98px");
+          iframeStyle = setStyleProperty(iframeStyle, "border", "none");
+          iframeStyle = setStyleProperty(iframeStyle, "display", "block");
+          iframeStyle = setStyleProperty(iframeStyle, "overflow", "hidden");
+
+          iframe.setAttribute("style", iframeStyle);
+          iframe.setAttribute("scrolling", "no");
+
+          const wrapper = doc.createElement("div");
+          wrapper.setAttribute(
+            "style",
+            [
+              "position: relative",
+              "overflow: hidden",
+              "border-radius: 12px",
+              "height: 285px",
+              "width: 100%",
+              "background: #fff",
+            ].join("; ") + ";"
+          );
+
+          iframe.replaceWith(wrapper);
+          wrapper.appendChild(iframe);
+          return;
+        }
+
         if (!src.includes("thoughtspot") && !src.includes("pinboardId=")) {
           return;
         }

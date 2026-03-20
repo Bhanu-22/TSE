@@ -11,6 +11,7 @@ type GenieRequestBody = {
   spaceId: string;
   message: string;
   conversationId?: string;
+  workspaceUrl?: string;
 };
 
 type DatabricksTokenSuccess = {
@@ -71,8 +72,10 @@ const normalizeDatabricksHost = (host: string): string => {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const getDatabricksAccessToken = async (): Promise<string> => {
-  const databricksHost = process.env.DATABRICKS_HOST;
+const getDatabricksAccessToken = async (
+  hostOverride?: string
+): Promise<string> => {
+  const databricksHost = hostOverride || process.env.DATABRICKS_HOST;
   const clientId = process.env.DATABRICKS_CLIENT_ID;
   const clientSecret = process.env.DATABRICKS_CLIENT_SECRET;
 
@@ -346,7 +349,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const databricksHost = process.env.DATABRICKS_HOST;
+  const databricksHost =
+    body.workspaceUrl?.trim?.() ||
+    request.cookies.get("databricks_workspace")?.value ||
+    process.env.DATABRICKS_HOST;
   if (!databricksHost) {
     return NextResponse.json(
       { error: "DATABRICKS_HOST not configured" },
@@ -356,7 +362,7 @@ export async function POST(request: NextRequest) {
 
   let token: string;
   try {
-    token = await getDatabricksAccessToken();
+    token = await getDatabricksAccessToken(databricksHost);
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to get token" },
