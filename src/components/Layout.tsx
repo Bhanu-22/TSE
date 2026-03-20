@@ -9,7 +9,7 @@ import React, {
   useCallback,
   startTransition,
 } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import TopBar from "./TopBar";
 import SideNav from "./SideNav";
 import SettingsModal from "./SettingsModal";
@@ -18,6 +18,11 @@ import SessionChecker from "./SessionChecker";
 import ChatBubble from "./ChatBubble";
 import DatabricksDashboardPage from "./pages/DatabricksDashboardPage";
 import DatabricksGeniePage from "./pages/DatabricksGeniePage";
+import DatabricksSessionChecker from "./DatabricksSessionChecker";
+import {
+  DatabricksAuthProvider,
+  useDatabricksAuth,
+} from "./DatabricksAuthContext";
 import {
   CustomMenu,
   StylingConfig,
@@ -290,8 +295,10 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export default function Layout({ children }: LayoutProps) {
+function LayoutContent({ children }: LayoutProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { clearDatabricksUser } = useDatabricksAuth();
 
   // Fix hydration issues and suppress third-party console errors (like Mixpanel)
   useEffect(() => {
@@ -1440,64 +1447,73 @@ export default function Layout({ children }: LayoutProps) {
     }
   };
 
-  const handleLogout = async () => {  
-    try {  
-      // Import the logout function  
-      const { logoutFromThoughtSpot } = await import("../services/thoughtspotApi");  
-        
-      // Call the logout API  
-      const success = await logoutFromThoughtSpot();  
-        
-      if (success) {  
-        // Clear ThoughtSpot-related state (reuse existing cleanup logic)  
-        if (typeof window !== "undefined") {  
-          // Clear localStorage  
-          const keysToRemove = Object.keys(localStorage).filter(  
-            (key) =>  
-              key.includes("thoughtspot") ||  
-              key.includes("ts-") ||  
-              key.includes("ts_")  
-          );  
-          keysToRemove.forEach((key) => {  
-            localStorage.removeItem(key);  
-          });  
-  
-          // Clear sessionStorage  
-          const sessionKeysToRemove = Object.keys(sessionStorage).filter(  
-            (key) =>  
-              key.includes("thoughtspot") ||  
-              key.includes("ts-") ||  
-              key.includes("ts_")  
-          );  
-          sessionKeysToRemove.forEach((key) => {  
-            sessionStorage.removeItem(key);  
-          });  
-  
-          // Clear cookies  
-          document.cookie.split(";").forEach((cookie) => {  
-            const eqPos = cookie.indexOf("=");  
-            const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;  
-            if (  
-              name.includes("thoughtspot") ||  
-              name.includes("ts-") ||  
-              name.includes("ts_")  
-            ) {  
-              document.cookie =  
-                name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";  
-            }  
-          });  
-  
-          // Reload the page to trigger SessionChecker  
-          window.location.reload();  
-        }  
-      } else {  
-        console.error("Logout failed");  
-        alert("Logout failed. Please try again.");  
-      }  
-    } catch (error) {  
-      console.error("Error during logout:", error);  
-      alert("An error occurred during logout. Please try again.");  
-    }  
+  const handleLogout = async () => {
+    if (provider === "databricks") {
+      try {
+        const { logoutFromDatabricks } = await import(
+          "../services/databricksApi"
+        );
+        await logoutFromDatabricks();
+        clearDatabricksUser();
+        router.push("/databricks-login");
+      } catch (error) {
+        console.error("Error during Databricks logout:", error);
+        alert("An error occurred during logout. Please try again.");
+      }
+      return;
+    }
+
+    try {
+      const { logoutFromThoughtSpot } = await import(
+        "../services/thoughtspotApi"
+      );
+      const success = await logoutFromThoughtSpot();
+
+      if (success) {
+        if (typeof window !== "undefined") {
+          const keysToRemove = Object.keys(localStorage).filter(
+            (key) =>
+              key.includes("thoughtspot") ||
+              key.includes("ts-") ||
+              key.includes("ts_")
+          );
+          keysToRemove.forEach((key) => {
+            localStorage.removeItem(key);
+          });
+
+          const sessionKeysToRemove = Object.keys(sessionStorage).filter(
+            (key) =>
+              key.includes("thoughtspot") ||
+              key.includes("ts-") ||
+              key.includes("ts_")
+          );
+          sessionKeysToRemove.forEach((key) => {
+            sessionStorage.removeItem(key);
+          });
+
+          document.cookie.split(";").forEach((cookie) => {
+            const eqPos = cookie.indexOf("=");
+            const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            if (
+              name.includes("thoughtspot") ||
+              name.includes("ts-") ||
+              name.includes("ts_")
+            ) {
+              document.cookie =
+                name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+            }
+          });
+
+          window.location.reload();
+        }
+      } else {
+        console.error("Logout failed");
+        alert("Logout failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+      alert("An error occurred during logout. Please try again.");
+    }
   };
 
   const openSettingsWithTab = (tab?: string, subTab?: string) => {
@@ -2363,6 +2379,9 @@ export default function Layout({ children }: LayoutProps) {
 
   const provider = appConfig.provider ?? "thoughtspot";
   const isDatabricksProvider = provider === "databricks";
+  const isDatabricksLoginRoute = pathname === "/databricks-login";
+  const shouldRenderAppChrome =
+    !(isDatabricksProvider && isDatabricksLoginRoute);
 
   let routedContent: React.ReactNode = children;
 
@@ -2373,20 +2392,30 @@ export default function Layout({ children }: LayoutProps) {
     let providerContentType: string | undefined;
 
     if (activeMenuId === "custom" && pathSegments[1]) {
-      providerContentType = (
-        customMenus.find((menu) => menu.id === pathSegments[1]) as any
-      )?.providerContentType;
+      const matchedMenu = customMenus.find((menu) => menu.id === pathSegments[1]) as
+        | (CustomMenu & Record<string, unknown>)
+        | undefined;
+      providerContentType =
+        typeof matchedMenu?.providerContentType === "string"
+          ? matchedMenu.providerContentType
+          : undefined;
     } else {
-      providerContentType = (
-        standardMenus.find((menu) => menu.id === activeMenuId) as any
-      )?.providerContentType;
+      const matchedMenu = standardMenus.find(
+        (menu) => menu.id === activeMenuId
+      ) as (StandardMenu & Record<string, unknown>) | undefined;
+      providerContentType =
+        typeof matchedMenu?.providerContentType === "string"
+          ? matchedMenu.providerContentType
+          : undefined;
     }
 
     const homeMenu = standardMenus.find((menu) => menu.id === "home");
     const hasCustomDatabricksHomePage =
       !!homeMenu?.homePageValue?.trim() || !!homePageConfig.value?.trim();
 
-    if (activeMenuId === "home") {
+    if (isDatabricksLoginRoute) {
+      routedContent = children;
+    } else if (activeMenuId === "home") {
       routedContent = hasCustomDatabricksHomePage ? (
         children
       ) : (
@@ -2444,7 +2473,9 @@ export default function Layout({ children }: LayoutProps) {
     children: React.ReactNode;
   }) {
     if (isDatabricksProvider) {
-      return <>{wrappedChildren}</>;
+      return (
+        <DatabricksSessionChecker>{wrappedChildren}</DatabricksSessionChecker>
+      );
     }
 
     return (
@@ -2466,6 +2497,7 @@ export default function Layout({ children }: LayoutProps) {
       <link rel="icon" href="/logo.png" id="favicon" />
       <StylingProvider stylingConfig={stylingConfig}>
         <MaybeSessionChecker>
+          {shouldRenderAppChrome ? (
           <div
             style={{
               height: "100vh",
@@ -2760,8 +2792,19 @@ export default function Layout({ children }: LayoutProps) {
               }}
             />
           </div>
+          ) : (
+            routedContent
+          )}
         </MaybeSessionChecker>
       </StylingProvider>
     </AppContext.Provider>
+  );
+}
+
+export default function Layout(props: LayoutProps) {
+  return (
+    <DatabricksAuthProvider>
+      <LayoutContent {...props} />
+    </DatabricksAuthProvider>
   );
 }

@@ -1,11 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useAppContext } from "../Layout";
+
+const DASHBOARD_BASE_WIDTH = 1720;
+const DASHBOARD_BASE_HEIGHT = 1280;
+const DASHBOARD_FOOTER_CROP = 44;
 
 export default function DatabricksDashboardPage() {
   const context = useAppContext();
   const [isIframeLoading, setIsIframeLoading] = useState(true);
+  const [availableWidth, setAvailableWidth] = useState(0);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const workspaceUrl = context.appConfig.databricks?.workspaceUrl?.trim() || "";
   const dashboardId = context.appConfig.databricks?.dashboardId?.trim() || "";
@@ -26,6 +32,36 @@ export default function DatabricksDashboardPage() {
     if (!iframeSrc) return;
     setIsIframeLoading(true);
   }, [iframeSrc]);
+
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) return;
+
+    const updateWidth = () => {
+      setAvailableWidth(node.clientWidth);
+    };
+
+    updateWidth();
+
+    const observer = new ResizeObserver(() => {
+      updateWidth();
+    });
+
+    observer.observe(node);
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  const iframeScale =
+    availableWidth > 0
+      ? Math.min(1, availableWidth / DASHBOARD_BASE_WIDTH)
+      : 1;
+
+  const visibleHeight = Math.max(
+    640,
+    (DASHBOARD_BASE_HEIGHT - DASHBOARD_FOOTER_CROP) * iframeScale
+  );
 
   if (!workspaceUrl || !dashboardId) {
     return (
@@ -64,19 +100,48 @@ export default function DatabricksDashboardPage() {
         flexDirection: "column",
       }}
     >
-      <div style={{ position: "relative", flex: 1, minHeight: 0 }}>
-        {iframeSrc && (
-          <iframe
-            src={iframeSrc}
-            title="Databricks Dashboard"
-            allow="fullscreen; clipboard-read; clipboard-write"
-            referrerPolicy="no-referrer-when-downgrade"
-            sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation allow-downloads"
-            style={{ width: "100%", height: "100%", border: "none" }}
-            onLoad={() => setIsIframeLoading(false)}
-            onError={() => setIsIframeLoading(false)}
-          />
-        )}
+      <div
+        ref={containerRef}
+        style={{
+          position: "relative",
+          flex: 1,
+          minHeight: 0,
+          overflow: "hidden",
+          borderRadius: "12px",
+          width: "100%",
+          backgroundColor: "#ffffff",
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            width: `${DASHBOARD_BASE_WIDTH * iframeScale}px`,
+            height: `${visibleHeight}px`,
+            overflow: "hidden",
+          }}
+        >
+          {iframeSrc && (
+            <iframe
+              src={iframeSrc}
+              title="Databricks Dashboard"
+              scrolling="no"
+              allow="fullscreen; clipboard-read; clipboard-write"
+              referrerPolicy="no-referrer-when-downgrade"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation allow-downloads"
+              style={{
+                width: `${DASHBOARD_BASE_WIDTH}px`,
+                height: `${DASHBOARD_BASE_HEIGHT}px`,
+                border: "none",
+                display: "block",
+                overflow: "hidden",
+                transform: `scale(${iframeScale})`,
+                transformOrigin: "top left",
+              }}
+              onLoad={() => setIsIframeLoading(false)}
+              onError={() => setIsIframeLoading(false)}
+            />
+          )}
+        </div>
         {isIframeLoading && (
           <div
             style={{
