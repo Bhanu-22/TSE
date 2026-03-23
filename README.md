@@ -99,7 +99,7 @@ Visit the test endpoint to verify configuration:
 - Check server logs for detailed error messages
 - Verify API key is valid and has correct permissions
 
-## Security
+## Security 
 
 This application is built with security as a top priority.
 
