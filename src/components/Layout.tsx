@@ -1766,7 +1766,7 @@ function LayoutContent({ children }: LayoutProps) {
       !bypassClusterWarning
     ) {
       // Show warning dialog for cluster change
-      setPendingClusterUrl(config.thoughtspotUrl);
+      setPendingClusterUrl(config.thoughtspotUrl || "");
       setShowClusterChangeWarning(true);
       return; // Don't update yet, wait for user confirmation
     }
@@ -2480,7 +2480,7 @@ function LayoutContent({ children }: LayoutProps) {
 
     return (
       <SessionChecker
-        thoughtspotUrl={appConfig.thoughtspotUrl}
+        thoughtspotUrl={appConfig.thoughtspotUrl || ""}
         onSessionStatusChange={handleSessionStatusChange}
         onConfigureSettings={() => setIsSettingsOpen(true)}
         appConfig={appConfig}

@@ -157,7 +157,7 @@ export interface DatabricksConfig {
 export interface AppConfig {
   provider?: "thoughtspot" | "databricks";
   databricks?: DatabricksConfig;
-  thoughtspotUrl: string;
+  thoughtspotUrl?: string;
   authType: "None" | "SSO" | "TrustedAuthToken";
   applicationName: string;
   logo: string;
