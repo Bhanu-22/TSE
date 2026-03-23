@@ -114,3 +114,4 @@ For more detailed information on specific features, please refer to the followin
 
 - **Authentication Enhancements**: Describes the modernized login page and logout functionality.
 - **SpotGPT API Setup**: Guide for setting up the SpotGPT API for chatbot features.
+
