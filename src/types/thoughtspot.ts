@@ -147,6 +147,7 @@ export interface DatabricksConfig {
   workspaceUrl: string;
   dashboardId?: string;
   genieSpaceId?: string;
+  kpiWidgetIds?: string[];
   orgId?: string;
   dashboardVersion?: "v1" | "v3";
   embedMode?: "iframe" | "external";
