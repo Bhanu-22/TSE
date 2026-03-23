@@ -53,6 +53,10 @@ Follow these steps to run the application on your local machine.
 
 ## Configuration: The `SPOTGPT_API_KEY`
 
+## Databricks Note
+
+- If the loaded app config sets `provider: "databricks"`, the app uses the Databricks login flow and Databricks dashboard/Genie pages instead of the ThoughtSpot session flow.
+
 ### What is SpotGPT?
 
 The `SPOTGPT_API_KEY` is a credential for the SpotGPT service, which provides the generative AI capabilities for this application (general chat, AI-powered question classification). You would typically get this key from your organization's ThoughtSpot administrator or a SpotGPT developer portal.
