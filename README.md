@@ -53,7 +53,7 @@ Follow these steps to run the application on your local machine.
 
 ## Configuration: The `SPOTGPT_API_KEY`
 
-## Databricks Note
+## Databricks Note 
 
 - If the loaded app config sets `provider: "databricks"`, the app uses the Databricks login flow and Databricks dashboard/Genie pages instead of the ThoughtSpot session flow.
 
