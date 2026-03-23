@@ -250,16 +250,19 @@ export interface HiddenActionsConfig {
   actions: string[]; // Array of action names (Action enum values or custom strings)
 }
 
+export type StandardMenuAccess = Record<string, boolean> & {
+  home?: boolean;
+  dashboard?: boolean;
+  favorites?: boolean;
+  "my-reports"?: boolean;
+  spotter?: boolean;
+  search?: boolean;
+  "full-app"?: boolean;
+  "all-content"?: boolean;
+};
+
 export interface UserAccess {
-  standardMenus: {
-    home: boolean;
-    favorites: boolean;
-    "my-reports": boolean;
-    spotter: boolean;
-    search: boolean;
-    "full-app": boolean;
-    "all-content": boolean;
-  };
+  standardMenus: StandardMenuAccess;
   customMenus: string[]; // Array of custom menu IDs that the user can access
   hiddenActions?: HiddenActionsConfig; // Configuration for hidden actions
   runtimeFilters?: RuntimeFilter[]; // User-specific runtime filters
