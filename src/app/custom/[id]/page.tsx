@@ -6,13 +6,14 @@ import { useAppContext } from "../../../components/Layout";
 import ContentGrid from "../../../components/ContentGrid";
 import ThoughtSpotEmbed from "../../../components/ThoughtSpotEmbed";
 import { ThoughtSpotContent } from "../../../types/thoughtspot";
+import PortalShortcut from "../../../components/PortalShortcut";
 
 type ContentType = "all" | "answer" | "liveboard";
 
 function CustomMenuPageContent() {
   const params = useParams();
   const router = useRouter();
-  const { customMenus, stylingConfig } = useAppContext();
+  const { customMenus, stylingConfig, appConfig } = useAppContext();
   const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
   const [selectedContentType, setSelectedContentType] =
@@ -83,6 +84,20 @@ function CustomMenuPageContent() {
     setShowContentDirectly(false);
     setSelectedContent(null);
   };
+
+  const thoughtspotHost = appConfig.thoughtspotUrl?.trim() || "";
+  const normalizedThoughtspotHost = thoughtspotHost
+    ? thoughtspotHost.startsWith("https://") ||
+      thoughtspotHost.startsWith("http://")
+      ? thoughtspotHost.replace(/\/$/, "")
+      : `https://${thoughtspotHost.replace(/\/$/, "")}`
+    : "";
+  const liveboardPortalUrl =
+    selectedContent?.type === "liveboard" &&
+    normalizedThoughtspotHost &&
+    selectedContent.id?.trim()
+      ? `${normalizedThoughtspotHost}/#/pinboard/${selectedContent.id.trim()}`
+      : "";
 
   const getTabLabels = () => [
     { id: "all" as ContentType, label: "All", count: null },
@@ -258,6 +273,14 @@ function CustomMenuPageContent() {
                   {selectedContent.description}
                 </p>
               )}
+            {liveboardPortalUrl ? (
+              <PortalShortcut
+                href={liveboardPortalUrl}
+                title="ThoughtSpot liveboard"
+                description="Open this liveboard directly in ThoughtSpot."
+                actionLabel="Open liveboard"
+              />
+            ) : null}
             <div
               style={{
                 border: "1px solid #e2e8f0",
@@ -296,6 +319,14 @@ function CustomMenuPageContent() {
               minHeight: 0,
             }}
           >
+            {liveboardPortalUrl ? (
+              <PortalShortcut
+                href={liveboardPortalUrl}
+                title="ThoughtSpot liveboard"
+                description="Open this liveboard directly in ThoughtSpot."
+                actionLabel="Open liveboard"
+              />
+            ) : null}
             <ThoughtSpotEmbed
               content={selectedContent}
               width="100%"

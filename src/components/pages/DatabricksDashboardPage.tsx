@@ -7,6 +7,8 @@ import {
   getDatabricksEmbedToken,
   getDatabricksExternalViewerId,
 } from "../../services/databricksApi";
+import PortalShortcut from "../PortalShortcut";
+import { normalizeDatabricksUrl } from "../../utils/databricksUrl";
 
 const DASHBOARD_BASE_WIDTH = 1720;
 const DASHBOARD_BASE_HEIGHT = 1280;
@@ -37,6 +39,17 @@ export default function DatabricksDashboardPage() {
     const base = `${normalizedWorkspaceUrl}/embed/${dashboardVersion}/${dashboardId}`;
     return orgId ? `${base}?o=${orgId}` : base;
   }, [normalizedWorkspaceUrl, dashboardId, orgId, dashboardVersion, workspaceUrl]);
+  const dashboardPortalUrl = useMemo(() => {
+    if (!workspaceUrl || !dashboardId) return "";
+
+    const normalizedPortalWorkspaceUrl = normalizeDatabricksUrl(workspaceUrl);
+    const base =
+      dashboardVersion === "dashboards"
+        ? `${normalizedPortalWorkspaceUrl}/sql/dashboards/${dashboardId}`
+        : `${normalizedPortalWorkspaceUrl}/dashboardsv3/${dashboardId}/published`;
+
+    return orgId ? `${base}?o=${orgId}` : base;
+  }, [dashboardId, dashboardVersion, orgId, workspaceUrl]);
 
   const loadEmbedToken = useCallback(async () => {
     const externalViewerId = getDatabricksExternalViewerId();
@@ -247,6 +260,14 @@ export default function DatabricksDashboardPage() {
         overflow: "hidden",
       }}
     >
+      {dashboardPortalUrl ? (
+        <PortalShortcut
+          href={dashboardPortalUrl}
+          title="Databricks dashboard"
+          description="Open the native dashboard view in Databricks."
+          actionLabel="Open dashboard"
+        />
+      ) : null}
       {iframeWarning ? (
         <div
           style={{
