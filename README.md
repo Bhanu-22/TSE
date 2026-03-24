@@ -12,7 +12,7 @@ This architecture ensures the `SPOTGPT_API_KEY` is never exposed to the user's b
 
 ---
 
-## Getting Started
+## Getting Started 
 
 Follow these steps to run the application on your local machine.
 
