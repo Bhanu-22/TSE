@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 
 export type DatabricksUser = Record<string, unknown>;
 const SESSION_KEY = "databricks_user";
@@ -49,28 +55,31 @@ export function DatabricksAuthProvider({
   const [databricksUser, setDatabricksUserState] =
     useState<DatabricksUser | null>(() => loadUserFromSession());
 
-  const setDatabricksUser = (user: DatabricksUser | null) => {
+  const setDatabricksUser = useCallback((user: DatabricksUser | null) => {
     if (user) {
       saveUserToSession(user);
     } else {
       clearUserFromSession();
     }
     setDatabricksUserState(user);
-  };
+  }, []);
 
-  const clearDatabricksUser = () => {
+  const clearDatabricksUser = useCallback(() => {
     clearUserFromSession();
     setDatabricksUserState(null);
-  };
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      databricksUser,
+      setDatabricksUser,
+      clearDatabricksUser,
+    }),
+    [databricksUser, setDatabricksUser, clearDatabricksUser]
+  );
 
   return (
-    <DatabricksAuthContext.Provider
-      value={{
-        databricksUser,
-        setDatabricksUser,
-        clearDatabricksUser,
-      }}
-    >
+    <DatabricksAuthContext.Provider value={value}>
       {children}
     </DatabricksAuthContext.Provider>
   );

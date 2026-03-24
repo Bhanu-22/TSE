@@ -73,20 +73,32 @@ const normalizeDatabricksHost = (host: string): string => {
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const getDatabricksAccessToken = async (
-  hostOverride?: string
+  hostOverride?: string,
+  clientIdOverride?: string,
+  clientSecretOverride?: string
 ): Promise<string> => {
   const databricksHost = hostOverride || process.env.DATABRICKS_HOST;
-  const clientId = process.env.DATABRICKS_CLIENT_ID;
-  const clientSecret = process.env.DATABRICKS_CLIENT_SECRET;
+  const clientId =
+    clientIdOverride ||
+    process.env.DATABRICKS_CLIENT_ID ||
+    process.env.DATABRICKS_SERVICE_PRINCIPAL_ID;
+  const clientSecret =
+    clientSecretOverride ||
+    process.env.DATABRICKS_CLIENT_SECRET ||
+    process.env.DATABRICKS_SERVICE_PRINCIPAL_SECRET;
 
   if (!databricksHost) {
     throw new Error("DATABRICKS_HOST not configured");
   }
   if (!clientId) {
-    throw new Error("DATABRICKS_CLIENT_ID not configured");
+    throw new Error(
+      "DATABRICKS_CLIENT_ID or DATABRICKS_SERVICE_PRINCIPAL_ID not configured"
+    );
   }
   if (!clientSecret) {
-    throw new Error("DATABRICKS_CLIENT_SECRET not configured");
+    throw new Error(
+      "DATABRICKS_CLIENT_SECRET or DATABRICKS_SERVICE_PRINCIPAL_SECRET not configured"
+    );
   }
 
   const normalizedHost = normalizeDatabricksHost(databricksHost);
@@ -353,6 +365,11 @@ export async function POST(request: NextRequest) {
     body.workspaceUrl?.trim?.() ||
     request.cookies.get("databricks_workspace")?.value ||
     process.env.DATABRICKS_HOST;
+  const sessionToken = request.cookies.get("databricks_token")?.value?.trim() || "";
+  const cookieClientId =
+    request.cookies.get("databricks_client_id")?.value?.trim() || "";
+  const cookieClientSecret =
+    request.cookies.get("databricks_client_secret")?.value?.trim() || "";
   if (!databricksHost) {
     return NextResponse.json(
       { error: "DATABRICKS_HOST not configured" },
@@ -362,7 +379,13 @@ export async function POST(request: NextRequest) {
 
   let token: string;
   try {
-    token = await getDatabricksAccessToken(databricksHost);
+    token =
+      sessionToken ||
+      (await getDatabricksAccessToken(
+        databricksHost,
+        cookieClientId,
+        cookieClientSecret
+      ));
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to get token" },

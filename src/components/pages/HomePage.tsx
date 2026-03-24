@@ -5,10 +5,17 @@ import { useAppContext } from "../Layout";
 import { HomePageConfig, StandardMenu, User } from "../../types/thoughtspot";
 import ThoughtSpotEmbed from "../ThoughtSpotEmbed";
 import { ThoughtSpotContent } from "../../types/thoughtspot";
+import {
+  getDatabricksEmbedToken,
+  getDatabricksExternalViewerId,
+} from "../../services/databricksApi";
 
 interface HomePageProps {
   onConfigUpdate?: (config: HomePageConfig) => void;
 }
+
+const DATABRICKS_WIDGET_TOP_CHROME_HEIGHT = 86;
+const DATABRICKS_WIDGET_BOTTOM_CHROME_HEIGHT = 42;
 
 export default function HomePage({ onConfigUpdate }: HomePageProps) {
   const [iframeError, setIframeError] = useState<string | null>(null);
@@ -17,6 +24,9 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
   const htmlContainerRef = useRef<HTMLDivElement>(null);
   const [processedHtml, setProcessedHtml] = useState<string | null>(null);
   const [htmlWarning, setHtmlWarning] = useState<string | null>(null);
+  const [renderableHtml, setRenderableHtml] = useState<string | null>(null);
+  const [tokenWarning, setTokenWarning] = useState<string | null>(null);
+  const [isResolvingHtml, setIsResolvingHtml] = useState(false);
   const liveboardInstancesRef = useRef<
     Array<{
       destroy?: () => void;
@@ -50,6 +60,9 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
   };
 
   const standardMenus: StandardMenu[] = context?.standardMenus || [];
+  const databricksWorkspaceUrl =
+    context.appConfig.databricks?.workspaceUrl?.trim() || "";
+  const databricksAuthType = context.appConfig.authType;
 
   // Find the home menu configuration
   const homeMenu = standardMenus.find((m) => m.id === "home");
@@ -195,6 +208,29 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
         return `${trimmedStyle}${trimmedStyle ? " " : ""}${nextEntry}`.trim();
       };
 
+      const normalizeCssDimension = (value: string, fallback: string): string => {
+        const trimmed = value.trim();
+        if (!trimmed) {
+          return fallback;
+        }
+        if (/^\d+(\.\d+)?$/.test(trimmed)) {
+          return `${trimmed}px`;
+        }
+        return trimmed;
+      };
+
+      const addPixelsToDimension = (
+        dimension: string,
+        extraPixels: number
+      ): string => {
+        const normalized = normalizeCssDimension(dimension, "0px");
+        const pixelMatch = normalized.match(/^(-?\d+(?:\.\d+)?)px$/i);
+        if (pixelMatch) {
+          return `${Number(pixelMatch[1]) + extraPixels}px`;
+        }
+        return `calc(${normalized} + ${extraPixels}px)`;
+      };
+
       const normalizeThoughtSpotUrl = (src: string): string => {
         return src.replace(/^https?:\/\/https?:\/\//i, "https://").trim();
       };
@@ -255,18 +291,38 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
 
       iframes.forEach((iframe) => {
         const src = iframe.getAttribute("src") || "";
+        const originalStyle = iframe.getAttribute("style") || "";
+        const widthFromStyle = readStyleValue(originalStyle, "width");
+        const heightFromStyle = readStyleValue(originalStyle, "height");
+        const width = normalizeCssDimension(
+          iframe.getAttribute("width") || widthFromStyle || "100%",
+          "100%"
+        );
+        const iframeHeight = normalizeCssDimension(
+          iframe.getAttribute("height") || heightFromStyle || "320px",
+          "320px"
+        );
+
         if (
           src.includes("/embed/dashboards") &&
           src.includes("fullscreenWidget=")
         ) {
-          const originalStyle = iframe.getAttribute("style") || "";
+          const frameHeight = addPixelsToDimension(
+            iframeHeight,
+            DATABRICKS_WIDGET_TOP_CHROME_HEIGHT +
+              DATABRICKS_WIDGET_BOTTOM_CHROME_HEIGHT
+          );
           let iframeStyle = originalStyle;
-          iframeStyle = setStyleProperty(iframeStyle, "width", "100%");
-          iframeStyle = setStyleProperty(iframeStyle, "height", "480px");
-          iframeStyle = setStyleProperty(iframeStyle, "margin-top", "-98px");
+          iframeStyle = setStyleProperty(iframeStyle, "width", width);
+          iframeStyle = setStyleProperty(iframeStyle, "height", frameHeight);
+          iframeStyle = setStyleProperty(
+            iframeStyle,
+            "margin-top",
+            `-${DATABRICKS_WIDGET_TOP_CHROME_HEIGHT}px`
+          );
           iframeStyle = setStyleProperty(iframeStyle, "border", "none");
           iframeStyle = setStyleProperty(iframeStyle, "display", "block");
-          iframeStyle = setStyleProperty(iframeStyle, "overflow", "hidden");
+          iframeStyle = setStyleProperty(iframeStyle, "background", "#fff");
 
           iframe.setAttribute("style", iframeStyle);
           iframe.setAttribute("scrolling", "no");
@@ -278,8 +334,8 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
               "position: relative",
               "overflow: hidden",
               "border-radius: 12px",
-              "height: 285px",
-              "width: 100%",
+              `height: ${iframeHeight}`,
+              `width: ${width}`,
               "background: #fff",
             ].join("; ") + ";"
           );
@@ -297,10 +353,7 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
         if (!embedInfo) return;
 
         const style = iframe.getAttribute("style") || "";
-        const widthFromStyle = readStyleValue(style, "width");
-        const heightFromStyle = readStyleValue(style, "height");
-        const width = iframe.getAttribute("width") || widthFromStyle || "100%";
-        const height =
+        const embedHeight =
           iframe.getAttribute("height") || heightFromStyle || "400px";
 
         const embedId = `ts-kpi-${embedIndex++}`;
@@ -310,7 +363,7 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
           liveboardId: embedInfo.liveboardId,
           vizId: embedInfo.vizId,
           width,
-          height,
+          height: embedHeight,
         });
 
         const placeholder = doc.createElement("div");
@@ -334,7 +387,7 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
           combinedStyle += `width:${width};`;
         }
         if (!hasHeightInStyle) {
-          combinedStyle += `height:${height};`;
+          combinedStyle += `height:${embedHeight};`;
         }
         // Preserve rounded corner look by clipping SDK content inside the card.
         if (hasRadiusInStyle && !hasOverflowInStyle) {
@@ -387,6 +440,136 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
       setHtmlWarning(null);
     }
   }, [mappedType, mappedValue]);
+
+  useEffect(() => {
+    if (mappedType !== "html") {
+      setRenderableHtml(null);
+      setTokenWarning(null);
+      setIsResolvingHtml(false);
+      return;
+    }
+
+    const baseHtml = processedHtml ?? mappedValue;
+    if (!baseHtml || !baseHtml.trim()) {
+      setRenderableHtml(baseHtml || null);
+      setTokenWarning(null);
+      setIsResolvingHtml(false);
+      return;
+    }
+
+    if (databricksAuthType !== "None") {
+      setRenderableHtml(baseHtml);
+      setTokenWarning(null);
+      setIsResolvingHtml(false);
+      return;
+    }
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(baseHtml, "text/html");
+    const databricksIframes = Array.from(doc.querySelectorAll("iframe")).filter(
+      (iframe) => {
+        const src = iframe.getAttribute("src") || "";
+        return /\/embed\/dashboards(?:v3)?\//i.test(src);
+      }
+    );
+
+    if (databricksIframes.length === 0) {
+      setRenderableHtml(baseHtml.replace(/{{DB_TOKEN}}/g, ""));
+      setTokenWarning(null);
+      setIsResolvingHtml(false);
+      return;
+    }
+
+    let isCancelled = false;
+    setIsResolvingHtml(true);
+    setTokenWarning(null);
+    setRenderableHtml(null);
+
+    const resolveDatabricksToken = async () => {
+      try {
+        const externalViewerId = getDatabricksExternalViewerId();
+        const dashboardIds = Array.from(
+          new Set(
+            databricksIframes
+              .map((iframe) => {
+                const src = iframe.getAttribute("src") || "";
+                const match = src.match(
+                  /\/embed\/dashboards(?:v3)?\/([^/?#&]+)/i
+                );
+                return match?.[1] || "";
+              })
+              .filter(Boolean)
+          )
+        );
+
+        const tokenEntries = await Promise.all(
+          dashboardIds.map(async (dashboardId) => {
+            const token = await getDatabricksEmbedToken({
+              workspaceUrl: databricksWorkspaceUrl,
+              dashboardId,
+              externalViewerId,
+              externalValue: externalViewerId,
+            });
+
+            return [dashboardId, token] as const;
+          })
+        );
+        if (isCancelled) return;
+
+        const tokensByDashboardId = new Map(tokenEntries);
+        databricksIframes.forEach((iframe) => {
+          const src = iframe.getAttribute("src") || "";
+          const match = src.match(/\/embed\/dashboards(?:v3)?\/([^/?#&]+)/i);
+          const dashboardId = match?.[1] || "";
+          const token = tokensByDashboardId.get(dashboardId);
+          if (!token) return;
+
+          try {
+            const url = new URL(src);
+            url.searchParams.set("token", token);
+            iframe.setAttribute("src", url.toString());
+          } catch {
+            iframe.setAttribute("src", src.replace(/{{DB_TOKEN}}/g, token));
+          }
+        });
+
+        setRenderableHtml(
+          `${doc.head.innerHTML ? `${doc.head.innerHTML}` : ""}${doc.body.innerHTML}`.replace(
+            /{{DB_TOKEN}}/g,
+            ""
+          )
+        );
+        setTokenWarning(null);
+      } catch (error) {
+        if (isCancelled) return;
+
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Failed to get Databricks embed token";
+        setRenderableHtml(baseHtml.replace(/{{DB_TOKEN}}/g, ""));
+        setTokenWarning(
+          `Databricks embed token could not be loaded. Embedded dashboard widgets may fail to render. ${message}`
+        );
+      } finally {
+        if (!isCancelled) {
+          setIsResolvingHtml(false);
+        }
+      }
+    };
+
+    void resolveDatabricksToken();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [
+    mappedType,
+    mappedValue,
+    processedHtml,
+    databricksAuthType,
+    databricksWorkspaceUrl,
+  ]);
 
   // Render KPI embeds via ThoughtSpot SDK after HTML is injected
   useEffect(() => {
@@ -494,6 +677,8 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     };
   }, [
     kpiEmbeds,
+    renderableHtml,
+    isResolvingHtml,
     context.userConfig.currentUserId,
     context.userConfig.users,
     context.stylingConfig.embedFlags?.liveboardEmbed,
@@ -546,7 +731,7 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     return () => {
       cleanupFns.forEach((cleanup) => cleanup());
     };
-  }, [mappedType, processedHtml, kpiEmbeds.length]);
+  }, [mappedType, processedHtml, renderableHtml, isResolvingHtml, kpiEmbeds.length]);
 
   // Effect to handle iframe errors
   useEffect(() => {
@@ -622,11 +807,23 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     switch (mappedType) {
       case "html":
         if (mappedValue && mappedValue.trim()) {
-          const htmlToRender = processedHtml ?? mappedValue;
+          const baseHtml = processedHtml ?? mappedValue;
+          const requiresDatabricksToken =
+            databricksAuthType === "None" &&
+            (baseHtml.includes("{{DB_TOKEN}}") ||
+              /\/embed\/dashboards(?:v3)?\//i.test(baseHtml));
+          const htmlToRender =
+            renderableHtml ?? (requiresDatabricksToken ? "" : baseHtml);
+          const shouldShowLoading =
+            isResolvingHtml || (requiresDatabricksToken && renderableHtml === null);
+          const warnings = [htmlWarning, tokenWarning].filter(
+            (warning): warning is string => Boolean(warning)
+          );
           return (
             <>
-              {htmlWarning ? (
+              {warnings.map((warning) => (
                 <div
+                  key={warning}
                   style={{
                     marginBottom: "16px",
                     padding: "12px 16px",
@@ -637,22 +834,37 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
                     fontSize: "14px",
                   }}
                 >
-                  {htmlWarning}
+                  {warning}
                 </div>
-              ) : null}
-              <div
-                dangerouslySetInnerHTML={{ __html: htmlToRender }}
-                className="Box-container"
-                style={{
-                  backgroundColor: "white",
-                  padding: "20px",
-                  borderRadius: "8px",
-                  border: "1px solid #e2e8f0",
-                  height: "100%",
-                  overflow: "auto",
-                }}
-                ref={htmlContainerRef}
-              />
+              ))}
+              {shouldShowLoading ? (
+                <div
+                  style={{
+                    padding: "40px",
+                    textAlign: "center",
+                    backgroundColor: "#f7fafc",
+                    borderRadius: "8px",
+                    border: "1px solid #e2e8f0",
+                    color: "#4a5568",
+                  }}
+                >
+                  Loading Databricks embed content...
+                </div>
+              ) : (
+                <div
+                  dangerouslySetInnerHTML={{ __html: htmlToRender }}
+                  className="Box-container"
+                  style={{
+                    backgroundColor: "white",
+                    padding: "20px",
+                    borderRadius: "8px",
+                    border: "1px solid #e2e8f0",
+                    height: "100%",
+                    overflow: "auto",
+                  }}
+                  ref={htmlContainerRef}
+                />
+              )}
             </>
           );
         }

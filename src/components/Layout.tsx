@@ -2382,6 +2382,7 @@ function LayoutContent({ children }: LayoutProps) {
   const isDatabricksLoginRoute = pathname === "/databricks-login";
   const shouldRenderAppChrome =
     !(isDatabricksProvider && isDatabricksLoginRoute);
+  let databricksContentPadding = "24px";
 
   let routedContent: React.ReactNode = children;
 
@@ -2412,6 +2413,12 @@ function LayoutContent({ children }: LayoutProps) {
     const homeMenu = standardMenus.find((menu) => menu.id === "home");
     const hasCustomDatabricksHomePage =
       !!homeMenu?.homePageValue?.trim() || !!homePageConfig.value?.trim();
+    const isDatabricksDashboardRoute =
+      activeMenuId === "dashboard" ||
+      (activeMenuId === "home" && !hasCustomDatabricksHomePage);
+    databricksContentPadding = isDatabricksDashboardRoute
+      ? "8px 12px 12px"
+      : "24px";
 
     if (isDatabricksLoginRoute) {
       routedContent = children;
@@ -2467,11 +2474,7 @@ function LayoutContent({ children }: LayoutProps) {
     configVersion,
   };
 
-  function MaybeSessionChecker({
-    children: wrappedChildren,
-  }: {
-    children: React.ReactNode;
-  }) {
+  function renderProtectedContent(wrappedChildren: React.ReactNode) {
     if (isDatabricksProvider) {
       return (
         <DatabricksSessionChecker>{wrappedChildren}</DatabricksSessionChecker>
@@ -2496,8 +2499,8 @@ function LayoutContent({ children }: LayoutProps) {
       {/* Dynamic favicon */}
       <link rel="icon" href="/logo.png" id="favicon" />
       <StylingProvider stylingConfig={stylingConfig}>
-        <MaybeSessionChecker>
-          {shouldRenderAppChrome ? (
+        {renderProtectedContent(
+          shouldRenderAppChrome ? (
           <div
             style={{
               height: "100vh",
@@ -2558,12 +2561,15 @@ function LayoutContent({ children }: LayoutProps) {
                     "#ffffff",
                   overflow: "auto",
                   overflowX: "hidden",
-                  padding: "24px",
+                  padding: isDatabricksProvider
+                    ? databricksContentPadding
+                    : "24px",
                   display: "flex",
                   flexDirection: "column",
+                  minHeight: 0,
                 }}
               >
-                <div style={{ flex: 1 }}>{routedContent}</div>
+                <div style={{ flex: 1, minHeight: 0 }}>{routedContent}</div>
                 {(appConfig.showFooter ?? true) && (
                   <Footer
                     backgroundColor={
@@ -2794,8 +2800,8 @@ function LayoutContent({ children }: LayoutProps) {
           </div>
           ) : (
             routedContent
-          )}
-        </MaybeSessionChecker>
+          )
+        )}
       </StylingProvider>
     </AppContext.Provider>
   );
