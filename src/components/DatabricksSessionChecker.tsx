@@ -13,39 +13,45 @@ export default function DatabricksSessionChecker({
   const pathname = usePathname();
   const router = useRouter();
   const { databricksUser, setDatabricksUser } = useDatabricksAuth();
-  const [isChecking, setIsChecking] = useState(databricksUser === null);
+  const [isChecking, setIsChecking] = useState(true);
 
-  const checkSession = async () => {
-    setIsChecking(true);
-    const user = await getCurrentDatabricksUser();
-
-    if (user) {
-      setDatabricksUser(user);
+  useEffect(() => {
+    if (pathname === "/databricks-login") {
       setIsChecking(false);
       return;
     }
 
-    setIsChecking(false);
-    router.replace("/databricks-login");
-  };
+    let isCancelled = false;
 
-  useEffect(() => {
-    if (pathname === "/databricks-login") {
-      return;
-    }
+    const checkSession = async () => {
+      setIsChecking(true);
+      const user = await getCurrentDatabricksUser();
 
-    if (databricksUser) {
-      return;
-    }
+      if (isCancelled) return;
+
+      if (user) {
+        setDatabricksUser(user);
+        setIsChecking(false);
+        return;
+      }
+
+      setDatabricksUser(null);
+      setIsChecking(false);
+      router.replace("/databricks-login");
+    };
 
     void checkSession();
-  }, []);
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [pathname, router, setDatabricksUser]);
 
   if (pathname === "/databricks-login") {
     return <>{children}</>;
   }
 
-  if (databricksUser) {
+  if (!isChecking && databricksUser) {
     return <>{children}</>;
   }
 

@@ -171,6 +171,8 @@ export async function POST(request: NextRequest) {
 
   cookieStore.set("databricks_token", parsedToken.access_token, cookieOptions);
   cookieStore.set("databricks_workspace", workspaceUrl, cookieOptions);
+  cookieStore.set("databricks_client_id", clientId, cookieOptions);
+  cookieStore.set("databricks_client_secret", clientSecret, cookieOptions);
 
   return NextResponse.json({
     success: true,

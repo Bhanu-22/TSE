@@ -16,6 +16,8 @@ export async function POST() {
 
   cookieStore.set("databricks_token", "", cookieOptions);
   cookieStore.set("databricks_workspace", "", cookieOptions);
+  cookieStore.set("databricks_client_id", "", cookieOptions);
+  cookieStore.set("databricks_client_secret", "", cookieOptions);
 
   return NextResponse.json({ success: true });
 }

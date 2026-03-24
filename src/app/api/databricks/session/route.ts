@@ -19,6 +19,8 @@ const clearDatabricksCookies = async () => {
 
   cookieStore.set("databricks_token", "", cookieOptions);
   cookieStore.set("databricks_workspace", "", cookieOptions);
+  cookieStore.set("databricks_client_id", "", cookieOptions);
+  cookieStore.set("databricks_client_secret", "", cookieOptions);
 };
 
 export async function GET() {

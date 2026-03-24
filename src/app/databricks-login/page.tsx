@@ -51,13 +51,8 @@ export default function DatabricksLoginPage() {
         ...appConfig,
         provider: "databricks",
         databricks: {
+          ...appConfig.databricks,
           workspaceUrl,
-          dashboardId: appConfig.databricks?.dashboardId,
-          genieSpaceId: appConfig.databricks?.genieSpaceId,
-          orgId: appConfig.databricks?.orgId,
-          dashboardVersion: appConfig.databricks?.dashboardVersion,
-          embedMode: appConfig.databricks?.embedMode,
-          useGenieApi: appConfig.databricks?.useGenieApi,
         },
       });
       setDatabricksUser(result.user);
