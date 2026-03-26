@@ -23,7 +23,7 @@ Follow these steps to run the application on your local machine.
 
 ### Local Setup
 
-1.  **Clone the Repository**
+1.  **Clone the Repository** 
     ```bash
     git clone <your-repository-url>
     cd <repository-folder>
