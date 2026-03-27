@@ -5,6 +5,7 @@ import { useAppContext } from "../Layout";
 import { HomePageConfig, StandardMenu, User } from "../../types/thoughtspot";
 import ThoughtSpotEmbed from "../ThoughtSpotEmbed";
 import { ThoughtSpotContent } from "../../types/thoughtspot";
+import PortalShortcut from "../PortalShortcut";
 import {
   getDatabricksEmbedToken,
   getDatabricksExternalViewerId,
@@ -63,6 +64,13 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
   const databricksWorkspaceUrl =
     context.appConfig.databricks?.workspaceUrl?.trim() || "";
   const databricksAuthType = context.appConfig.authType;
+  const thoughtspotHost = context.appConfig.thoughtspotUrl?.trim() || "";
+  const normalizedThoughtspotHost = thoughtspotHost
+    ? thoughtspotHost.startsWith("https://") ||
+      thoughtspotHost.startsWith("http://")
+      ? thoughtspotHost.replace(/\/$/, "")
+      : `https://${thoughtspotHost.replace(/\/$/, "")}`
+    : "";
 
   // Find the home menu configuration
   const homeMenu = standardMenus.find((m) => m.id === "home");
@@ -94,6 +102,13 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     mappedType = "html";
     mappedValue = homeMenu?.homePageValue || homePageConfig.value;
   }
+
+  const liveboardPortalUrl =
+    homeMenu?.homePageType === "liveboard" &&
+    normalizedThoughtspotHost &&
+    mappedValue?.trim()
+      ? `${normalizedThoughtspotHost}/#/pinboard/${mappedValue.trim()}`
+      : "";
 
   // Effect to handle image content
   useEffect(() => {
@@ -355,6 +370,8 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
         const style = iframe.getAttribute("style") || "";
         const embedHeight =
           iframe.getAttribute("height") || heightFromStyle || "400px";
+        const adjustedWidth = width;
+        const adjustedHeight = embedHeight;
 
         const embedId = `ts-kpi-${embedIndex++}`;
         embeds.push({
@@ -362,8 +379,8 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
           host: embedInfo.host,
           liveboardId: embedInfo.liveboardId,
           vizId: embedInfo.vizId,
-          width,
-          height: embedHeight,
+          width: adjustedWidth,
+          height: adjustedHeight,
         });
 
         const placeholder = doc.createElement("div");
@@ -384,10 +401,10 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
           combinedStyle += ";";
         }
         if (!hasWidthInStyle) {
-          combinedStyle += `width:${width};`;
+          combinedStyle += `width:${adjustedWidth};`;
         }
         if (!hasHeightInStyle) {
-          combinedStyle += `height:${embedHeight};`;
+          combinedStyle += `height:${adjustedHeight};`;
         }
         // Preserve rounded corner look by clipping SDK content inside the card.
         if (hasRadiusInStyle && !hasOverflowInStyle) {
@@ -1083,16 +1100,34 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
         };
 
         return (
-          <div style={{ flex: 1, width: "100%", minHeight: 0 }}>
-            <ThoughtSpotEmbed
-              content={thoughtSpotContent}
-              width="100%"
-              height="100%"
-              onError={(error) => {
-                console.error("ThoughtSpot embed error:", error);
-                setIframeError(`Failed to load ${contentType}: ${error}`);
-              }}
-            />
+          <div
+            style={{
+              flex: 1,
+              width: "100%",
+              minHeight: 0,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {liveboardPortalUrl ? (
+              <PortalShortcut
+                href={liveboardPortalUrl}
+                title="ThoughtSpot liveboard"
+                description="Open this liveboard directly in ThoughtSpot."
+                actionLabel="Open liveboard"
+              />
+            ) : null}
+            <div style={{ flex: 1, width: "100%", minHeight: 0 }}>
+              <ThoughtSpotEmbed
+                content={thoughtSpotContent}
+                width="100%"
+                height="100%"
+                onError={(error) => {
+                  console.error("ThoughtSpot embed error:", error);
+                  setIframeError(`Failed to load ${contentType}: ${error}`);
+                }}
+              />
+            </div>
           </div>
         );
 

@@ -5,6 +5,7 @@ import ContentGrid from "../ContentGrid";
 import ThoughtSpotEmbed from "../ThoughtSpotEmbed";
 import { useAppContext } from "../Layout";
 import { ThoughtSpotContent } from "../../types/thoughtspot";
+import PortalShortcut from "../PortalShortcut";
 
 type ContentType = "all" | "answer" | "liveboard";
 
@@ -40,12 +41,25 @@ export default function ContentPage({
   description,
   emptyMessage,
 }: ContentPageProps) {
-  const { standardMenus, stylingConfig } = useAppContext();
+  const { standardMenus, stylingConfig, appConfig } = useAppContext();
   const [selectedContentType, setSelectedContentType] =
     useState<ContentType>("all");
   const [selectedContent, setSelectedContent] =
     useState<ThoughtSpotContent | null>(null);
   const [showContentDirectly, setShowContentDirectly] = useState(false);
+  const thoughtspotHost = appConfig.thoughtspotUrl?.trim() || "";
+  const normalizedThoughtspotHost = thoughtspotHost
+    ? thoughtspotHost.startsWith("https://") ||
+      thoughtspotHost.startsWith("http://")
+      ? thoughtspotHost.replace(/\/$/, "")
+      : `https://${thoughtspotHost.replace(/\/$/, "")}`
+    : "";
+  const liveboardPortalUrl =
+    selectedContent?.type === "liveboard" &&
+    normalizedThoughtspotHost &&
+    selectedContent.id?.trim()
+      ? `${normalizedThoughtspotHost}/#/pinboard/${selectedContent.id.trim()}`
+      : "";
 
   // Get configuration from standard menus
   const menu = standardMenus.find((m) => m.id === pageType);
@@ -185,6 +199,14 @@ export default function ContentPage({
                   {selectedContent.description}
                 </p>
               )}
+            {liveboardPortalUrl ? (
+              <PortalShortcut
+                href={liveboardPortalUrl}
+                title="ThoughtSpot liveboard"
+                description="Open this liveboard directly in ThoughtSpot."
+                actionLabel="Open liveboard"
+              />
+            ) : null}
             <div
               style={{
                 border: "1px solid #e2e8f0",
@@ -223,6 +245,14 @@ export default function ContentPage({
               minHeight: 0,
             }}
           >
+            {liveboardPortalUrl ? (
+              <PortalShortcut
+                href={liveboardPortalUrl}
+                title="ThoughtSpot liveboard"
+                description="Open this liveboard directly in ThoughtSpot."
+                actionLabel="Open liveboard"
+              />
+            ) : null}
             <ThoughtSpotEmbed
               content={selectedContent}
               width="100%"
