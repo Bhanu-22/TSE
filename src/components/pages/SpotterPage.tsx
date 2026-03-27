@@ -140,6 +140,7 @@ export default function SpotterPage({
               ...embedConfig,
               worksheetId: embedConfig.worksheetId as string,
               hiddenActions: hiddenActions,
+              updatedSpotterChatPrompt: true,
             };
 
             embedInstance = new SpotterEmbed(embedRef.current, spotterConfig);

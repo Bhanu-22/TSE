@@ -16,7 +16,7 @@
     "@mui/icons-material": "^7.3.1",
     "@mui/material": "^7.3.1",
     "@octokit/rest": "^22.0.0",
-    "@thoughtspot/visual-embed-sdk": "^1.39.3",
+    "@thoughtspot/visual-embed-sdk": "^1.46.4",
     "next": "^15.5.7",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",

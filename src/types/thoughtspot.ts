@@ -42,6 +42,7 @@ export interface ThoughtSpotEmbedConfig {
   searchOptions?: {
     searchQuery: string;
   };
+  updatedSpotterChatPrompt?: boolean;
   hiddenActions?: string[];
   runtimeFilters?: RuntimeFilter[];
   customizations?: {
@@ -94,6 +95,7 @@ export interface ThoughtSpotBaseEmbedConfig {
     height: string;
   };
   locale?: string; // User locale preference
+  updatedSpotterChatPrompt?: boolean;
   runtimeFilters?: RuntimeFilter[];
   customizations: {
     content: {

@@ -295,6 +295,7 @@ export default function ThoughtSpotEmbed({
           embedInstance = new SpotterEmbed(embedRef.current, {
             worksheetId: content.id,
             ...baseEmbedConfig,
+            updatedSpotterChatPrompt: true,
           });
         }
 
