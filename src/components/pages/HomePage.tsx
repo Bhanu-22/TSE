@@ -6,10 +6,14 @@ import { HomePageConfig, StandardMenu, User } from "../../types/thoughtspot";
 import ThoughtSpotEmbed from "../ThoughtSpotEmbed";
 import { ThoughtSpotContent } from "../../types/thoughtspot";
 import PortalShortcut from "../PortalShortcut";
+import TemplateSandboxPreview from "../template-studio/TemplateSandboxPreview";
 import {
   getDatabricksEmbedToken,
   getDatabricksExternalViewerId,
 } from "../../services/databricksApi";
+import { applyTokens } from "../../utils/template/applyTemplateTokens";
+import { logError, logInfo } from "../../utils/template/templateLogger";
+import { TemplateTokens } from "../../types/template";
 
 interface HomePageProps {
   onConfigUpdate?: (config: HomePageConfig) => void;
@@ -20,14 +24,19 @@ const DATABRICKS_WIDGET_BOTTOM_CHROME_HEIGHT = 42;
 
 export default function HomePage({ onConfigUpdate }: HomePageProps) {
   const [iframeError, setIframeError] = useState<string | null>(null);
+  const [templateIframeError, setTemplateIframeError] = useState<string | null>(
+    null
+  );
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const htmlContainerRef = useRef<HTMLDivElement>(null);
+  const htmlContainerRef = useRef<HTMLElement | null>(null);
+  const templateIframeRef = useRef<HTMLIFrameElement>(null);
   const [processedHtml, setProcessedHtml] = useState<string | null>(null);
   const [htmlWarning, setHtmlWarning] = useState<string | null>(null);
   const [renderableHtml, setRenderableHtml] = useState<string | null>(null);
   const [tokenWarning, setTokenWarning] = useState<string | null>(null);
   const [isResolvingHtml, setIsResolvingHtml] = useState(false);
+  const [templateFrameVersion, setTemplateFrameVersion] = useState(0);
   const liveboardInstancesRef = useRef<
     Array<{
       destroy?: () => void;
@@ -109,6 +118,17 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     mappedValue?.trim()
       ? `${normalizedThoughtspotHost}/#/pinboard/${mappedValue.trim()}`
       : "";
+
+  const templateTokens: TemplateTokens = {
+    COMPANY_NAME: context.appConfig.applicationName || "",
+    PRIMARY_COLOR:
+      context.stylingConfig.application.buttons.primary.backgroundColor || "",
+    BACKGROUND_COLOR:
+      context.stylingConfig.application.backgrounds.mainBackground || "",
+    DASHBOARD_URL: "/dashboard",
+    GENIE_URL: "/spotter",
+    dashboardUrl: liveboardPortalUrl || "/dashboard",
+  };
 
   // Effect to handle image content
   useEffect(() => {
@@ -450,8 +470,13 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
 
       setProcessedHtml(`${preservedHeadMarkup}${doc.body.innerHTML}`);
       setKpiEmbeds(embeds);
+      logInfo("Processed homepage HTML", {
+        originalLength: mappedValue.length,
+        processedLength: `${preservedHeadMarkup}${doc.body.innerHTML}`.length,
+        thoughtSpotEmbeds: embeds.length,
+      });
     } catch (error) {
-      console.error("Failed to process KPI embeds:", error);
+      logError("Failed to process KPI embeds", error);
       setProcessedHtml(mappedValue);
       setKpiEmbeds([]);
       setHtmlWarning(null);
@@ -459,6 +484,8 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
   }, [mappedType, mappedValue]);
 
   useEffect(() => {
+    htmlContainerRef.current = null;
+    setTemplateIframeError(null);
     if (mappedType !== "html") {
       setRenderableHtml(null);
       setTokenWarning(null);
@@ -494,6 +521,9 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
       setRenderableHtml(baseHtml.replace(/{{DB_TOKEN}}/g, ""));
       setTokenWarning(null);
       setIsResolvingHtml(false);
+      logInfo("Prepared homepage HTML without Databricks token step", {
+        length: baseHtml.length,
+      });
       return;
     }
 
@@ -556,6 +586,9 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
             ""
           )
         );
+        logInfo("Resolved Databricks tokens for homepage HTML", {
+          dashboardCount: dashboardIds.length,
+        });
         setTokenWarning(null);
       } catch (error) {
         if (isCancelled) return;
@@ -565,6 +598,7 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
             ? error.message
             : "Failed to get Databricks embed token";
         setRenderableHtml(baseHtml.replace(/{{DB_TOKEN}}/g, ""));
+        logError("Failed to resolve Databricks embed token", error);
         setTokenWarning(
           `Databricks embed token could not be loaded. Embedded dashboard widgets may fail to render. ${message}`
         );
@@ -696,6 +730,7 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     kpiEmbeds,
     renderableHtml,
     isResolvingHtml,
+    templateFrameVersion,
     context.userConfig.currentUserId,
     context.userConfig.users,
     context.stylingConfig.embedFlags?.liveboardEmbed,
@@ -748,7 +783,14 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     return () => {
       cleanupFns.forEach((cleanup) => cleanup());
     };
-  }, [mappedType, processedHtml, renderableHtml, isResolvingHtml, kpiEmbeds.length]);
+  }, [
+    mappedType,
+    processedHtml,
+    renderableHtml,
+    isResolvingHtml,
+    kpiEmbeds.length,
+    templateFrameVersion,
+  ]);
 
   // Effect to handle iframe errors
   useEffect(() => {
@@ -831,6 +873,9 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
               /\/embed\/dashboards(?:v3)?\//i.test(baseHtml));
           const htmlToRender =
             renderableHtml ?? (requiresDatabricksToken ? "" : baseHtml);
+          const finalHtml = htmlToRender
+            ? applyTokens(htmlToRender, templateTokens)
+            : "";
           const shouldShowLoading =
             isResolvingHtml || (requiresDatabricksToken && renderableHtml === null);
           const warnings = [htmlWarning, tokenWarning].filter(
@@ -868,19 +913,49 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
                   Loading Databricks embed content...
                 </div>
               ) : (
-                <div
-                  dangerouslySetInnerHTML={{ __html: htmlToRender }}
-                  className="Box-container"
-                  style={{
-                    backgroundColor: "white",
-                    padding: "20px",
-                    borderRadius: "8px",
-                    border: "1px solid #e2e8f0",
-                    height: "100%",
-                    overflow: "auto",
-                  }}
-                  ref={htmlContainerRef}
-                />
+                <>
+                  {templateIframeError ? (
+                    <div
+                      style={{
+                        marginBottom: "16px",
+                        padding: "12px 16px",
+                        backgroundColor: "#fef2f2",
+                        border: "1px solid #fecaca",
+                        borderRadius: "8px",
+                        color: "#b91c1c",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {templateIframeError}
+                    </div>
+                  ) : null}
+                  <TemplateSandboxPreview
+                    processedHtml={finalHtml}
+                    isLoading={false}
+                    iframeRef={templateIframeRef}
+                    onFrameLoad={() => {
+                      const frameDocument =
+                        templateIframeRef.current?.contentDocument;
+                      htmlContainerRef.current = frameDocument?.body || null;
+                      setTemplateIframeError(null);
+                      setTemplateFrameVersion((value) => value + 1);
+                      logInfo("Rendered homepage HTML in sandboxed iframe", {
+                        rawLength: mappedValue.length,
+                        processedLength: finalHtml.length,
+                      });
+                    }}
+                    onFrameError={() => {
+                      htmlContainerRef.current = null;
+                      setTemplateIframeError(
+                        "Failed to render the template preview."
+                      );
+                      logError(
+                        "Template iframe failed to load",
+                        new Error("iframe onError triggered")
+                      );
+                    }}
+                  />
+                </>
               )}
             </>
           );

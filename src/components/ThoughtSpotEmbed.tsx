@@ -288,15 +288,16 @@ export default function ThoughtSpotEmbed({
           });
         } else if (content.type === "model") {
           // For models (Spotter), use SpotterEmbed with worksheetId
-          console.log("[ThoughtSpotEmbed] Creating SpotterEmbed with config:", {
-            worksheetId: content.id,
-            ...baseEmbedConfig,
-          });
-          embedInstance = new SpotterEmbed(embedRef.current, {
+          const spotterConfig = {
             worksheetId: content.id,
             ...baseEmbedConfig,
             updatedSpotterChatPrompt: true,
-          });
+          };
+          console.log(
+            "[ThoughtSpotEmbed] Creating SpotterEmbed with config:",
+            spotterConfig
+          );
+          embedInstance = new SpotterEmbed(embedRef.current, spotterConfig);
         }
 
         if (embedInstance) {
