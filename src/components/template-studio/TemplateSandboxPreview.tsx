@@ -18,16 +18,60 @@ export default function TemplateSandboxPreview({
   onFrameError,
 }: TemplateSandboxPreviewProps) {
   return (
-    <div className="w-full min-h-[800px] rounded-xl overflow-hidden border bg-gray-50">
+    <div
+      style={{
+        width: "100%",
+        minHeight: "800px",
+        borderRadius: "12px",
+        overflow: "hidden",
+        border: "1px solid #e5e7eb",
+        backgroundColor: "#f9fafb",
+      }}
+    >
       {isLoading ? (
-        <div className="flex min-h-[800px] items-center justify-center text-sm text-gray-600">
-          <div className="flex flex-col items-center gap-3">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-blue-500" />
+        <div
+          style={{
+            minHeight: "800px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#4b5563",
+            fontSize: "14px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "12px",
+            }}
+          >
+            <div
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "9999px",
+                border: "4px solid #e5e7eb",
+                borderTopColor: "#3b82f6",
+                animation: "template-studio-spin 1s linear infinite",
+              }}
+            />
             <span>Loading template preview...</span>
           </div>
+          <style>{`@keyframes template-studio-spin { to { transform: rotate(360deg); } }`}</style>
         </div>
       ) : !processedHtml ? (
-        <div className="flex min-h-[800px] items-center justify-center text-sm text-gray-600">
+        <div
+          style={{
+            minHeight: "800px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#4b5563",
+            fontSize: "14px",
+          }}
+        >
           No template loaded
         </div>
       ) : (
@@ -36,8 +80,15 @@ export default function TemplateSandboxPreview({
           ref={iframeRef}
           title="Template Preview"
           srcDoc={processedHtml}
-          sandbox="allow-same-origin"
-          className="w-full min-h-[800px] h-[800px] bg-white border-none block"
+          sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+          style={{
+            width: "100%",
+            minHeight: "800px",
+            height: "800px",
+            backgroundColor: "#ffffff",
+            border: "none",
+            display: "block",
+          }}
           onLoad={onFrameLoad}
           onError={onFrameError}
         />

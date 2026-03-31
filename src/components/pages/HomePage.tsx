@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { useAppContext } from "../Layout";
 import { HomePageConfig, StandardMenu, User } from "../../types/thoughtspot";
 import ThoughtSpotEmbed from "../ThoughtSpotEmbed";
@@ -19,10 +20,17 @@ interface HomePageProps {
   onConfigUpdate?: (config: HomePageConfig) => void;
 }
 
+interface TemplateFooterAction {
+  label: string;
+  href: string;
+  variant: "primary" | "secondary";
+}
+
 const DATABRICKS_WIDGET_TOP_CHROME_HEIGHT = 86;
 const DATABRICKS_WIDGET_BOTTOM_CHROME_HEIGHT = 42;
 
 export default function HomePage({ onConfigUpdate }: HomePageProps) {
+  const router = useRouter();
   const [iframeError, setIframeError] = useState<string | null>(null);
   const [templateIframeError, setTemplateIframeError] = useState<string | null>(
     null
@@ -32,6 +40,10 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
   const htmlContainerRef = useRef<HTMLElement | null>(null);
   const templateIframeRef = useRef<HTMLIFrameElement>(null);
   const [processedHtml, setProcessedHtml] = useState<string | null>(null);
+  const [templateFooterActions, setTemplateFooterActions] = useState<
+    TemplateFooterAction[]
+  >([]);
+  const [templateBrandColor, setTemplateBrandColor] = useState("#1c1c1c");
   const [htmlWarning, setHtmlWarning] = useState<string | null>(null);
   const [renderableHtml, setRenderableHtml] = useState<string | null>(null);
   const [tokenWarning, setTokenWarning] = useState<string | null>(null);
@@ -189,6 +201,8 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
   useEffect(() => {
     if (mappedType !== "html") {
       setProcessedHtml(null);
+      setTemplateFooterActions([]);
+      setTemplateBrandColor("#1c1c1c");
       setKpiEmbeds([]);
       setHtmlWarning(null);
       return;
@@ -196,6 +210,8 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
 
     if (!mappedValue || !mappedValue.trim()) {
       setProcessedHtml(null);
+      setTemplateFooterActions([]);
+      setTemplateBrandColor("#1c1c1c");
       setKpiEmbeds([]);
       setHtmlWarning(null);
       return;
@@ -204,6 +220,8 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     // Only run in the browser
     if (typeof window === "undefined") {
       setProcessedHtml(mappedValue);
+      setTemplateFooterActions([]);
+      setTemplateBrandColor("#1c1c1c");
       setKpiEmbeds([]);
       return;
     }
@@ -211,6 +229,34 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     try {
       const parser = new DOMParser();
       const doc = parser.parseFromString(mappedValue, "text/html");
+      const styleText = Array.from(doc.querySelectorAll("style"))
+        .map((node) => node.textContent || "")
+        .join("\n");
+      const brandColorMatch = styleText.match(/--brand-color\s*:\s*([^;]+);/i);
+      setTemplateBrandColor(brandColorMatch?.[1]?.trim() || "#1c1c1c");
+
+      const footerActions: TemplateFooterAction[] = [];
+      const footer = doc.querySelector(".footer");
+      if (footer) {
+        const anchors = Array.from(footer.querySelectorAll("a"));
+        anchors.forEach((anchor) => {
+          const href = anchor.getAttribute("href")?.trim() || "";
+          const label = anchor.textContent?.trim() || "";
+          if (!href || !label || !href.startsWith("/")) return;
+
+          footerActions.push({
+            label,
+            href,
+            variant: anchor.classList.contains("inverse")
+              ? "secondary"
+              : "primary",
+          });
+        });
+
+        footer.remove();
+      }
+      setTemplateFooterActions(footerActions);
+
       const embeds: Array<{
         id: string;
         host: string;
@@ -478,6 +524,8 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     } catch (error) {
       logError("Failed to process KPI embeds", error);
       setProcessedHtml(mappedValue);
+      setTemplateFooterActions([]);
+      setTemplateBrandColor("#1c1c1c");
       setKpiEmbeds([]);
       setHtmlWarning(null);
     }
@@ -792,6 +840,46 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     templateFrameVersion,
   ]);
 
+  useEffect(() => {
+    if (mappedType !== "html") return;
+    const frameDocument = templateIframeRef.current?.contentDocument;
+    if (!frameDocument) return;
+
+    const handleClick = (event: MouseEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const anchor = target.closest("a");
+      if (!(anchor instanceof HTMLAnchorElement)) return;
+
+      const href = anchor.getAttribute("href");
+      if (!href) return;
+
+      try {
+        const resolvedUrl = new URL(href, window.location.origin);
+        if (resolvedUrl.origin !== window.location.origin) {
+          return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        router.push(
+          `${resolvedUrl.pathname}${resolvedUrl.search}${resolvedUrl.hash}`
+        );
+        logInfo("Intercepted template navigation", {
+          href: `${resolvedUrl.pathname}${resolvedUrl.search}${resolvedUrl.hash}`,
+        });
+      } catch (error) {
+        logError("Failed to intercept template navigation", error);
+      }
+    };
+
+    frameDocument.addEventListener("click", handleClick, true);
+    return () => {
+      frameDocument.removeEventListener("click", handleClick, true);
+    };
+  }, [mappedType, templateFrameVersion, router]);
+
   // Effect to handle iframe errors
   useEffect(() => {
     const iframe = iframeRef.current;
@@ -955,6 +1043,46 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
                       );
                     }}
                   />
+                  {templateFooterActions.length > 0 ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        gap: "16px",
+                        padding: "20px 16px 0",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      {templateFooterActions.map((action) => {
+                        const isPrimary = action.variant === "primary";
+                        return (
+                          <button
+                            key={`${action.href}-${action.label}`}
+                            type="button"
+                            onClick={() => router.push(action.href)}
+                            style={{
+                              backgroundColor: isPrimary
+                                ? templateBrandColor
+                                : "transparent",
+                              color: isPrimary ? "#ffffff" : templateBrandColor,
+                              fontWeight: 700,
+                              fontSize: "16px",
+                              padding: "12px 24px",
+                              borderRadius: "999px",
+                              cursor: "pointer",
+                              border: `2px solid ${templateBrandColor}`,
+                              transition: "all 0.2s",
+                              boxShadow: isPrimary
+                                ? "0px 2px 12px rgba(0, 0, 0, 0.06)"
+                                : "none",
+                            }}
+                          >
+                            {action.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : null}
                 </>
               )}
             </>
@@ -1232,7 +1360,9 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     <div
       style={{
         flex: 1,
-        width: "100%",
+        width: "calc(100% + 48px)",
+        marginLeft: "-24px",
+        marginRight: "-24px",
         overflow: "hidden",
         display: "flex",
         minHeight: 0,
