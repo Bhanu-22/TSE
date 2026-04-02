@@ -1,0 +1,233 @@
+{
+  "standardMenus": [
+    {
+      "id": "home-html-1",
+      "name": "Home",
+      "enabled": true,
+      "icon": "home",
+      "homePageType": "html",
+      "homePageValue": "<!DOCTYPE html>\r\n<html>\r\n\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <title>Blitz Trial Live</title>\r\n     <link href=\"https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap\" rel=\"stylesheet\">\r\n</head>\r\n\r\n<body style=\"margin:0; padding:40px 0; background:#f3f3f3; font-family:'Work Sans', Arial, Helvetica, sans-serif;\">\r\n\r\n    <table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\r\n        <tr>\r\n            <td align=\"center\">\r\n\r\n                <!--[if gte mso 9]>\r\n<v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\"\r\n arcsize=\"4%\"\r\n stroke=\"false\"\r\n fill=\"true\"\r\n style=\"width:800px;\">\r\n<v:fill type=\"frame\"\r\n src=\"https://lab.blitzdemos.ai/email_assets/gradients/gradient-1000.png\"\r\n color=\"#7D426E\"/>\r\n<v:textbox inset=\"12px,12px,12px,12px\">\r\n<![endif]-->\r\n\r\n                <table width=\"800\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"\r\n                    background=\"https://lab.blitzdemos.ai/email_assets/gradients/gradient-1000.png\"\r\n                    style=\"background-size:800px 100%; background-repeat:no-repeat; border-radius:32px;\">\r\n\r\n                    <tr>\r\n                        <td style=\"padding:12px;\">\r\n\r\n                            <table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\"\r\n                                style=\"border-radius:24px; overflow:hidden;\">\r\n\r\n                                <!-- Header -->\r\n                                <tr>\r\n                                    <td bgcolor=\"#7D426E\" style=\"padding:20px 28px;\">\r\n                                        <img src=\"https://lab.blitzdemos.ai/email_assets/logos/blitz-logo-white.png\"\r\n                                            style=\"display:block;\" alt=\"Blitz\">\r\n                                    </td>\r\n                                </tr>\r\n\r\n                                <!-- Body -->\r\n                                <tr>\r\n                                    <td style=\"padding:24px 40px; color:#252422;\">\r\n\r\n                                        <h1 style=\"font-size:40px; font-weight:600; line-height:48px; margin:0 0 24px 0;\">\r\n                                            Your 7-day Blitz trial is live.\r\n                                        </h1>\r\n\r\n                                        <p style=\"font-size:20px; line-height:32px; margin:0 0 24px 0;\">\r\n                                            Enter a company name. We’ll build the Blitz demo that sells.\r\n                                        </p>\r\n\r\n                                        <p style=\"font-size:20px; line-height:32px; margin:0 0 24px 0;\">\r\n                                            Start here:\r\n                                        </p>\r\n\r\n                                        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"\r\n                                            style=\"margin:0 0 24px 0;\">\r\n                                            <tr>\r\n                                                <td style=\"font-size:20px; line-height:32px;\">1. Paste a company URL</td>\r\n                                            </tr>\r\n                                            <tr>\r\n                                                <td style=\"font-size:20px; line-height:32px;\">2. Pick the story (KPIs + outcomes)</td>\r\n                                            </tr>\r\n                                            <tr>\r\n                                                <td style=\"font-size:20px; line-height:32px;\">3. Walk into the demo ready</td>\r\n                                            </tr>\r\n                                        </table>\r\n\r\n                                        <p style=\"font-size:20px; line-height:32px; margin:0 0 24px 0;\">\r\n                                            Tip: choose a real target account. The difference is instant.\r\n                                        </p>\r\n\r\n                                        <p style=\"font-size:20px; line-height:32px; margin:0 0 32px 0;\">\r\n                                            Demo that look like you spent days. Ready in minutes.\r\n                                        </p>\r\n\r\n                                        <!-- Watch a Demo Button -->\r\n                                        <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"margin:0 0 32px 0;\">\r\n                                            <tr>\r\n                                                <td align=\"center\" bgcolor=\"#0E3A84\"\r\n                                                    style=\"width:174px; height:55px; border-radius:6px;\">\r\n                                                    <a href=\"https://www.youtube.com/watch?v=bg8PDRuqMjk&t=2s\"\r\n                                                        style=\"display:inline-block; width:174px; height:55px; line-height:55px; font-size:20px; font-weight:500; color:#ffffff; text-decoration:none; text-align:center;\">\r\n                                                        Watch a demo\r\n                                                    </a>\r\n                                                </td>\r\n                                            </tr>\r\n                                        </table>\r\n\r\n                                        <p style=\"font-size:20px; line-height:32px; margin:0 0 24px 0;\">\r\n                                            Over the next week, we’ll drop some helpful tips with handy info on how to make the most of your time here.\r\n                                        </p>\r\n\r\n                                        <p style=\"font-size:20px; line-height:32px; margin:0 0 24px 0;\">\r\n                                            - <strong>The Blitz Team</strong>\r\n                                        </p>\r\n\r\n                                        <hr style=\"border:0; border-top:1px solid #D7DADD; margin:24px 0;\">\r\n\r\n                                        <p style=\"font-size:20px; line-height:32px; margin:0 0 24px 0;\">\r\n                                            We can’t wait to show you how effortless winning demos can be!\r\n                                        </p>\r\n\r\n                                        <!-- Explore + Social -->\r\n                                        <table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"\r\n                                            style=\"margin:0 0 24px 0;\">\r\n                                            <tr>\r\n                                                <td align=\"left\">\r\n                                                    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\r\n                                                        <tr>\r\n                                                            <td align=\"center\" bgcolor=\"#7D426E\"\r\n                                                                style=\"width:200px; height:40px; border-radius:4px;\">\r\n                                                                <a href=\"https://www.blitzdemos.ai/\"\r\n                                                                    style=\"display:inline-block; width:191px; height:40px; line-height:40px; font-size:16px; font-weight:bold; color:#ffffff; text-decoration:none; text-align:center;\">\r\n                                                                    Explore our website\r\n                                                                </a>\r\n                                                            </td>\r\n                                                        </tr>\r\n                                                    </table>\r\n                                                </td>\r\n\r\n                                                <td align=\"right\">\r\n                                                    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\r\n                                                        <tr>\r\n                                                            <td>\r\n                                                                <a href=\"https://www.linkedin.com/company/blitzdemos/?viewAsMember=true\">\r\n                                                                    <img src=\"https://lab.blitzdemos.ai/email_assets/icons/linkedin.png\"\r\n                                                                        width=\"40\" height=\"40\"\r\n                                                                        style=\"display:block;\" alt=\"LinkedIn\">\r\n                                                                </a>\r\n                                                            </td>\r\n                                                            <td width=\"12\"></td>\r\n                                                            <td>\r\n                                                                <a href=\"https://www.youtube.com/@blitzdemos\">\r\n                                                                    <img src=\"https://lab.blitzdemos.ai/email_assets/icons/youtube.png\"\r\n                                                                        width=\"40\" height=\"40\"\r\n                                                                        style=\"display:block;\" alt=\"YouTube\">\r\n                                                                </a>\r\n                                                            </td>\r\n                                                        </tr>\r\n                                                    </table>\r\n                                                </td>\r\n                                            </tr>\r\n                                        </table>\r\n\r\n                                        <p style=\"font-size:16px; line-height:32px; color:#8C857E; margin:0;\">\r\n                                            This is an automatic email, so please don't reply to it. If you have any questions or need more help, drop us a line on the website.\r\n                                        </p>\r\n\r\n                                    </td>\r\n                                </tr>\r\n                            </table>\r\n\r\n                        </td>\r\n                    </tr>\r\n                </table>\r\n\r\n                <!--[if gte mso 9]>\r\n</v:textbox>\r\n</v:roundrect>\r\n<![endif]-->\r\n\r\n            </td>\r\n        </tr>\r\n    </table>\r\n\r\n</body>\r\n\r\n</html>"
+    },
+    {
+      "id": "home-html-2",
+      "name": "Campaign Home",
+      "enabled": true,
+      "icon": "home",
+      "homePageType": "html",
+      "homePageValue": "<!DOCTYPE html>\r\n<html>\r\n\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <title>Blitz Trial Live</title>\r\n     <link href=\"https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap\" rel=\"stylesheet\">\r\n</head>\r\n\r\n<body style=\"margin:0; padding:40px 0; background:#f3f3f3; font-family:'Work Sans', Arial, Helvetica, sans-serif;\">\r\n\r\n    <table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\r\n        <tr>\r\n            <td align=\"center\">\r\n\r\n                <!--[if gte mso 9]>\r\n<v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\"\r\n arcsize=\"4%\"\r\n stroke=\"false\"\r\n fill=\"true\"\r\n style=\"width:800px;\">\r\n<v:fill type=\"frame\"\r\n src=\"https://lab.blitzdemos.ai/email_assets/gradients/gradient-1000.png\"\r\n color=\"#7D426E\"/>\r\n<v:textbox inset=\"12px,12px,12px,12px\">\r\n<![endif]-->\r\n\r\n                <table width=\"800\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"\r\n                    background=\"https://lab.blitzdemos.ai/email_assets/gradients/gradient-1000.png\"\r\n                    style=\"background-size:800px 100%; background-repeat:no-repeat; border-radius:32px;\">\r\n\r\n                    <tr>\r\n                        <td style=\"padding:12px;\">\r\n\r\n                            <table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\"\r\n                                style=\"border-radius:24px; overflow:hidden;\">\r\n\r\n                                <!-- Header -->\r\n                                <tr>\r\n                                    <td bgcolor=\"#7D426E\" style=\"padding:20px 28px;\">\r\n                                        <img src=\"https://lab.blitzdemos.ai/email_assets/logos/blitz-logo-white.png\"\r\n                                            style=\"display:block;\" alt=\"Blitz\">\r\n                                    </td>\r\n                                </tr>\r\n\r\n                                <!-- Body -->\r\n                                <tr>\r\n                                    <td style=\"padding:24px 40px; color:#252422;\">\r\n\r\n                                        <h1 style=\"font-size:40px; font-weight:600; line-height:48px; margin:0 0 24px 0;\">\r\n                                            Your 7-day Blitz trial is live.\r\n                                        </h1>\r\n\r\n                                        <p style=\"font-size:20px; line-height:32px; margin:0 0 24px 0;\">\r\n                                            Enter a company name. We’ll build the Blitz demo that sells.\r\n                                        </p>\r\n\r\n                                        <p style=\"font-size:20px; line-height:32px; margin:0 0 24px 0;\">\r\n                                            Start here:\r\n                                        </p>\r\n\r\n                                        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"\r\n                                            style=\"margin:0 0 24px 0;\">\r\n                                            <tr>\r\n                                                <td style=\"font-size:20px; line-height:32px;\">1. Paste a company URL</td>\r\n                                            </tr>\r\n                                            <tr>\r\n                                                <td style=\"font-size:20px; line-height:32px;\">2. Pick the story (KPIs + outcomes)</td>\r\n                                            </tr>\r\n                                            <tr>\r\n                                                <td style=\"font-size:20px; line-height:32px;\">3. Walk into the demo ready</td>\r\n                                            </tr>\r\n                                        </table>\r\n\r\n                                        <p style=\"font-size:20px; line-height:32px; margin:0 0 24px 0;\">\r\n                                            Tip: choose a real target account. The difference is instant.\r\n                                        </p>\r\n\r\n                                        <p style=\"font-size:20px; line-height:32px; margin:0 0 32px 0;\">\r\n                                            Demo that look like you spent days. Ready in minutes.\r\n                                        </p>\r\n\r\n                                        <!-- Watch a Demo Button -->\r\n                                        <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"margin:0 0 32px 0;\">\r\n                                            <tr>\r\n                                                <td align=\"center\" bgcolor=\"#0E3A84\"\r\n                                                    style=\"width:174px; height:55px; border-radius:6px;\">\r\n                                                    <a href=\"https://www.youtube.com/watch?v=bg8PDRuqMjk&t=2s\"\r\n                                                        style=\"display:inline-block; width:174px; height:55px; line-height:55px; font-size:20px; font-weight:500; color:#ffffff; text-decoration:none; text-align:center;\">\r\n                                                        Watch a demo\r\n                                                    </a>\r\n                                                </td>\r\n                                            </tr>\r\n                                        </table>\r\n\r\n                                        <p style=\"font-size:20px; line-height:32px; margin:0 0 24px 0;\">\r\n                                            Over the next week, we’ll drop some helpful tips with handy info on how to make the most of your time here.\r\n                                        </p>\r\n\r\n                                        <p style=\"font-size:20px; line-height:32px; margin:0 0 24px 0;\">\r\n                                            - <strong>The Blitz Team</strong>\r\n                                        </p>\r\n\r\n                                        <hr style=\"border:0; border-top:1px solid #D7DADD; margin:24px 0;\">\r\n\r\n                                        <p style=\"font-size:20px; line-height:32px; margin:0 0 24px 0;\">\r\n                                            We can’t wait to show you how effortless winning demos can be!\r\n                                        </p>\r\n\r\n                                        <!-- Explore + Social -->\r\n                                        <table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"\r\n                                            style=\"margin:0 0 24px 0;\">\r\n                                            <tr>\r\n                                                <td align=\"left\">\r\n                                                    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\r\n                                                        <tr>\r\n                                                            <td align=\"center\" bgcolor=\"#7D426E\"\r\n                                                                style=\"width:200px; height:40px; border-radius:4px;\">\r\n                                                                <a href=\"https://www.blitzdemos.ai/\"\r\n                                                                    style=\"display:inline-block; width:191px; height:40px; line-height:40px; font-size:16px; font-weight:bold; color:#ffffff; text-decoration:none; text-align:center;\">\r\n                                                                    Explore our website\r\n                                                                </a>\r\n                                                            </td>\r\n                                                        </tr>\r\n                                                    </table>\r\n                                                </td>\r\n\r\n                                                <td align=\"right\">\r\n                                                    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\r\n                                                        <tr>\r\n                                                            <td>\r\n                                                                <a href=\"https://www.linkedin.com/company/blitzdemos/?viewAsMember=true\">\r\n                                                                    <img src=\"https://lab.blitzdemos.ai/email_assets/icons/linkedin.png\"\r\n                                                                        width=\"40\" height=\"40\"\r\n                                                                        style=\"display:block;\" alt=\"LinkedIn\">\r\n                                                                </a>\r\n                                                            </td>\r\n                                                            <td width=\"12\"></td>\r\n                                                            <td>\r\n                                                                <a href=\"https://www.youtube.com/@blitzdemos\">\r\n                                                                    <img src=\"https://lab.blitzdemos.ai/email_assets/icons/youtube.png\"\r\n                                                                        width=\"40\" height=\"40\"\r\n                                                                        style=\"display:block;\" alt=\"YouTube\">\r\n                                                                </a>\r\n                                                            </td>\r\n                                                        </tr>\r\n                                                    </table>\r\n                                                </td>\r\n                                            </tr>\r\n                                        </table>\r\n\r\n                                        <p style=\"font-size:16px; line-height:32px; color:#8C857E; margin:0;\">\r\n                                            This is an automatic email, so please don't reply to it. If you have any questions or need more help, drop us a line on the website.\r\n                                        </p>\r\n\r\n                                    </td>\r\n                                </tr>\r\n                            </table>\r\n\r\n                        </td>\r\n                    </tr>\r\n                </table>\r\n\r\n                <!--[if gte mso 9]>\r\n</v:textbox>\r\n</v:roundrect>\r\n<![endif]-->\r\n\r\n            </td>\r\n        </tr>\r\n    </table>\r\n\r\n</body>\r\n\r\n</html>"
+    },
+    {
+      "id": "spotter-1",
+      "name": "Sales Spotter",
+      "enabled": true,
+      "icon": "spotter-custom.svg",
+      "homePageType": "spotter",
+      "spotterModelId": "815fb416-8598-4834-8c3f-890133242c15",
+      "spotterSearchQuery": "Show sales by region"
+    },
+    {
+      "id": "spotter-2",
+      "name": "Finance Spotter",
+      "enabled": true,
+      "icon": "spotter-custom.svg",
+      "homePageType": "spotter",
+      "spotterModelId": "815fb416-8598-4834-8c3f-890133242c15",
+      "spotterSearchQuery": "Explain this dataset to me"
+    },
+    {
+      "id": "liveboard-1",
+      "name": "Executive Dashboard",
+      "enabled": true,
+      "icon": "dashboard",
+      "homePageType": "liveboard",
+      "homePageValue": "19c79974-8154-410a-ba1e-cb40fd12ddd4"
+    },
+    {
+      "id": "liveboard-2",
+      "name": "Operations Dashboard",
+      "enabled": true,
+      "icon": "dashboard",
+      "homePageType": "liveboard",
+      "homePageValue": "3adcfe19-3869-4ea4-a399-6679dd72740b"
+    }
+  ],
+  "customMenus": [
+    {
+      "id": "custom-1775146125348-0",
+      "name": "My Reports",
+      "description": "",
+      "icon": "my-reports",
+      "enabled": true,
+      "contentSelection": {
+        "type": "specific",
+        "specificContent": {
+          "liveboards": [
+            "19c79974-8154-410a-ba1e-cb40fd12ddd4"
+          ],
+          "answers": []
+        }
+      },
+      "openDirectly": true
+    }
+  ],
+  "menuOrder": [
+    "home-html-1",
+    "home-html-2",
+    "spotter-1",
+    "spotter-2",
+    "liveboard-1",
+    "liveboard-2",
+    "custom-1775146125348-0"
+  ],
+  "homePageConfig": {
+    "type": "html",
+    "value": "<h1>Welcome to TSE Demo Builder</h1>"
+  },
+  "appConfig": {
+    "thoughtspotUrl": "https://7dxperts.thoughtspot.cloud",
+    "orgIdentifier": "Primary",
+    "applicationName": "Macys-Test",
+    "logo": "https://media.brand.dev/488b6336-c286-4ec5-8d12-53687b716e73.jpg",
+    "earlyAccessFlags": "enable-modular-home\nenable-custom-styling",
+    "favicon": "https://media.brand.dev/488b6336-c286-4ec5-8d12-53687b716e73.jpg",
+    "showFooter": false,
+    "disableSettings": true,
+    "chatbot": {
+      "enabled": true,
+      "welcomeMessage": "Hello! I'm your AI assistant. What would you like to know about your data?",
+      "position": "bottom-right",
+      "primaryColor": "#3b82f6",
+      "hoverColor": "#2563eb"
+    },
+    "authType": "TrustedAuthToken",
+    "faviconSyncEnabled": true,
+    "provider": "thoughtspot"
+  },
+  "fullAppConfig": {
+    "showPrimaryNavbar": true,
+    "hideHomepageLeftNav": false
+  },
+  "stylingConfig": {
+    "application": {
+      "topBar": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333",
+        "logoUrl": "https://media.brand.dev/488b6336-c286-4ec5-8d12-53687b716e73.jpg"
+      },
+      "sidebar": {
+        "backgroundColor": "#ca0808",
+        "foregroundColor": "#FFFFFF"
+      },
+      "footer": {
+        "backgroundColor": "#1E293B",
+        "foregroundColor": "#333333"
+      },
+      "dialogs": {
+        "backgroundColor": "#ffffff",
+        "foregroundColor": "#333333"
+      },
+      "buttons": {
+        "primary": {
+          "backgroundColor": "#ca0808",
+          "foregroundColor": "#FFFFFF",
+          "borderColor": "#ca0808",
+          "hoverBackgroundColor": "#2c5aa0",
+          "hoverForegroundColor": "#ffffff"
+        },
+        "secondary": {
+          "backgroundColor": "#e6ba52",
+          "foregroundColor": "#0F172A",
+          "borderColor": "#e6ba52",
+          "hoverBackgroundColor": "#f9fafb",
+          "hoverForegroundColor": "#374151"
+        }
+      },
+      "backgrounds": {
+        "mainBackground": "#F8FAFC",
+        "contentBackground": "#ffffff",
+        "cardBackground": "#FFFFFF",
+        "borderColor": "#E2E8F0"
+      },
+      "typography": {
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#6b7280",
+        "linkColor": "#e6ba52",
+        "linkHoverColor": "#ca0808"
+      },
+      "selectedTheme": "default"
+    },
+    "embeddedContent": {
+      "strings": {},
+      "stringIDs": {},
+      "cssUrl": "",
+      "customCSS": {
+        "variables": {
+          "--ts-var-button--primary-background": "rgba(202, 8, 8, 1.0)",
+          "--ts-var-button--primary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--primary--hover-background": "rgba(202, 8, 8, 0.8)",
+          "--ts-var-button--primary--active-background": "rgba(202, 8, 8, 0.6)",
+          "--ts-var-button--secondary-background": "rgba(230, 186, 82, 1.0)",
+          "--ts-var-button--secondary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--secondary--hover-background": "rgba(230, 186, 82, 0.8)",
+          "--ts-var-button--secondary--active-background": "rgba(230, 186, 82, 0.6)",
+          "--ts-var-button--tertiary-background": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--tertiary-color": "rgba(255, 255, 255, 1.0)",
+          "--ts-var-button--tertiary--hover-background": "rgba(248, 250, 252, 0.8)",
+          "--ts-var-button--tertiary--active-background": "rgba(248, 250, 252, 0.6)",
+          "--ts-var-menu--hover-background": "rgba(255, 255, 255, 0.8)",
+          "--ts-var-root-background": "#FFFFFF",
+          "--ts-var-menu-background": "#FFFFFF",
+          "--ts-var-liveboard-layout-background": "rgba(255, 255, 255, 1.0)"
+        },
+        "rules_UNSTABLE": {}
+      }
+    },
+    "embedFlags": {
+      "liveboardEmbed": {
+        "showLiveboardTitle": false,
+        "showLiveboardDescription": false,
+        "isLiveboardHeaderSticky": false,
+        "hideLiveboardHeader": false,
+        "disabledActions": [],
+        "disabledActionReason": "Disabled",
+        "visibleActions": [],
+        "hiddenActions": []
+      }
+    },
+    "embedDisplay": {
+      "hideTitle": false,
+      "hideDescription": false
+    }
+  },
+  "userConfig": {
+    "users": [
+      {
+        "id": "power-user",
+        "name": "Power User",
+        "description": "Full access - can access all features including Search and Full App",
+        "locale": "en",
+        "access": {
+          "standardMenus": {
+            "home-html-1": true,
+            "home-html-2": true,
+            "spotter-1": true,
+            "spotter-2": true,
+            "liveboard-1": true,
+            "liveboard-2": true
+          },
+          "customMenus": [
+            "custom-1775146125348-0"
+          ],
+          "hiddenActions": {
+            "enabled": true,
+            "actions": []
+          }
+        }
+      }
+    ],
+    "currentUserId": "power-user"
+  },
+  "version": "1.0.0",
+  "timestamp": "2026-04-02T16:08:45.358425",
+  "description": "TSE Demo Builder Configuration Export"
+}
