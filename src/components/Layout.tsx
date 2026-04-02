@@ -403,22 +403,9 @@ function LayoutContent({ children }: LayoutProps) {
   );
 
   // Load initial state from configurationService
-  const [standardMenus, setStandardMenus] = useState<StandardMenu[]>(() => {
-    // Ensure all-content menu is always present
-    const initialMenus = [...DEFAULT_CONFIG.standardMenus];
-    const allContentMenu = initialMenus.find((m) => m.id === "all-content");
-    if (!allContentMenu) {
-      console.warn("all-content menu not found in DEFAULT_CONFIG, adding it");
-      initialMenus.push({
-        id: "all-content",
-        icon: "📚",
-        name: "All Content",
-        enabled: true,
-        excludeSystemContent: true,
-      });
-    }
-    return initialMenus;
-  });
+  const [standardMenus, setStandardMenus] = useState<StandardMenu[]>(
+    DEFAULT_CONFIG.standardMenus
+  );
   const [customMenus, setCustomMenus] = useState<CustomMenu[]>(
     DEFAULT_CONFIG.customMenus
   );
@@ -531,23 +518,6 @@ function LayoutContent({ children }: LayoutProps) {
           const loadedMenus = configs.standardMenus;
           if (Array.isArray(loadedMenus)) {
             const migratedMenus = migrateStandardMenus(loadedMenus);
-
-            // Ensure all-content menu is always present
-            const allContentMenu = migratedMenus.find(
-              (m) => m.id === "all-content"
-            );
-            if (!allContentMenu) {
-              console.warn(
-                "all-content menu not found in loaded menus, adding it"
-              );
-              migratedMenus.push({
-                id: "all-content",
-                icon: "📚",
-                name: "All Content",
-                enabled: true,
-                excludeSystemContent: true,
-              });
-            }
 
             setStandardMenus(migratedMenus);
           } else {

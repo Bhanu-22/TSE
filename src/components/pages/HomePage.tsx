@@ -1463,6 +1463,10 @@ export default function HomePage({ onConfigUpdate, menuId }: HomePageProps) {
           name: `${contentType} Content`, // Default name for the content
           type: contentTypeForEmbed as "liveboard" | "answer" | "model",
         };
+        const thoughtSpotEmbedHeight =
+          contentType === "liveboard"
+            ? "calc(100vh - 260px)"
+            : "calc(100vh - 220px)";
 
         return (
           <div
@@ -1482,11 +1486,18 @@ export default function HomePage({ onConfigUpdate, menuId }: HomePageProps) {
                 actionLabel="Open liveboard"
               />
             ) : null}
-            <div style={{ flex: 1, width: "100%", minHeight: 0 }}>
+            <div
+              style={{
+                flex: 1,
+                width: "100%",
+                minHeight: "640px",
+                height: thoughtSpotEmbedHeight,
+              }}
+            >
               <ThoughtSpotEmbed
                 content={thoughtSpotContent}
                 width="100%"
-                height="100%"
+                height={thoughtSpotEmbedHeight}
                 onError={(error) => {
                   console.error("ThoughtSpot embed error:", error);
                   setIframeError(`Failed to load ${contentType}: ${error}`);

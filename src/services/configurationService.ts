@@ -69,15 +69,6 @@ export const DEFAULT_CONFIG: ConfigurationData = {
       homePageType: "html",
       homePageValue: "<h1>Full App</h1>",
     },
-    {
-      id: "all-content",
-      name: "All Content",
-      enabled: true,
-      icon: "📚",
-      homePageType: "html",
-      homePageValue: "<h1>All Content</h1>",
-      excludeSystemContent: true,
-    },
   ],
   customMenus: [],
   menuOrder: [
@@ -87,7 +78,6 @@ export const DEFAULT_CONFIG: ConfigurationData = {
     "spotter",
     "search",
     "full-app",
-    "all-content",
   ],
   homePageConfig: {
     type: "html",

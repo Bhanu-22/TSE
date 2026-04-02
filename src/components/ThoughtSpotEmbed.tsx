@@ -419,6 +419,8 @@ export default function ThoughtSpotEmbed({
     return (
       <div
         style={{
+          width,
+          minHeight: height,
           padding: "20px",
           backgroundColor: "#fed7d7",
           border: "1px solid #feb2b2",
@@ -433,7 +435,14 @@ export default function ThoughtSpotEmbed({
   }
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+    <div
+      style={{
+        position: "relative",
+        width,
+        height,
+        minHeight: height,
+      }}
+    >
       {isLoading && (
         <div
           style={{
@@ -455,8 +464,9 @@ export default function ThoughtSpotEmbed({
       <div
         ref={embedRef}
         style={{
-          width: "100%",
-          height: "100%",
+          width,
+          height,
+          minHeight: height,
           overflow: "hidden",
         }}
       />
