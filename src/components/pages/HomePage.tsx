@@ -20,7 +20,7 @@ interface HomePageProps {
   onConfigUpdate?: (config: HomePageConfig) => void;
 }
 
-interface TemplateFooterAction {
+interface HomePageAction {
   label: string;
   href: string;
   variant: "primary" | "secondary";
@@ -28,6 +28,47 @@ interface TemplateFooterAction {
 
 const DATABRICKS_WIDGET_TOP_CHROME_HEIGHT = 86;
 const DATABRICKS_WIDGET_BOTTOM_CHROME_HEIGHT = 42;
+
+const dedupeHomeActions = (actions: HomePageAction[]): HomePageAction[] => {
+  const seen = new Set<string>();
+  return actions.filter((action) => {
+    const key = `${action.href}::${action.label}`;
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
+};
+
+const getStandardMenuRoute = (menu: StandardMenu): string => {
+  const routeMap: Record<string, string> = {
+    home: "/",
+    dashboard: "/dashboard",
+    favorites: "/favorites",
+    "my-reports": "/my-reports",
+    spotter: "/spotter",
+    search: "/search",
+    "full-app": "/full-app",
+    "all-content": "/all-content",
+  };
+
+  if (routeMap[menu.id]) {
+    return routeMap[menu.id];
+  }
+
+  if (
+    menu.homePageType === "spotter" ||
+    menu.spotterModelId ||
+    menu.spotterSearchQuery ||
+    menu.providerContentType === "genie" ||
+    menu.providerContentType === "dashboard"
+  ) {
+    return `/menu/${menu.id}`;
+  }
+
+  return "/";
+};
 
 export default function HomePage({ onConfigUpdate }: HomePageProps) {
   const router = useRouter();
@@ -41,7 +82,7 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
   const templateIframeRef = useRef<HTMLIFrameElement>(null);
   const [processedHtml, setProcessedHtml] = useState<string | null>(null);
   const [templateFooterActions, setTemplateFooterActions] = useState<
-    TemplateFooterAction[]
+    HomePageAction[]
   >([]);
   const [templateBrandColor, setTemplateBrandColor] = useState("#1c1c1c");
   const [htmlWarning, setHtmlWarning] = useState<string | null>(null);
@@ -142,6 +183,109 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
     dashboardUrl: liveboardPortalUrl || "/dashboard",
   };
 
+  const providerHomeActions: HomePageAction[] = [];
+  const dashboardMenu = standardMenus.find(
+    (menu) =>
+      menu.enabled &&
+      (menu.id === "dashboard" || menu.providerContentType === "dashboard")
+  );
+  const myReportsMenu = standardMenus.find(
+    (menu) => menu.enabled && menu.id === "my-reports"
+  );
+  const genieMenu = standardMenus.find(
+    (menu) =>
+      menu.enabled &&
+      (
+        menu.id === "spotter" ||
+        menu.homePageType === "spotter" ||
+        !!menu.spotterModelId ||
+        !!menu.spotterSearchQuery ||
+        menu.providerContentType === "genie"
+      )
+  );
+  const genieMenuRoute = genieMenu ? getStandardMenuRoute(genieMenu) : "";
+
+  if (context.appConfig.provider === "thoughtspot" && liveboardPortalUrl) {
+    providerHomeActions.push({
+      label: "View Liveboard",
+      href: liveboardPortalUrl,
+      variant: "primary",
+    });
+  } else if (context.appConfig.provider === "thoughtspot" && myReportsMenu) {
+    providerHomeActions.push({
+      label: "View Liveboard",
+      href: "/my-reports",
+      variant: "primary",
+    });
+  } else if (dashboardMenu) {
+    providerHomeActions.push({
+      label: "View Dashboard",
+      href: "/dashboard",
+      variant: "primary",
+    });
+  }
+
+  if (genieMenu) {
+    providerHomeActions.push({
+      label:
+        context.appConfig.provider === "databricks"
+          ? "Ask Genie"
+          : "Ask Spotter",
+      href: genieMenuRoute,
+      variant:
+        context.appConfig.provider === "thoughtspot" && liveboardPortalUrl
+          ? "secondary"
+          : dashboardMenu
+            ? "secondary"
+            : "primary",
+    });
+  }
+
+  const thoughtspotFallbackActions =
+    context.appConfig.provider === "thoughtspot"
+      ? providerHomeActions.filter(
+          (action) =>
+            (!!genieMenuRoute && action.href === genieMenuRoute) ||
+            action.href === "/my-reports" ||
+            /^https?:\/\/.+#\/pinboard\//i.test(action.href)
+        )
+      : [];
+
+  const effectiveHomeActions =
+    templateFooterActions.length > 0
+      ? dedupeHomeActions([
+          ...templateFooterActions,
+          ...thoughtspotFallbackActions.filter(
+            (fallbackAction) =>
+              !templateFooterActions.some((templateAction) => {
+                if (
+                  fallbackAction.href === "/spotter" &&
+                  templateAction.href === "/spotter"
+                ) {
+                  return true;
+                }
+
+                if (
+                  fallbackAction.href === "/my-reports" &&
+                  templateAction.href === "/my-reports"
+                ) {
+                  return true;
+                }
+
+                if (
+                  /^https?:\/\/.+#\/pinboard\//i.test(fallbackAction.href) &&
+                  (/^https?:\/\/.+#\/pinboard\//i.test(templateAction.href) ||
+                    templateAction.href.startsWith("/custom/"))
+                ) {
+                  return true;
+                }
+
+                return false;
+              })
+          ),
+        ])
+      : providerHomeActions;
+
   // Effect to handle image content
   useEffect(() => {
     // Use the mapped value for image content detection
@@ -235,27 +379,33 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
       const brandColorMatch = styleText.match(/--brand-color\s*:\s*([^;]+);/i);
       setTemplateBrandColor(brandColorMatch?.[1]?.trim() || "#1c1c1c");
 
-      const footerActions: TemplateFooterAction[] = [];
       const footer = doc.querySelector(".footer");
       if (footer) {
         const anchors = Array.from(footer.querySelectorAll("a"));
-        anchors.forEach((anchor) => {
-          const href = anchor.getAttribute("href")?.trim() || "";
-          const label = anchor.textContent?.trim() || "";
-          if (!href || !label || !href.startsWith("/")) return;
+        const footerActions = anchors
+          .map((anchor) => {
+            const href = anchor.getAttribute("href")?.trim() || "";
+            const label = anchor.textContent?.trim() || "";
 
-          footerActions.push({
-            label,
-            href,
-            variant: anchor.classList.contains("inverse")
-              ? "secondary"
-              : "primary",
-          });
-        });
+            if (!href || !label) {
+              return null;
+            }
 
+            return {
+              label,
+              href,
+              variant: anchor.classList.contains("inverse")
+                ? "secondary"
+                : "primary",
+            } satisfies HomePageAction;
+          })
+          .filter((action): action is HomePageAction => Boolean(action));
+
+        setTemplateFooterActions(footerActions);
         footer.remove();
+      } else {
+        setTemplateFooterActions([]);
       }
-      setTemplateFooterActions(footerActions);
 
       const embeds: Array<{
         id: string;
@@ -1043,7 +1193,7 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
                       );
                     }}
                   />
-                  {templateFooterActions.length > 0 ? (
+                  {effectiveHomeActions.length > 0 ? (
                     <div
                       style={{
                         display: "flex",
@@ -1053,13 +1203,23 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
                         flexWrap: "wrap",
                       }}
                     >
-                      {templateFooterActions.map((action) => {
+                      {effectiveHomeActions.map((action) => {
                         const isPrimary = action.variant === "primary";
                         return (
                           <button
                             key={`${action.href}-${action.label}`}
                             type="button"
-                            onClick={() => router.push(action.href)}
+                            onClick={() => {
+                              if (/^https?:\/\//i.test(action.href)) {
+                                window.open(
+                                  action.href,
+                                  "_blank",
+                                  "noopener,noreferrer"
+                                );
+                                return;
+                              }
+                              router.push(action.href);
+                            }}
                             style={{
                               backgroundColor: isPrimary
                                 ? templateBrandColor

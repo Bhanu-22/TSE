@@ -2388,11 +2388,14 @@ function LayoutContent({ children }: LayoutProps) {
 
   if (isDatabricksProvider) {
     const pathSegments = (pathname || "/").split("/").filter(Boolean);
-    const activeMenuId = pathSegments[0] || "home";
+    const activeMenuId =
+      pathSegments[0] === "menu" && pathSegments[1]
+        ? pathSegments[1]
+        : pathSegments[0] || "home";
 
     let providerContentType: string | undefined;
 
-    if (activeMenuId === "custom" && pathSegments[1]) {
+    if (pathSegments[0] === "custom" && pathSegments[1]) {
       const matchedMenu = customMenus.find((menu) => menu.id === pathSegments[1]) as
         | (CustomMenu & Record<string, unknown>)
         | undefined;

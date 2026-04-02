@@ -2361,7 +2361,12 @@ function StandardMenusContent({
                       </div>
                     )}
 
-                    {menu.id === "spotter" && (
+                    {(
+                      menu.id === "spotter" ||
+                      menu.homePageType === "spotter" ||
+                      !!menu.spotterModelId ||
+                      !!menu.spotterSearchQuery
+                    ) && (
                       <div style={{ marginBottom: "16px" }}>
                         <div
                           style={{

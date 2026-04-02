@@ -61,6 +61,35 @@ interface NavItem {
   isCustom?: boolean;
 }
 
+const getStandardMenuRoute = (menu: StandardMenu): string => {
+  const routeMap: { [key: string]: string } = {
+    home: "/",
+    dashboard: "/dashboard",
+    favorites: "/favorites",
+    "my-reports": "/my-reports",
+    spotter: "/spotter",
+    search: "/search",
+    "full-app": "/full-app",
+    "all-content": "/all-content",
+  };
+
+  if (routeMap[menu.id]) {
+    return routeMap[menu.id];
+  }
+
+  if (
+    menu.homePageType === "spotter" ||
+    menu.spotterModelId ||
+    menu.spotterSearchQuery ||
+    menu.providerContentType === "genie" ||
+    menu.providerContentType === "dashboard"
+  ) {
+    return `/menu/${menu.id}`;
+  }
+
+  return "/";
+};
+
 interface SideNavProps {
   onSettingsClick?: () => void;
   standardMenus: StandardMenu[];
@@ -186,22 +215,12 @@ export default function SideNav({
           });
         } else {
           const standardMenu = menu as StandardMenu;
-          const routeMap: { [key: string]: string } = {
-            home: "/",
-            dashboard: "/dashboard",
-            favorites: "/favorites",
-            "my-reports": "/my-reports",
-            spotter: "/spotter",
-            search: "/search",
-            "full-app": "/full-app",
-            "all-content": "/all-content",
-          };
 
           orderedItems.push({
             id: standardMenu.id,
             name: standardMenu.name,
             icon: standardMenu.icon,
-            route: routeMap[standardMenu.id] || "/",
+            route: getStandardMenuRoute(standardMenu),
             isCustom: false,
           });
         }
@@ -213,22 +232,11 @@ export default function SideNav({
       const standardNavItems: NavItem[] = standardMenus
         .filter((menu) => menu.enabled)
         .map((menu) => {
-          const routeMap: { [key: string]: string } = {
-            home: "/",
-            dashboard: "/dashboard",
-            favorites: "/favorites",
-            "my-reports": "/my-reports",
-            spotter: "/spotter",
-            search: "/search",
-            "full-app": "/full-app",
-            "all-content": "/all-content",
-          };
-
           return {
             id: menu.id,
             name: menu.name,
             icon: menu.icon,
-            route: routeMap[menu.id] || "/",
+            route: getStandardMenuRoute(menu),
             isCustom: false,
           };
         });

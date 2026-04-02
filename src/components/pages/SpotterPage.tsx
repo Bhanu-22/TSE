@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
+import { usePathname } from "next/navigation";
 import { useAppContext } from "../Layout";
 import { ThoughtSpotEmbedConfig } from "../../types/thoughtspot";
 
@@ -13,6 +14,7 @@ export default function SpotterPage({
   spotterModelId: propSpotterModelId,
   spotterSearchQuery: propSpotterSearchQuery,
 }: SpotterPageProps = {}) {
+  const pathname = usePathname();
   const [iframeError, setIframeError] = useState<string | null>(null);
   const embedRef = useRef<HTMLDivElement>(null);
   const embedInstanceRef = useRef<{ destroy?: () => void } | null>(null);
@@ -26,13 +28,34 @@ export default function SpotterPage({
   let contextEmbedFlags: Record<string, unknown> | undefined;
 
   try {
-    const spotterMenu = context.standardMenus.find(
-      (m: {
-        id: string;
-        spotterModelId?: string;
-        spotterSearchQuery?: string;
-      }) => m.id === "spotter"
-    );
+    const pathSegments = (pathname || "/").split("/").filter(Boolean);
+    const activeStandardMenuId =
+      pathSegments[0] === "menu" && pathSegments[1]
+        ? pathSegments[1]
+        : pathSegments[0] || "spotter";
+    const spotterMenu =
+      context.standardMenus.find(
+        (m: {
+          id: string;
+          homePageType?: string;
+          spotterModelId?: string;
+          spotterSearchQuery?: string;
+        }) =>
+          m.id === activeStandardMenuId &&
+          (
+            m.homePageType === "spotter" ||
+            Boolean(m.spotterModelId) ||
+            Boolean(m.spotterSearchQuery) ||
+            m.id === "spotter"
+          )
+      ) ||
+      context.standardMenus.find(
+        (m: {
+          id: string;
+          spotterModelId?: string;
+          spotterSearchQuery?: string;
+        }) => m.id === "spotter"
+      );
     contextSpotterModelId = spotterMenu?.spotterModelId;
     contextSpotterSearchQuery = spotterMenu?.spotterSearchQuery;
     contextEmbedFlags = context.stylingConfig.embedFlags?.spotterEmbed;
@@ -178,6 +201,7 @@ export default function SpotterPage({
     context.stylingConfig.embeddedContent.stringIDs,
     context.userConfig.currentUserId,
     context.userConfig.users,
+    pathname,
   ]);
 
   return (

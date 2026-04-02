@@ -2104,7 +2104,15 @@ export const redirectFromCustomMenu = (standardMenus: StandardMenu[]): void => {
         "all-content": "/all-content",
       };
 
-      const redirectRoute = routeMap[firstStandardMenu.id] || "/";
+      const redirectRoute =
+        routeMap[firstStandardMenu.id] ||
+        (firstStandardMenu.homePageType === "spotter" ||
+        firstStandardMenu.spotterModelId ||
+        firstStandardMenu.spotterSearchQuery ||
+        firstStandardMenu.providerContentType === "genie" ||
+        firstStandardMenu.providerContentType === "dashboard"
+          ? `/menu/${firstStandardMenu.id}`
+          : "/");
       console.log(`Redirecting from custom menu to: ${redirectRoute}`);
 
       // Redirect to the first available standard menu
