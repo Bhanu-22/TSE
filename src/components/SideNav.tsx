@@ -78,6 +78,12 @@ const getStandardMenuRoute = (menu: StandardMenu): string => {
   }
 
   if (
+    menu.homePageType === "html" ||
+    menu.homePageType === "iframe" ||
+    menu.homePageType === "image" ||
+    menu.homePageType === "liveboard" ||
+    menu.homePageType === "answer" ||
+    !!menu.homePageValue ||
     menu.homePageType === "spotter" ||
     menu.spotterModelId ||
     menu.spotterSearchQuery ||
@@ -194,6 +200,7 @@ export default function SideNav({
     if (menuOrder && menuOrder.length > 0) {
       // Use the stored order
       const orderedItems: NavItem[] = [];
+      const seenIds = new Set<string>();
 
       menuOrder.forEach((id) => {
         const menuData = allMenus.get(id);
@@ -203,6 +210,7 @@ export default function SideNav({
         }
 
         const { menu, isCustom } = menuData;
+        seenIds.add(id);
 
         if (isCustom) {
           const customMenu = menu as CustomMenu;
@@ -224,6 +232,37 @@ export default function SideNav({
             isCustom: false,
           });
         }
+      });
+
+      allMenus.forEach(({ menu, isCustom }, id) => {
+        if (seenIds.has(id)) {
+          return;
+        }
+
+        if (isCustom) {
+          const customMenu = menu as CustomMenu;
+          orderedItems.push({
+            id: customMenu.id,
+            name: customMenu.name,
+            icon: customMenu.icon,
+            route: `/custom/${customMenu.id}`,
+            isCustom: true,
+          });
+          return;
+        }
+
+        const standardMenu = menu as StandardMenu;
+        if (!standardMenu.enabled) {
+          return;
+        }
+
+        orderedItems.push({
+          id: standardMenu.id,
+          name: standardMenu.name,
+          icon: standardMenu.icon,
+          route: getStandardMenuRoute(standardMenu),
+          isCustom: false,
+        });
       });
 
       return orderedItems;

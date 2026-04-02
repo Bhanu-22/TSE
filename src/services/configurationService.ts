@@ -2106,7 +2106,13 @@ export const redirectFromCustomMenu = (standardMenus: StandardMenu[]): void => {
 
       const redirectRoute =
         routeMap[firstStandardMenu.id] ||
-        (firstStandardMenu.homePageType === "spotter" ||
+        (firstStandardMenu.homePageType === "html" ||
+        firstStandardMenu.homePageType === "iframe" ||
+        firstStandardMenu.homePageType === "image" ||
+        firstStandardMenu.homePageType === "liveboard" ||
+        firstStandardMenu.homePageType === "answer" ||
+        !!firstStandardMenu.homePageValue ||
+        firstStandardMenu.homePageType === "spotter" ||
         firstStandardMenu.spotterModelId ||
         firstStandardMenu.spotterSearchQuery ||
         firstStandardMenu.providerContentType === "genie" ||

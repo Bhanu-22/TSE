@@ -18,6 +18,7 @@ import { TemplateTokens } from "../../types/template";
 
 interface HomePageProps {
   onConfigUpdate?: (config: HomePageConfig) => void;
+  menuId?: string;
 }
 
 interface HomePageAction {
@@ -70,7 +71,7 @@ const getStandardMenuRoute = (menu: StandardMenu): string => {
   return "/";
 };
 
-export default function HomePage({ onConfigUpdate }: HomePageProps) {
+export default function HomePage({ onConfigUpdate, menuId }: HomePageProps) {
   const router = useRouter();
   const [iframeError, setIframeError] = useState<string | null>(null);
   const [templateIframeError, setTemplateIframeError] = useState<string | null>(
@@ -134,8 +135,9 @@ export default function HomePage({ onConfigUpdate }: HomePageProps) {
       : `https://${thoughtspotHost.replace(/\/$/, "")}`
     : "";
 
-  // Find the home menu configuration
-  const homeMenu = standardMenus.find((m) => m.id === "home");
+  // Find the active homepage-style menu configuration
+  const selectedMenuId = menuId || "home";
+  const homeMenu = standardMenus.find((m) => m.id === selectedMenuId);
 
   // Map the homePageType to the appropriate type for rendering
   // Use homeMenu.homePageValue for the actual content, fallback to homePageConfig.value

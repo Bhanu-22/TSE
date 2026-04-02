@@ -3,6 +3,7 @@
 import { useAppContext } from "../Layout";
 import DatabricksDashboardPage from "./DatabricksDashboardPage";
 import DatabricksGeniePage from "./DatabricksGeniePage";
+import HomePage from "./HomePage";
 import SpotterPage from "./SpotterPage";
 
 interface StandardMenuPageProps {
@@ -38,6 +39,17 @@ export default function StandardMenuPage({ menuId }: StandardMenuPageProps) {
     if (menu.providerContentType === "genie") {
       return <DatabricksGeniePage />;
     }
+  }
+
+  if (
+    menu.homePageType === "html" ||
+    menu.homePageType === "iframe" ||
+    menu.homePageType === "image" ||
+    menu.homePageType === "liveboard" ||
+    menu.homePageType === "answer" ||
+    !!menu.homePageValue
+  ) {
+    return <HomePage menuId={menu.id} />;
   }
 
   if (
